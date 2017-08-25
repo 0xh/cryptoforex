@@ -11,11 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-});
-Route::get('/design', function () { return view('welcome'); });
-
+Route::get('/', 'HomeController@index')->name('home');
+Route::get('/data/test/{type}', 'DataController@test')->name('test');
+// Route::get('/design', function () { return view('welcome'); });
 Auth::routes();
 
 // Route::get('/home', 'HomeController@index')->name('home');
