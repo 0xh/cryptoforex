@@ -13,6 +13,7 @@
 
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/data/test/{type}', 'DataController@test')->name('test');
+Route::get('/data/amcharts/{type}', 'DataController@amcharts')->name('amcharts');
 // Route::get('/design', function () { return view('welcome'); });
 Auth::routes();
 

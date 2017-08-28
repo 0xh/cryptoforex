@@ -1,193 +1,268 @@
-var cf = {
-    api:{
-        url:"https://min-api.cryptocompare.com/data/",
-        defaults:{
-            type:"histominute",
-            fsym:"BTC",
-            tsym:"BCH",
-            limit:120,
-            success:function(){}
+var graphControl = {
+    CandleStick:function(){
+        var chart = AmCharts.charts[ 0 ];
+        if ( chart.panels.length ) {
+            var panel = chart.panels[0];
+            var graph = new AmCharts.StockGraph();
+            graph.id= "g1";
+            graph.proCandlesticks= true,
+            graph.valueField = "value";
+            graph.openField = "open";
+            graph.closeField = "close";
+            graph.highField = "high";
+            graph.lowField = "low";
+            graph.comparable= true;
+            graph.type = "candlestick";
+            graph.compareField = "value";
+            graph.balloonText = "[[title]]: open <b>[[open]]</b> low <b>[[low]]</b> high <b>[[high]]</b> close <b>[[close]]</b>";
+            graph.compareGraphBalloonText = "[[title]]:<b>[[value]]</b>";
+            graph.dateFormat = "hh:mm:ss";
+            graph.animationPlayed= true;
+            graph.fillColor = "#7f8da9";
+            graph.lineColor = "#7f8da9";
+            graph.negativeFillColors = "#db4c3c";
+            graph.negativeLineColor =  "#db4c3c";
+            panel.removeStockGraph(panel.stockGraphs[0]);
+            panel.addStockGraph(graph);
+
+            chart.validateNow();
         }
     },
-    geturl:function(a){
-        var opt = $.extend(this.api.defaults,a);
-        return this.api.url+opt.type+"?fsym="+opt.fsym+"&tsym="+opt.tsym+"&limit="+opt.limit+"&aggregate=3&e=CCCAGG";
-    },
-    data:function(a){
-        var opt = $.extend(this.api.defaults,a);
-        $.ajax({
-            url: this.geturl(a),
-            dataType:"json",
-            success:function(d,s,x){
-                console.debug(d);
-                opt.success(d.Data);
-            }
-        });
-    }
-};
-// var canvasJS = {
-//     cryptoApi:{
-//         url:"https://min-api.cryptocompare.com/data/"
-//     },
-//     defaults:{
-//         type:"histominute",
-//         fsym:"BTC",
-//         tsym:"BCH",
-//         limit:20
-//     },
-//     dataPoints:function(a){
-//         var opt = $.extend(this.defaults,a);
-//         $.ajax({
-//             url: this.cryptoApi.url+opt.type+"?fsym="+opt.fsym+"&tsym="+opt.tsym+"&limit="+opt.limit+"&aggregate=3&e=CCCAGG",
-//             dataType:"json",
-//             success:function(d,s,x){
-//                 console.debug(d);
-//                 var dp = [];
-//                 for(var i in d.Data){
-//                     var point = {
-//                         x:new Date(d.Data[i].time),
-//                         // y:[d.Data[i].open,d.Data[i].low,d.Data[i].high,d.Data[i].close]
-//                         y:[d.Data[i].low,d.Data[i].open,d.Data[i].close,d.Data[i].high]
-//                     };
-//                     dp.push(point);
-//                 }
-//                 console.debug(dp);
-//                 canvasJS.chart(dp);
-//             }
-//         });
-//     },
-//     chart:function(dp){
-//         var chart = new CanvasJS.Chart("chartContainer",{
-//             title:{text: "BTC/BCH"},
-//             zoomEnabled: true,
-//             dataPointWidth: 20,
-//             axisY: {
-//                 includeZero:false,
-//                 title: "Rate",
-//                 prefix: ""
-//             },
-//             axisX: {
-//                 interval:10,
-//                 intervalType: "minute",
-//                 valueFormatString: "MMM-YY",
-//                 labelAngle: -45
-//             },
-//             data: [{type: "candlestick",dataPoints: dp}]
-//         });
-//         chart.render();
-//     }
-// };
-var handleQueryResponse=function(response){
-    console.debug(response);
-    if (response.isError()) {
-        console.error('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
-        return;
-    }
-    var data = response.getDataTable(),
-        chart = new google.visualization.CandlestickChart(document.getElementById('chart_div'));
-    chart.draw(data, {
-        title:'BTC/BCH',
-        legend:'none',
-        height: 600
-    });
-    // chart.drawToolbar();
-};
-function googleCharts(){
-    this.query=null;
-    this.chart=null;
-    this.handle=function(){
-        this.chart = google.visualization.drawChart({
-            "containerId": "chart_div",
-            "dataSourceUrl": "/data/test/hystominute",
-            "query": "select * limit 40",
-            "refreshInterval": 5,
-            "chartType": "CandlestickChart",
-            "options": {
-                "title":"BTC/BCH",
-                "legend":"none",
-                "alternatingRowStyle": false,
-                "showRowNumber" : false
-            }
-        });
-        this.chart = google.visualization.drawChart({
-            "containerId": "chart_line",
-            "dataSourceUrl": "/data/test/hystominute",
-            "query": "select time,close limit 40",
-            "refreshInterval": 1,
-            "chartType": "LineChart",
-            "options": {
-                "title":"BTC/BCH",
-                "legend":"none",
-                "alternatingRowStyle": false,
-                "showRowNumber" : false
-            }
-        });
-    };
-    this.handle2=function(){
-        // Replace the data source URL on next line with your data source URL.
-        this.query = new google.visualization.Query("/data/test", {
-            sendMethod: 'xhr'
-        });
-        this.query.setRefreshInterval(1);
-        this.query.setQuery("select * limit 20");
-        this.query.send(handleQueryResponse);
-    };
-    this.handleQueryResponse=function(response){
-        console.debug(response);
-        if (response.isError()) {
-            console.error('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
-            return;
+    Line:function(){
+        var chart = AmCharts.charts[ 0 ];
+        if ( chart.panels.length ) {
+            var panel = chart.panels[0];
+            var graph = new AmCharts.StockGraph();
+            graph.id= "g1";
+            graph.valueField = "value";
+            graph.comparable= true;
+            graph.type = "line";
+            graph.compareField = "value";
+            graph.balloonText = "[[title]]: open <b>[[open]]</b> low <b>[[low]]</b> high <b>[[high]]</b> close <b>[[close]]</b>";
+            graph.compareGraphBalloonText = "[[title]]:<b>[[value]]</b>";
+            graph.dateFormat = "hh:mm:ss";
+            graph.animationPlayed= true;
+            panel.removeStockGraph(panel.stockGraphs[0]);
+            panel.addStockGraph(graph);
+            chart.validateNow();
         }
-        var data = response.getDataTable(),
-            chart = new google.visualization.CandlestickChart(document.getElementById('chart_div'));
-        chart.draw(data, {
-            title:'BTC/BCH',
-            legend:'none',
-            height: '600px'
-        });
-    };
-    this.draw=function(){
-        cf.data({
-            success:function(hystoData){
-                var dp = [];
-                for(var i in hystoData){
-                    var point = [new Date(hystoData[i].time),hystoData[i].low,hystoData[i].open,hystoData[i].close,hystoData[i].high];
-                    dp.push(point);
-                }
-                var data = google.visualization.arrayToDataTable(dp,true);
-                // [
-                //   ['Mon', 20, 28, 38, 45],
-                //   ['Tue', 31, 38, 55, 66],
-                //   ['Wed', 50, 55, 77, 80],
-                //   ['Thu', 77, 77, 66, 50],
-                //   ['Fri', 68, 66, 22, 15]
-                  // Treat first row as data as well.
-                // ], true);
+    },
+    OHLC:function(){
+        var chart = AmCharts.charts[ 0 ];
+        if ( chart.panels.length ) {
+            var panel = chart.panels[0];
+            var graph = new AmCharts.StockGraph();
+            graph.id= "g1";
+            graph.proCandlesticks= true,
+            graph.valueField = "value";
+            graph.openField = "open";
+            graph.closeField = "close";
+            graph.highField = "high";
+            graph.lowField = "low";
+            graph.comparable= true;
+            graph.type = "ohlc";
+            graph.compareField = "value";
+            graph.balloonText = "[[title]]: open <b>[[open]]</b> low <b>[[low]]</b> high <b>[[high]]</b> close <b>[[close]]</b>";
+            graph.compareGraphBalloonText = "[[title]]:<b>[[value]]</b>";
+            graph.dateFormat = "hh:mm:ss";
+            graph.animationPlayed= true;
+            graph.fillColor = "#7f8da9";
+            graph.lineColor = "#7f8da9";
+            graph.negativeFillColors = "#db4c3c";
+            graph.negativeLineColor =  "#db4c3c";
+            panel.removeStockGraph(panel.stockGraphs[0]);
+            panel.addStockGraph(graph);
 
-                var options = {
-                    legend:'BTC/BCH'
-                };
-
-                var chart = new google.visualization.CandlestickChart(document.getElementById('chart_div'));
-                chart.draw(data, {
-                    legend:'none'
-                });
-            }
-        });
-
+            chart.validateNow();
+        }
     }
 };
-googleCharts.prototype = cf;
-googleCharts.prototype.contructor = googleCharts;
-var gc = new googleCharts();
+function CandleStick(){
 
-google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(gc.handle);
-
+}
 $(document).ready(function () {
-    // setInterval(canvasJS.dataPoints({}),1000);
-    // setInterval(googleCharts.draw(),1000);
-
+    var dl = {
+        url: '/data/amcharts/hystominute',
+        // url: 'amchdata500.json',
+        format: "json",
+        load:function(){},
+        complete:function(){},
+        reload: 60
+    };
+    var chart = AmCharts.makeChart("chartdiv", {
+        type: "stock",
+        dataDateFormat: "YYYY-MM-DD HH:mm:ss",
+        theme: "light",
+        pathToImages: "https://www.amcharts.com/lib/3/images/",
+        dataSets: [
+            {
+                title: "BTC/BCH",
+                // dataProvider: d,
+                dataLoader: dl,
+                categoryField: "date",
+                fieldMappings: [
+                    {
+                        fromField: "value",
+                        toField: "value"
+                    },
+                    {
+                        fromField: "open",
+                        toField: "open"
+                    },
+                    {
+                        fromField: "low",
+                        toField: "low"
+                    },
+                    {
+                        fromField: "high",
+                        toField: "high"
+                    },
+                    {
+                        fromField: "close",
+                        toField: "close"
+                    },
+                    {
+                        fromField: "volumefrom",
+                        toField: "volumefrom"
+                    },
+                    {
+                        fromField: "volumeto",
+                        toField: "volumeto"
+                    },
+                    {
+                        fromField: "volume",
+                        toField: "volume"
+                    }
+                ]
+            },
+        ],
+        categoryAxis: {
+            parseDates: true,
+            dateFormat: "YYYY-MM-DD hh:mm:ss"
+        },
+        categoryAxesSettings: {
+            equalSpacing: true,
+            minPeriod: "mm"
+        },
+        panels: [
+            {
+                showCategoryAxis: false,
+                title: "Stock",
+                percentHeight: 66,
+                creditsPosition: "bottom-left",
+                marginBottom:"10",
+                stockGraphs: [
+                    {
+                        id: "g1",
+                        valueField: "value",
+                        comparable: true,
+                        type: "line",
+                        compareField: "value",
+                        balloonText: "[[title]]: open <b>[[open]]</b> close <b>[[close]]</b>",
+                        compareGraphBalloonText: "[[title]]:<b>[[value]]</b>",
+                        dateFormat: "hh:mm:ss",
+                        animationPlayed: true
+                    }
+                ],
+                stockLegend: {
+                    periodValueTextComparing: "[[percents.value.close]]%",
+                    periodValueTextRegular: "[[value.close]]",
+                    valueText: "Open:[[open]] Low:[[low]] High:[[high]] Close:[[close]]",
+                    valueTextRegular: "Open:[[open]] Low:[[low]] High:[[high]] Close:[[close]]"
+                }
+                // drawingIconsEnabled: false,
+                // showCategoryAxis:true,
+                // eraseAll: false,
+                // allLabels: [
+                //     {
+                //         x: 0,
+                //         y: 115,
+                //         text: "Click on the pencil icon on top-right to start drawing",
+                //         align: "center",
+                //         size: 16
+                //     }
+                // ],
+            },
+            {
+                title: "Volume",
+                percentHeight: 34,
+                stockGraphs: [{
+                    valueField: "volume",
+                    type: "column",
+                    showBalloon: false,
+                    fillAlphas: 1
+                }],
+                stockLegend: {
+                    periodValueTextRegular: "[[value.close]]"
+                }
+            }
+        ],
+        chartScrollbarSettings: {
+            graph: "g1",
+            minPeriod: "mm"
+        },
+        chartCursorSettings: {
+            valueBalloonsEnabled: true,
+            fullWidth: true,
+            cursorAlpha: 0.1,
+            valueLineBalloonEnabled: true,
+            valueLineEnabled: true,
+            valueLineAlpha: 0.5
+        },
+        periodSelector: {
+            position: "bottom",
+            inputFieldsEnabled:false,
+            hideOutOfScopePeriods:false,
+            periods: [{
+                    period: "mm",
+                    selected: true,
+                    count: 1,
+                    label: "1 minute"
+                },
+                {
+                    period: "5mm",
+                    count: 5,
+                    label: "10 minutes"
+                },
+                {
+                    period: "DD",
+                    count: 1,
+                    label: "1 day"
+                },
+                {
+                    period: "WW",
+                    count: 1,
+                    label: "1 week"
+                },
+                {
+                    period: "MM",
+                    count: 1,
+                    label: "1 month"
+                },
+                {
+                    period: "MM",
+                    count: 6,
+                    label: "6 month"
+                },
+                {
+                    period: "YYYY",
+                    count: 1,
+                    label: "1 year"
+                }
+            ]
+        },
+        export: {
+            enabled: true,
+            position: "bottom"
+        }
+    });
+    chart.addListener( "rendered", zoomChart );
+    zoomChart();
+    // this method is called when chart is first inited as we listen for "dataUpdated" event
+    function zoomChart() {
+        // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
+        // chart.zoomToIndexes( chart.dataProvider.length - 50, chart.dataProvider.length - 1 );
+    }
 });
 /*
 function Ask(d){

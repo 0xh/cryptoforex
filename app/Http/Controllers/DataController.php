@@ -32,7 +32,42 @@ class DataController extends Controller
         $res = $this->_googleFormat($res,$tq,$tqx);
         return response()->json($res);
     }
-
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function amcharts(Request $rq,$type="histoday"){
+        $tq=[
+            "fsym" => $rq->input("fsym","BTC"),
+            "tsym" => $rq->input("tsym","BCH"),
+            "limit" => $rq->input("limit","100"),
+        ];
+        $type="histominute";
+        $url ="https://min-api.cryptocompare.com/data/".$type."?fsym=".$tq["fsym"]."&tsym=".$tq['tsym']."&limit=".$tq['limit']."&aggregate=1&e=CCCAGG";
+        $res = $this->_fetchJSON($url);
+        $res = $this->_amchartFormat($res);
+        return response()->json($res);
+    }
+    protected function _amchartFormat($data){
+        $res = [];
+        foreach ($data->Data as $row) {
+            // print_r($row->volumefrom);exit;
+            $volume = floatval($row->volumeto)-floatval($row->volumefrom);
+            $res[]=[
+              "date"=>date("Y-m-d H:i:s",$row->time),
+              "open"=>$row->open,
+              "low"=>$row->low,
+              "high"=>$row->high,
+              "close"=>$row->close,
+              "value"=>$row->close,
+              "volumefrom"=> $row->volumefrom,
+              "volumeto"=> $row->volumeto,
+              "volume"=> $volume
+          ];
+        }
+        return $res;
+    }
     protected $_defaultColumns = [
         ["id"=>'A', "label"=> 'time', "type"=> 'datetime'],
         ["id"=>'B', "label"=> 'open', "type"=> 'number'],
