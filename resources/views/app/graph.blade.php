@@ -25,12 +25,10 @@
     <!-- <div class="graf">
 <img src="images/graf.png" alt="">
 </div> -->
-    <div class="button-group">
+    <div id="chartdiv" class="graf"></div>
+    <div class="btn-group">
         <button onclick="graphControl.CandleStick()">CandleStick</button>
         <button onclick="graphControl.Line()">Line</button>
         <button onclick="graphControl.OHLC()">OHLC</button>
     </div>
-
-    <div id="chartdiv" class="graf">Loading data ....</div>
-
 </div>

@@ -66,8 +66,31 @@ jQuery(document).ready(function () {
 		return false
 	});
 
+	jQuery('a.mail').click(function(){
+		if ( jQuery('.notifications').is(':visible') ) {
+			jQuery('.notifications').slideUp();
+		} else {
+			jQuery('.notifications').slideDown();
+		}
+		return false
+	});
+
+	jQuery('.notifications li a').click(function(){
+		if ( jQuery('.popup_message').is(':visible') ) {
+			jQuery('.popup_message,.bgc').fadeOut();
+		} else {
+			jQuery('.popup_message,.bgc').fadeIn();
+		}
+		return false
+	});
+
 	jQuery('.bal').click(function(){
 		jQuery('.popup_bal,.bgc').fadeIn();
+		return false
+	});
+
+	jQuery('.bal2').click(function(){
+		jQuery('.popup_bal2,.bgc').fadeIn();
 		return false
 	});
 	jQuery('.his').click(function(){

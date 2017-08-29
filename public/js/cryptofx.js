@@ -1,33 +1,4 @@
 var graphControl = {
-    CandleStick:function(){
-        var chart = AmCharts.charts[ 0 ];
-        if ( chart.panels.length ) {
-            var panel = chart.panels[0];
-            var graph = new AmCharts.StockGraph();
-            graph.id= "g1";
-            graph.proCandlesticks= true,
-            graph.valueField = "value";
-            graph.openField = "open";
-            graph.closeField = "close";
-            graph.highField = "high";
-            graph.lowField = "low";
-            graph.comparable= true;
-            graph.type = "candlestick";
-            graph.compareField = "value";
-            graph.balloonText = "[[title]]: open <b>[[open]]</b> low <b>[[low]]</b> high <b>[[high]]</b> close <b>[[close]]</b>";
-            graph.compareGraphBalloonText = "[[title]]:<b>[[value]]</b>";
-            graph.dateFormat = "hh:mm:ss";
-            graph.animationPlayed= true;
-            graph.fillColor = "#7f8da9";
-            graph.lineColor = "#7f8da9";
-            graph.negativeFillColors = "#db4c3c";
-            graph.negativeLineColor =  "#db4c3c";
-            panel.removeStockGraph(panel.stockGraphs[0]);
-            panel.addStockGraph(graph);
-
-            chart.validateNow();
-        }
-    },
     Line:function(){
         var chart = AmCharts.charts[ 0 ];
         if ( chart.panels.length ) {
@@ -42,8 +13,40 @@ var graphControl = {
             graph.compareGraphBalloonText = "[[title]]:<b>[[value]]</b>";
             graph.dateFormat = "hh:mm:ss";
             graph.animationPlayed= true;
+            graph.lineColor = "#38697f";
             panel.removeStockGraph(panel.stockGraphs[0]);
             panel.addStockGraph(graph);
+            chart.validateNow();
+        }
+    },
+    CandleStick:function(){
+        var chart = AmCharts.charts[ 0 ];
+        if ( chart.panels.length ) {
+            var panel = chart.panels[0];
+            var graph = new AmCharts.StockGraph();
+            graph.id= "g1";
+            graph.proCandlesticks= true,
+            graph.valueField = "value";
+
+            graph.openField = "open";
+            graph.closeField = "close";
+            graph.highField = "high";
+            graph.lowField = "low";
+
+            graph.comparable= true;
+            graph.type = "candlestick";
+            graph.compareField = "value";
+            graph.balloonText = "[[title]]: open <b>[[open]]</b> low <b>[[low]]</b> high <b>[[high]]</b> close <b>[[close]]</b>";
+            graph.compareGraphBalloonText = "[[title]]:<b>[[value]]</b>";
+            graph.dateFormat = "hh:mm:ss";
+            graph.animationPlayed= true;
+            graph.fillColor = "#38697f";
+            graph.lineColor = "#38697f";
+            graph.negativeFillColors = "#db4c3c";
+            graph.negativeLineColor =  "#db4c3c";
+            panel.removeStockGraph(panel.stockGraphs[0]);
+            panel.addStockGraph(graph);
+
             chart.validateNow();
         }
     },
@@ -66,8 +69,8 @@ var graphControl = {
             graph.compareGraphBalloonText = "[[title]]:<b>[[value]]</b>";
             graph.dateFormat = "hh:mm:ss";
             graph.animationPlayed= true;
-            graph.fillColor = "#7f8da9";
-            graph.lineColor = "#7f8da9";
+            graph.fillColor = "#38697f";
+            graph.lineColor = "#38697f";
             graph.negativeFillColors = "#db4c3c";
             graph.negativeLineColor =  "#db4c3c";
             panel.removeStockGraph(panel.stockGraphs[0]);
@@ -77,22 +80,21 @@ var graphControl = {
         }
     }
 };
-function CandleStick(){
 
-}
 $(document).ready(function () {
     var dl = {
-        url: '/data/amcharts/hystominute',
+        url: '/data/amcharts/hystominute?limit=2000',
         // url: 'amchdata500.json',
         format: "json",
         load:function(){},
         complete:function(){},
-        reload: 60
+        reload: 45,
+        async:true
     };
     var chart = AmCharts.makeChart("chartdiv", {
         type: "stock",
         dataDateFormat: "YYYY-MM-DD HH:mm:ss",
-        theme: "light",
+        theme: "none",
         pathToImages: "https://www.amcharts.com/lib/3/images/",
         dataSets: [
             {
@@ -190,7 +192,8 @@ $(document).ready(function () {
                     valueField: "volume",
                     type: "column",
                     showBalloon: false,
-                    fillAlphas: 1
+                    fillAlphas: 1,
+                    fillColor: "#38697f"
                 }],
                 stockLegend: {
                     periodValueTextRegular: "[[value.close]]"
@@ -217,37 +220,42 @@ $(document).ready(function () {
                     period: "mm",
                     selected: true,
                     count: 1,
-                    label: "1 minute"
+                    label: "1M"
                 },
                 {
                     period: "5mm",
                     count: 5,
-                    label: "10 minutes"
+                    label: "5M"
                 },
                 {
                     period: "DD",
                     count: 1,
-                    label: "1 day"
+                    label: "1D"
                 },
                 {
                     period: "WW",
                     count: 1,
-                    label: "1 week"
+                    label: "7D"
                 },
                 {
                     period: "MM",
                     count: 1,
-                    label: "1 month"
+                    label: "1MO"
                 },
                 {
                     period: "MM",
                     count: 6,
-                    label: "6 month"
+                    label: "6MO"
                 },
                 {
                     period: "YYYY",
                     count: 1,
-                    label: "1 year"
+                    label: "1Y"
+                },
+                {
+                    period: "MAX",
+                    count: 1,
+                    label: "MAX"
                 }
             ]
         },
