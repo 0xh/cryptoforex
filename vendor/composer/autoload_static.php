@@ -22,6 +22,10 @@ class ComposerStaticInit4ffcd26d882151a6c992467651aab328
         array (
             'phpDocumentor\\Reflection\\' => 25,
         ),
+        'c' => 
+        array (
+            'cryptofx\\' => 9,
+        ),
         'X' => 
         array (
             'XdgBaseDir\\' => 11,
@@ -101,6 +105,10 @@ class ComposerStaticInit4ffcd26d882151a6c992467651aab328
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
             1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
             2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+        ),
+        'cryptofx\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/cryptofx',
         ),
         'XdgBaseDir\\' => 
         array (
@@ -272,24 +280,36 @@ class ComposerStaticInit4ffcd26d882151a6c992467651aab328
     );
 
     public static $classMap = array (
+        'App\\Account' => __DIR__ . '/../..' . '/app/Account.php',
+        'App\\Console\\Commands\\LoadPrices' => __DIR__ . '/../..' . '/app/Console/Commands/LoadPrices.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
+        'App\\Currency' => __DIR__ . '/../..' . '/app/Currency.php',
+        'App\\Deal' => __DIR__ . '/../..' . '/app/Deal.php',
+        'App\\DealHistory' => __DIR__ . '/../..' . '/app/DealHistory.php',
+        'App\\DealStatus' => __DIR__ . '/../..' . '/app/DealStatus.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
         'App\\Http\\Controllers\\Auth\\LoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/LoginController.php',
         'App\\Http\\Controllers\\Auth\\RegisterController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/RegisterController.php',
         'App\\Http\\Controllers\\Auth\\ResetPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ResetPasswordController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
+        'App\\Http\\Controllers\\DataController' => __DIR__ . '/../..' . '/app/Http/Controllers/DataController.php',
         'App\\Http\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/HomeController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',
         'App\\Http\\Middleware\\RedirectIfAuthenticated' => __DIR__ . '/../..' . '/app/Http/Middleware/RedirectIfAuthenticated.php',
         'App\\Http\\Middleware\\TrimStrings' => __DIR__ . '/../..' . '/app/Http/Middleware/TrimStrings.php',
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
+        'App\\Instrument' => __DIR__ . '/../..' . '/app/Instrument.php',
+        'App\\Merchant' => __DIR__ . '/../..' . '/app/Merchant.php',
+        'App\\Price' => __DIR__ . '/../..' . '/app/Price.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AuthServiceProvider.php',
         'App\\Providers\\BroadcastServiceProvider' => __DIR__ . '/../..' . '/app/Providers/BroadcastServiceProvider.php',
         'App\\Providers\\EventServiceProvider' => __DIR__ . '/../..' . '/app/Providers/EventServiceProvider.php',
         'App\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/app/Providers/RouteServiceProvider.php',
+        'App\\Source' => __DIR__ . '/../..' . '/app/Source.php',
+        'App\\Transaction' => __DIR__ . '/../..' . '/app/Transaction.php',
         'App\\User' => __DIR__ . '/../..' . '/app/User.php',
         'App\\UserMeta' => __DIR__ . '/../..' . '/app/UserMeta.php',
         'App\\UserRights' => __DIR__ . '/../..' . '/app/UserRights.php',
@@ -3234,6 +3254,7 @@ class ComposerStaticInit4ffcd26d882151a6c992467651aab328
         'TijsVerkoyen\\CssToInlineStyles\\Css\\Rule\\Rule' => __DIR__ . '/..' . '/tijsverkoyen/css-to-inline-styles/src/Css/Rule/Rule.php',
         'Webmozart\\Assert\\Assert' => __DIR__ . '/..' . '/webmozart/assert/src/Assert.php',
         'XdgBaseDir\\Xdg' => __DIR__ . '/..' . '/dnoegel/php-xdg-base-dir/src/Xdg.php',
+        'cryptofx\\CryptoCompareApi' => __DIR__ . '/../..' . '/app/cryptofx/CryptoCompareApi.php',
         'phpDocumentor\\Reflection\\DocBlock' => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src/DocBlock.php',
         'phpDocumentor\\Reflection\\DocBlockFactory' => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src/DocBlockFactory.php',
         'phpDocumentor\\Reflection\\DocBlockFactoryInterface' => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src/DocBlockFactoryInterface.php',

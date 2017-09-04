@@ -24,6 +24,6 @@ class Currency extends Model
      * @var array
      */
     protected $fillable = [
-        'name','code','image'
+        'name','code','image','symbol','unicode'
     ];
 }

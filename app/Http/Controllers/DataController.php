@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Log;
 use Illuminate\Http\Request;
+use App\Instrument;
+use App\Currency;
+use App\Histo;
 
 class DataController extends Controller
 {
@@ -43,10 +46,28 @@ class DataController extends Controller
             "tsym" => $rq->input("tsym","BCH"),
             "limit" => $rq->input("limit","100"),
         ];
-        $type="histominute";
-        $url ="https://min-api.cryptocompare.com/data/".$type."?fsym=".$tq["fsym"]."&tsym=".$tq['tsym']."&limit=".$tq['limit']."&aggregate=1&e=CCCAGG";
-        $res = $this->_fetchJSON($url);
-        $res = $this->_amchartFormat($res);
+        $instid = $rq->input("instrument_id",1);
+        $res = [];
+        $histo = Histo::where('instrument_id',$instid)->limit($tq["limit"])->get();
+        foreach ($histo as $row) {
+            $tores = [
+                "date" => date("Y-m-d H:i:s",$row->time),
+                "open"=>floatval($row->open),
+                "low"=>floatval($row->low),
+                "high"=>floatval($row->high),
+                "close"=>floatval($row->close),
+                "value"=>floatval($row->close),
+                "volumefrom"=> floatval($row->volumefrom),
+                "volumeto"=> floatval($row->volumeto),
+                "volume"=> floatval($row->volumeto)-floatval($row->volumefrom)
+            ];
+            $res[]=$tores;
+        }
+        // $res = $histo;
+        // $type="histominute";
+        // $url ="https://min-api.cryptocompare.com/data/".$type."?fsym=".$tq["fsym"]."&tsym=".$tq['tsym']."&limit=".$tq['limit']."&aggregate=1&e=CCCAGG";
+        // $res = $this->_fetchJSON($url);
+        // $res = $this->_amchartFormat($res);
         return response()->json($res);
     }
     protected function _amchartFormat($data){

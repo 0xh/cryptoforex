@@ -3,17 +3,21 @@
         <h2>Активные сделки</h2>
         <div class="flex column">
             <div class="flex column width mh">
-                <div class="top">
-                    <div class="item flex title">
-                        <div class="inner">Инструмент</div>
-                        <div class="inner">Вложено</div>
-                        <div class="inner">Прибыль</div>
-                    </div>
-                    <div class="item flex">
-                        <div class="inner">BTC/ETH</div>
-                        <div class="inner">100.00$</div>
-                        <div class="inner down">-3.54$</div>
-                    </div>
+                <script>
+                    function userDeals(container,d,x,s){
+                        console.debug("deals",d,x,s);
+                        container.append('<div class="item flex title"><div class="inner">Инструмент</div><div class="inner">Вложено</div><div class="inner">Прибыль</div></div>');
+                        for(var i in d){
+                            var row=d[i];
+                            console.debug(row);
+                            var inst = "BTC/BCH",profit = row.profit,bet = row.bet;
+                            container.append('<div class="item flex"><div class="inner">'+inst+'</div><div class="inner">100.00$</div><div class="inner down">-3.54$</div></div>');
+                        }
+                    }
+                </script>
+                <div class="top loader" data-action="/deal" data-autostart="true" data-refresh="1" data-function="userDeals">
+
+                    <!-- <div class="item flex"><div class="inner">BTC/ETH</div><div class="inner">100.00$</div><div class="inner down">-3.54$</div></div>
                     <div class="item flex">
                         <div class="inner">BTC/ETH</div>
                         <div class="inner">100.00$</div>
@@ -28,7 +32,7 @@
                         <div class="inner">DOGE/DASH</div>
                         <div class="inner">100.00$</div>
                         <div class="inner up">16.76$</div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="bot">
                     <ul class="flex">

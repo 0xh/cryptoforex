@@ -18,3 +18,7 @@ Route::get('/data/amcharts/{type}', 'DataController@amcharts')->name('amcharts')
 Auth::routes();
 
 // Route::get('/home', 'HomeController@index')->name('home');
+
+//Instrument
+Route::get('/instrument','InstrumentController@index')->name('instruments');
+Route::get('/deal','dealController@index')->name('deals');

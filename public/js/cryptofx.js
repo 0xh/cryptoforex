@@ -26,12 +26,12 @@ var graphControl = {
             var graph = new AmCharts.StockGraph();
             graph.id= "g1";
             graph.proCandlesticks= true,
-            graph.valueField = "value";
+            // graph.valueField = "value";
 
             graph.openField = "open";
             graph.closeField = "close";
-            graph.highField = "high";
-            graph.lowField = "low";
+            graph.highField = "low";
+            graph.lowField = "high";
 
             graph.comparable= true;
             graph.type = "candlestick";
@@ -40,10 +40,11 @@ var graphControl = {
             graph.compareGraphBalloonText = "[[title]]:<b>[[value]]</b>";
             graph.dateFormat = "hh:mm:ss";
             graph.animationPlayed= true;
-            graph.fillColor = "#38697f";
             graph.lineColor = "#38697f";
+            graph.fillColors = "#38697f";
             graph.negativeFillColors = "#db4c3c";
             graph.negativeLineColor =  "#db4c3c";
+            graph.fillAlphas=1;
             panel.removeStockGraph(panel.stockGraphs[0]);
             panel.addStockGraph(graph);
 
@@ -80,15 +81,15 @@ var graphControl = {
         }
     }
 };
-
 $(document).ready(function () {
-    var dl = {
+    var dl = {//dataLoader
         url: '/data/amcharts/hystominute?limit=2000',
         // url: 'amchdata500.json',
         format: "json",
-        load:function(){},
-        complete:function(){},
-        reload: 45,
+        // load:function(){},
+        // complete:function(){},
+        reverse:true,
+        // reload: 45,
         async:true
     };
     var chart = AmCharts.makeChart("chartdiv", {
@@ -202,7 +203,7 @@ $(document).ready(function () {
         ],
         chartScrollbarSettings: {
             graph: "g1",
-            minPeriod: "mm"
+            minPeriod: "ss"
         },
         chartCursorSettings: {
             valueBalloonsEnabled: true,
@@ -210,7 +211,18 @@ $(document).ready(function () {
             cursorAlpha: 0.1,
             valueLineBalloonEnabled: true,
             valueLineEnabled: true,
-            valueLineAlpha: 0.5
+            valueLineAlpha: 0.5,
+            zoomable:true,
+            categoryBalloonDateFormats:[
+                {period:"YYYY", format:"YYYY"},
+                {period:"MM", format:"MMM, YYYY"},
+                {period:"WW", format:"MMM DD, YYYY"},
+                {period:"DD", format:"MMM DD, YYYY"},
+                {period:"hh", format:"JJ:NN"},
+                {period:"mm", format:"JJ:NN:SS"},
+                {period:"ss", format:"JJ:NN:SS"},
+                {period:"fff", format:"JJ:NN:SS"}
+            ]
         },
         periodSelector: {
             position: "bottom",
@@ -264,8 +276,8 @@ $(document).ready(function () {
             position: "bottom"
         }
     });
-    chart.addListener( "rendered", zoomChart );
-    zoomChart();
+    // chart.addListener( "rendered", zoomChart );
+    // zoomChart();
     // this method is called when chart is first inited as we listen for "dataUpdated" event
     function zoomChart() {
         // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues

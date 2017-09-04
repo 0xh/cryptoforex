@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        \App\Console\Commands\LoadPrices::class,
+        \App\Console\Commands\LoadHistominute::class
     ];
 
     /**
@@ -24,8 +25,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        // $schedule->command('cryptofx:prices')->everyMinute();//->emailOutputTo('yanusdnd@inbox.ru');;
+        $schedule->command('cryptofx:histo')->everyMinute();
     }
 
     /**
