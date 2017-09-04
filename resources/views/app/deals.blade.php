@@ -5,17 +5,22 @@
             <div class="flex column width mh">
                 <script>
                     function userDeals(container,d,x,s){
-                        console.debug("deals",d,x,s);
-                        container.append('<div class="item flex title"><div class="inner">Инструмент</div><div class="inner">Вложено</div><div class="inner">Прибыль</div></div>');
+                        console.debug("deals",container,d);
+                        if(!container.find('.title').length)container.append('<div class="item flex title"><div class="inner">Инструмент</div><div class="inner">Вложено</div><div class="inner">Прибыль</div></div>');
                         for(var i in d){
                             var row=d[i];
                             console.debug(row);
-                            var inst = "BTC/BCH",profit = row.profit,bet = row.bet;
-                            container.append('<div class="item flex"><div class="inner">'+inst+'</div><div class="inner">'+bet+'</div><div class="inner down">'+profit+'</div></div>');
+                            var inst = "BTC/BCH",profit = row.profit,amount = row.amount, profit_type=(profit>0)?'up':'down';
+                            if(!container.find('#deal-'+row.id).length)container.append('<div id="deal-'+row.id+'" class="item flex"><div class="inner instrument">'+inst+'</div><div class="inner amount">'+amount+'</div><div class="inner '+profit_type+' profit">'+profit+'</div></div>');
+                            else{
+                                // container.find('#deal-'+row.id+' .intrument').text(inst);
+                                container.find('#deal-'+row.id+' .profit').text(profit).removeClass('up').removeClass('down').addClass(profit_type);
+                                // container.find('#deal-'+row.id+' .amount').text(amount);
+                            }
                         }
                     }
                 </script>
-                <div class="top loader" data-action="/deal" data-autostart="true" data-refresh="1" data-function="userDeals">
+                <div class="top loader" data-action="/deal" data-autostart="true" data-refresh="10000" data-function="userDeals"></div>
 
                     <!-- <div class="item flex"><div class="inner">BTC/ETH</div><div class="inner">100.00$</div><div class="inner down">-3.54$</div></div>
                     <div class="item flex">
@@ -33,7 +38,7 @@
                         <div class="inner">100.00$</div>
                         <div class="inner up">16.76$</div>
                     </div> -->
-                </div>
+
                 <div class="bot">
                     <ul class="flex">
                         <li class="active"><a href="#">Отчет</a></li>

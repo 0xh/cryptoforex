@@ -26,6 +26,6 @@ class Deal extends Model
     protected $fillable = [
         'status_id','instrument_id','user_id','open_price_id','close_price_id','direction',
         'stop_high','stop_low','amount','currency_id','multiplier',
-        'profit','bet'
+        'profit','price_start','price_stop'
     ];
 }

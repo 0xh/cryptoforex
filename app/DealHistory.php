@@ -18,6 +18,7 @@ class DealHistory extends Model
      * @var string
      */
     protected $dateFormat = 'U';
+    const UPDATED_AT = null;
     /**
      * The attributes that are mass assignable.
      *

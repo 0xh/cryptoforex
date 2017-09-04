@@ -31,32 +31,83 @@ var cf={
         console.debug("refresher constructor called");
     },
     loader:function(){
-        this.opts = {};
-        this.container = arguments.length?arguments[0]:null;
+        var container=arguments.length?$(arguments[0]):null;
+        this.opts = {
+            container:container,
+            autostart: false,
+            refresh:0
+        };
+        if(container == null) return;
+        this.attrs = {
+            func:container.attr("data-function"),
+            autostart:(container.attr("data-autostart")=="true"),
+            action:container.attr("data-action"),
+            refresh:container.attr("data-refresh")
+        };
+        this.opts = $.extend(this.opts,this.attrs);
         this.opts = $.extend(this.opts,((arguments.length>1)?arguments[1]:{}));
-        if(this.container == null) return;
-        this.container = $(this.container);
-        var func = this.container.attr("data-function");
-        $.ajax({
-            url:this.container.attr("data-action"),
-            type:cf._type,
-            complete:function(d,x,s){
-                try{
-                    window[func](this.container,d,x,s);
+        this.execute = function(opts){
+            $.ajax({
+                url:opts.action,
+                type:cf._type,
+                success:function(d,x,s){
+                    try{
+                        window[opts.func](opts.container,d,x,s);
+                    }
+                    catch(e){console.error(e);}
                 }
-                catch(e){
-                    console.error(e);
-                }
-
-            }
-        });
+            });
+        };
+        console.debug(this.opts);
+        if(this.opts.autostart)this.execute(this.opts);
+        if(this.opts.refresh>0){
+            setTimeout(this.execute,this.refresh,this.opts);
+            // setInterval(this.execute,this.refresh,this.opts);
+        }
         return this;
+    },
+    submiter:function(){
+        var container = arguments.length?arguments[0]:null,
+            checkvals=function($t){
+                return true;
+            },getargs = function($c){
+                var args = {};
+                $c.find("input,select").each(function(){
+                    var n,v;
+                    n = $(this).attr("data-name");
+                    if(n!=undefined && n.length)args[n]= $(this).val();
+                });
+                return args;
+            };
+        if(container == null) return;
+        container = $(container);
+
+        container.find('.submit').on('click',function(){
+            var container =$(this).closest('.submiter');
+            if(!checkvals(container))return;
+            console.debug(container);
+            var action = container.attr("data-action"), args = getargs(container);
+            // console.debug(args);return;
+            $.ajax({
+                url:action,
+                data:args,
+                type:cf._type,
+                success:function(d){console.debug(d)},
+                error:function(x,s){console.debug(x)}
+            });
+        });
+        container.find('.cancel').on('click',function(){});
+        return false;
     }
+
 };
 $(document).ready(function(){
     var Fresher = new cf.refresher();
     $(".loader").each(function(){
         new cf.loader(this);
+    });
+    $(".submiter").each(function(){
+        cf.submiter(this);
     });
 });
 

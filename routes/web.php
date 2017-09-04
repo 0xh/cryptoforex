@@ -21,4 +21,6 @@ Auth::routes();
 
 //Instrument
 Route::get('/instrument','InstrumentController@index')->name('instruments');
+//Deals
 Route::get('/deal','dealController@index')->name('deals');
+Route::get('/deal/add','dealController@store')->name('dealadd');

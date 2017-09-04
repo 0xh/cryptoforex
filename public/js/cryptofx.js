@@ -158,8 +158,12 @@ $(document).ready(function () {
                     {
                         id: "g1",
                         valueField: "value",
+                        lowField: "low",
+                        highField:"high",
+                        openField:"open",
+                        closeField:"close",
                         comparable: true,
-                        type: "line",
+                        type: "candlestick",
                         compareField: "value",
                         balloonText: "[[title]]: open <b>[[open]]</b> close <b>[[close]]</b>",
                         compareGraphBalloonText: "[[title]]:<b>[[value]]</b>",
