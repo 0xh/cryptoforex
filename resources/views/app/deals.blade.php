@@ -11,7 +11,7 @@
                             var row=d[i];
                             console.debug(row);
                             var inst = "BTC/BCH",profit = row.profit,bet = row.bet;
-                            container.append('<div class="item flex"><div class="inner">'+inst+'</div><div class="inner">100.00$</div><div class="inner down">-3.54$</div></div>');
+                            container.append('<div class="item flex"><div class="inner">'+inst+'</div><div class="inner">'+bet+'</div><div class="inner down">'+profit+'</div></div>');
                         }
                     }
                 </script>
