@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('cryptofx:prices')->everyMinute();//->emailOutputTo('yanusdnd@inbox.ru');;
+        $schedule->command('cryptofx:prices')->everyMinute();//->emailOutputTo('yanusdnd@inbox.ru');;
         $schedule->command('cryptofx:histo')->everyMinute();
     }
 

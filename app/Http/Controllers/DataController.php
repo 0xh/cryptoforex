@@ -48,7 +48,7 @@ class DataController extends Controller
         ];
         $instid = $rq->input("instrument_id",1);
         $res = [];
-        $histo = Histo::where('instrument_id',$instid)->limit($tq["limit"])->get();
+        $histo = Histo::where('instrument_id',$instid)->limit($tq["limit"])->orderBy('id','desc')->get();
         foreach ($histo as $row) {
             $tores = [
                 "date" => date("Y-m-d H:i:s",$row->time),

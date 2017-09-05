@@ -21,7 +21,8 @@ var cf={
             var dt = new Date().getTime();
             for(var i in cf._actions){
                 if((dt-cf._actions[i].last)>cf._actions[i].refresh*1000){
-                    cf._actions[i].run();
+                    var args = (cf._actions[i].arguments == undefined)?null:cf._actions[i].arguments;
+                    cf._actions[i].run(args);
                     cf._actions[i].last = dt;
                 }
 
@@ -32,6 +33,7 @@ var cf={
     },
     loader:function(){
         var container=arguments.length?$(arguments[0]):null;
+        var fresher = arguments.length?$(arguments[1]):new Fresher;
         this.opts = {
             container:container,
             autostart: false,
@@ -42,7 +44,7 @@ var cf={
             func:container.attr("data-function"),
             autostart:(container.attr("data-autostart")=="true"),
             action:container.attr("data-action"),
-            refresh:container.attr("data-refresh")
+            refresh:(container.attr("data-refresh")!=undefined)?container.attr("data-refresh"):0
         };
         this.opts = $.extend(this.opts,this.attrs);
         this.opts = $.extend(this.opts,((arguments.length>1)?arguments[1]:{}));
@@ -58,10 +60,14 @@ var cf={
                 }
             });
         };
-        console.debug(this.opts);
+        // console.debug(this.opts);
         if(this.opts.autostart)this.execute(this.opts);
-        if(this.opts.refresh>0){
-            setTimeout(this.execute,this.refresh,this.opts);
+        if(parseInt(this.opts.refresh)>0){
+            fresher.bind({
+                run:this.execute,
+                arguments:this.opts
+            });
+            // setTimeout(this.execute,this.refresh,60000);
             // setInterval(this.execute,this.refresh,this.opts);
         }
         return this;
@@ -104,7 +110,7 @@ var cf={
 $(document).ready(function(){
     var Fresher = new cf.refresher();
     $(".loader").each(function(){
-        new cf.loader(this);
+        new cf.loader(this,Fresher);
     });
     $(".submiter").each(function(){
         cf.submiter(this);

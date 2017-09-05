@@ -81,6 +81,21 @@ var graphControl = {
         }
     }
 };
+var getData = function(limit){
+    var res={};
+    $.ajax({
+        async:false,
+        url:"/data/amcharts/hystominute?limit="+limit,
+        dataType:"json",
+        success:function(d){
+            res = d.reverse();
+            // chart.dataProvider.shift();
+            // chart.dataProvider.push(d[0]);
+            // chart.validateData();
+        }
+    });
+    return res;
+}
 $(document).ready(function () {
     var dl = {//dataLoader
         url: '/data/amcharts/hystominute?limit=2000',
@@ -89,19 +104,22 @@ $(document).ready(function () {
         // load:function(){},
         // complete:function(){},
         reverse:true,
-        // reload: 45,
+        reload: 45,
         async:true
     };
     var chart = AmCharts.makeChart("chartdiv", {
         type: "stock",
-        dataDateFormat: "YYYY-MM-DD HH:mm:ss",
-        theme: "none",
+        dataDateFormat: "YYYY-MM-DD JJ:NN:SS",
+        glueToTheEnd:true,
+        mouseWheelScrollEnabled:true,
+        processTimeout:1,
+        // theme: "light",
         pathToImages: "https://www.amcharts.com/lib/3/images/",
         dataSets: [
             {
                 title: "BTC/BCH",
-                // dataProvider: d,
-                dataLoader: dl,
+                dataProvider: getData(12000),
+                // dataLoader: dl,
                 categoryField: "date",
                 fieldMappings: [
                     {
@@ -141,11 +159,18 @@ $(document).ready(function () {
         ],
         categoryAxis: {
             parseDates: true,
-            dateFormat: "YYYY-MM-DD hh:mm:ss"
+            dateFormat: "YYYY-MM-DD hh:mm:ss",
+            minPeriod: 'mm'
         },
         categoryAxesSettings: {
             equalSpacing: true,
             minPeriod: "mm"
+        },
+        axisX: {
+            interval:1,
+            intervalType: "minute",
+            // valueFormatString: "YYYY-MM-DD hh:mm:ss",
+            labelAngle: -45
         },
         panels: [
             {
@@ -165,8 +190,14 @@ $(document).ready(function () {
                         comparable: true,
                         type: "candlestick",
                         compareField: "value",
-                        balloonText: "[[title]]: open <b>[[open]]</b> close <b>[[close]]</b>",
+                        balloonText: "[[title]]: On date:<b>[[date]]</b> open <b>[[open]]</b> low <b>[[low]]</b> high <b>[[high]]</b> close <b>[[close]]</b>",
                         compareGraphBalloonText: "[[title]]:<b>[[value]]</b>",
+                        fillColor: "#38697f",
+                        lineColor: "#38697f",
+                        fillAlphas:1,
+                        negativeFillColors: "#db4c3c",
+                        negativeLineColor:  "#db4c3c",
+                        negativeFillAlphas:1,
                         dateFormat: "hh:mm:ss",
                         animationPlayed: true
                     }
@@ -189,8 +220,8 @@ $(document).ready(function () {
                 //         size: 16
                 //     }
                 // ],
-            },
-            {
+            }
+            ,{
                 title: "Volume",
                 percentHeight: 34,
                 stockGraphs: [{
@@ -207,7 +238,7 @@ $(document).ready(function () {
         ],
         chartScrollbarSettings: {
             graph: "g1",
-            minPeriod: "ss"
+            // minPeriod: "mm"
         },
         chartCursorSettings: {
             valueBalloonsEnabled: true,
@@ -217,15 +248,16 @@ $(document).ready(function () {
             valueLineEnabled: true,
             valueLineAlpha: 0.5,
             zoomable:true,
+            // categoryBalloonDateFormat:'HH:NN',
             categoryBalloonDateFormats:[
                 {period:"YYYY", format:"YYYY"},
                 {period:"MM", format:"MMM, YYYY"},
                 {period:"WW", format:"MMM DD, YYYY"},
                 {period:"DD", format:"MMM DD, YYYY"},
-                {period:"hh", format:"JJ:NN"},
-                {period:"mm", format:"JJ:NN:SS"},
-                {period:"ss", format:"JJ:NN:SS"},
-                {period:"fff", format:"JJ:NN:SS"}
+                {period:"hh", format:"HH:NN"},
+                {period:"mm", format:"HH:NN"},
+                {period:"ss", format:"HH:NN:SS"},
+                {period:"fff", format:"HH:NN:SS.QQQ"}
             ]
         },
         periodSelector: {
@@ -234,7 +266,6 @@ $(document).ready(function () {
             hideOutOfScopePeriods:false,
             periods: [{
                     period: "mm",
-                    selected: true,
                     count: 1,
                     label: "1M"
                 },
@@ -246,6 +277,7 @@ $(document).ready(function () {
                 {
                     period: "DD",
                     count: 1,
+
                     label: "1D"
                 },
                 {
@@ -270,7 +302,7 @@ $(document).ready(function () {
                 },
                 {
                     period: "MAX",
-                    count: 1,
+                    selected: true,
                     label: "MAX"
                 }
             ]
@@ -283,6 +315,23 @@ $(document).ready(function () {
     // chart.addListener( "rendered", zoomChart );
     // zoomChart();
     // this method is called when chart is first inited as we listen for "dataUpdated" event
+    /**
+ * Init some variables for demo purposes
+ */
+
+
+    setInterval( function(chart) {
+        $.ajax({
+            url:"/data/amcharts/hystominute?limit=1",
+            dataType:"json",
+            success:function(d){
+                // chart.dataSets[0].dataProvider.shift();
+                console.debug(chart.dataSets[0].dataProvider,d);
+                if(chart.dataSets[0].dataProvider[chart.dataSets[0].dataProvider.length-1].date!=d[0].date)chart.dataSets[0].dataProvider.push(d[0]);
+                chart.validateData();
+            }
+        });
+    }, 10000,chart );
     function zoomChart() {
         // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
         // chart.zoomToIndexes( chart.dataProvider.length - 50, chart.dataProvider.length - 1 );

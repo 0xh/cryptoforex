@@ -5,11 +5,11 @@
             <div class="flex column width mh">
                 <script>
                     function userDeals(container,d,x,s){
-                        console.debug("deals",container,d);
+                        // console.debug("deals",container,d);
                         if(!container.find('.title').length)container.append('<div class="item flex title"><div class="inner">Инструмент</div><div class="inner">Вложено</div><div class="inner">Прибыль</div></div>');
                         for(var i in d){
                             var row=d[i];
-                            console.debug(row);
+                            // console.debug(row);
                             var inst = "BTC/BCH",profit = row.profit,amount = row.amount, profit_type=(profit>0)?'up':'down';
                             if(!container.find('#deal-'+row.id).length)container.append('<div id="deal-'+row.id+'" class="item flex"><div class="inner instrument">'+inst+'</div><div class="inner amount">'+amount+'</div><div class="inner '+profit_type+' profit">'+profit+'</div></div>');
                             else{

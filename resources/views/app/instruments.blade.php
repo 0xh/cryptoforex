@@ -4,10 +4,10 @@
             <a href="#">Инструменты</a>
             <script>
                 function userInstruments(container,d,x,s){
-                    console.debug("userInstruments",container,d);
+                    // console.debug("userInstruments",container,d);
                     for(var i in d){
                         var row=d[i],inst = "BTC/BCH",profit = row.profit,bet = row.bet;
-                        console.debug(row);
+                        // console.debug(row);
                         container.append('<div class="inner flex column"><div class="pic flex"><img src="images/bitcoin.png" alt=""><span></span><img src="images/litecoin.png" alt=""></div></div>');
                         container.append('<div class="percent"></div>');
                         container.append('<p class="total">2 357.57</p>');
