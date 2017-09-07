@@ -1,4 +1,6 @@
 <div class="content flex column">
+    <a href="#" class="button"></a>
+    <a href="#" class="b_close"></a>
     <!-- <div class="item flex">
         <div class="pic">
             <img src="images/bitcoin.png" alt="">
@@ -27,8 +29,8 @@
 </div> -->
     <div id="chartdiv" class="graf"></div>
     <div class="btn-group">
-        <button onclick="graphControl.CandleStick()">CandleStick</button>
-        <button onclick="graphControl.Line()">Line</button>
-        <button onclick="graphControl.OHLC()">OHLC</button>
+        <button onclick="graphControl.CandleStick()"><i class="fa fa-bar-chart"></i>CandleStick</button>
+        <button onclick="graphControl.Line()"><i class="fa fa-line-chart"></i>Line</button>
+        <button onclick="graphControl.OHLC()"><i class="fa fa-bar-chart"></i>OHLC</button>
     </div>
 </div>

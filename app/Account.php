@@ -26,4 +26,14 @@ class Account extends Model
     protected $fillable = [
         'status','currency_id','user_id','amount','type'
     ];
+    /**
+     * Scope a query to only include popular users.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUser($query,User $user)
+    {
+        return $query->where('user_id', '=', $user->id);
+    }
 }

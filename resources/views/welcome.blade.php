@@ -9,15 +9,15 @@
     <meta name="description" content="">
     <meta name="keywords" content="">
     <!-- Favicon -->
-    <link rel="shortcut icon" href="images/favicon/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/crmd2/images/favicon/favicon.ico" type="image/x-icon">
     <!-- CSS -->
-    <link rel="stylesheet" href="style/main.css">
+    <link rel="stylesheet" href="/crmd2/style/main.css">
 </head>
 <body>
     <header class="header">
         <div class="container">
             <div class="logo">
-                <a href="/"><img src="images/logo.gif" alt=""></a>
+                <a href="{{ url('/crm' )}}"><img src="/crmd2/images/logo.gif" alt=""></a>
             </div>
             @if (Auth::guest())
                 <a class="out" href="{{ url('/login') }}">Login</a>

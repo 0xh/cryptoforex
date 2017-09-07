@@ -47,8 +47,8 @@ class LoadPrices extends Command
         $source = Source::where('name','CryptoCompare')->first();
         $ins = Instrument::get();
         $ticks = 200;
+        echo $this->signature." loaded as ".date("Y-m-d H:i:s")."\n";
         while($ticks!=0){
-
             foreach ($ins as $i=>$instrument) {
                 $fsym = Currency::find($instrument->from_currency_id);
                 $tsym = Currency::find($instrument->to_currency_id);

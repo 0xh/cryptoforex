@@ -12,9 +12,9 @@ class CurrencyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
+    public function index($code=null){
+        $curs = is_null($code)?Currency::all():Currency::where('code','=',$code)->get();
+        return response()->json($curs);
     }
 
     /**
@@ -44,9 +44,8 @@ class CurrencyController extends Controller
      * @param  \App\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function show(Currency $currency)
-    {
-        //
+    public function show(Currency $currency){
+        return response()->json($currency);
     }
 
     /**

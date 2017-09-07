@@ -2,6 +2,7 @@
 
 namespace App;
 
+
 use Illuminate\Database\Eloquent\Model;
 
 class UserMeta extends Model
@@ -26,4 +27,14 @@ class UserMeta extends Model
     protected $fillable = [
         'meta_name','meta_value','user_id'
     ];
+    /**
+     * Scope a query to only include popular users.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUser($query,User $user)
+    {
+        return $query->where('user_id', '=', $user->id);
+    }
 }

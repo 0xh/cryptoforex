@@ -14,7 +14,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\LoadPrices::class,
-        \App\Console\Commands\LoadHistominute::class
+        \App\Console\Commands\LoadHistominute::class,
+        \App\Console\Commands\ProcessDeals::class
     ];
 
     /**
@@ -25,8 +26,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('cryptofx:prices')->everyMinute();//->emailOutputTo('yanusdnd@inbox.ru');;
-        $schedule->command('cryptofx:histo')->everyMinute();
+        // $schedule->command('cryptofx:process')->everyMinute();
+        // $schedule->command('cryptofx:histo')->everyMinute();
+        // $schedule->command('cryptofx:prices')->everyMinute();//->emailOutputTo('yanusdnd@inbox.ru');;
     }
 
     /**

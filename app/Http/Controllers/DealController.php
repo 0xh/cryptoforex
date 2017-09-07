@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Deal;
 use App\DealStatus;
 use App\DealHistory;
@@ -23,13 +24,23 @@ class DealController extends Controller{
     public function index(Request $rq){
         $res = [];
         $user = $rq->user();
-        $selector = Deal::where('user_id',$user->id);
-        // filters {
-        // }
+        $status = $rq->input("status","all");
+        $selector = ($user->rights_id<=1)?Deal::where('user_id',$user->id):Deal::where('id','>','0');
+        if($status!="all"){
+            $status = DealStatus::where('code',$status)->first();
+            if(!is_null($status))$selector = $selector->where("status_id",$status->id);
+        }
         $deals = $selector->get();
         foreach($deals as $deal){
             $row = $deal->toArray();
-            $row["instrument"] = Instrument::find($deal->instrument_id);
+            $row["instrument"] = Instrument::find($deal->instrument_id)->toArray();
+            $row["instrument"]["from_currency"] = Currency::find($row["instrument"]["from_currency_id"]);
+            $row["instrument"]["to_currency"] = Currency::find($row["instrument"]["to_currency_id"]);
+            $row["open_price"] = Price::find($deal->open_price_id);
+            $row["currency"] = Currency::find($deal->currency_id);
+            $row["status"] = DealStatus::find($deal->status_id);
+            $row["user"] = User::find($deal->user_id);
+            if(!is_null($deal->close_price_id))$row["close_price"] = Price::find($deal->close_price_id);
             $res[]=$row;
         }
         return response()->json($res,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
@@ -43,6 +54,7 @@ class DealController extends Controller{
     public function create()
     {
         //
+
     }
 
     /**

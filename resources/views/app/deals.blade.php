@@ -10,7 +10,7 @@
                         for(var i in d){
                             var row=d[i];
                             // console.debug(row);
-                            var inst = "BTC/BCH",profit = row.profit,amount = row.amount, profit_type=(profit>0)?'up':'down';
+                            var inst = "BTC/BCH",profit = row.profit,amount = currency.value(row.amount,'USD'), profit_type=(profit>0)?'up':'down';
                             if(!container.find('#deal-'+row.id).length)container.append('<div id="deal-'+row.id+'" class="item flex"><div class="inner instrument">'+inst+'</div><div class="inner amount">'+amount+'</div><div class="inner '+profit_type+' profit">'+profit+'</div></div>');
                             else{
                                 // container.find('#deal-'+row.id+' .intrument').text(inst);
@@ -41,13 +41,12 @@
 
                 <div class="bot">
                     <ul class="flex">
-                        <li class="active"><a href="#">Отчет</a></li>
-                        <li><a href="#">Закрытые</a></li>
+                        <li class="active"><a href="#" class="b03">Аналитика</a></li>
                     </ul>
                 </div>
             </div>
             <div class="new width">
-                <div class="flex">
+                <!-- <div class="flex">
                     <div class="inner">
                         <p>BTC/LTE</p>
                     </div>
@@ -57,8 +56,8 @@
                     <div class="inner">
                         <p class="down">-0.25%</p>
                     </div>
-                </div>
-                <a href="#" class="order">Открыть сделку</a>
+                </div> -->
+                <a href="#" class="order b01">Открыть сделку</a>
             </div>
         </div>
     </div>

@@ -6,11 +6,12 @@
                 function userInstruments(container,d,x,s){
                     // console.debug("userInstruments",container,d);
                     for(var i in d){
-                        var row=d[i],inst = "BTC/BCH",profit = row.profit,bet = row.bet;
-                        // console.debug(row);
-                        container.append('<div class="inner flex column"><div class="pic flex"><img src="images/bitcoin.png" alt=""><span></span><img src="images/litecoin.png" alt=""></div></div>');
-                        container.append('<div class="percent"></div>');
-                        container.append('<p class="total">2 357.57</p>');
+                        var row=d[i],inst = row.title, s='';
+                        s+='<div class="inner flex column"><div class="pic flex"><img src="'+row.from_currency.image+'" alt="'+row.from_currency.name+'"><span></span><img src="'+row.to_currency.image+'" alt="'+row.to_currency.name+'"></div>';
+                        s+='<div class="percent"><span class="'+((row.direction>0)?"up":"down")+'">'+currency.value(row.diff,'')+'%</span></div>';
+                        s+='<p class="total">'+currency.value(row.price,'')+'</p></div>';
+                        container.append(s);
+
                     }
                 }
             </script>

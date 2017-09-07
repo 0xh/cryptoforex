@@ -1,5 +1,45 @@
 jQuery(document).ready(function () {
 
+	ion.sound({
+        sounds: [
+            {name: "bell_ring"},
+            {name: "door_bell"},
+            {name: "branch_break"}
+        ],
+        path: "sounds/",
+        preload: true,
+        volume: 1.0
+    });
+
+
+    // jQuery("#b01").on("click", function(){
+    //     ion.sound.play("beer_can_opening");
+    // });
+
+    jQuery(".b01").on("click", function(){
+        ion.sound.play("bell_ring");
+    });
+    jQuery(".b02").on("click", function(){
+        ion.sound.play("door_bell");
+    });
+    jQuery(".b03").on("click", function(){
+        ion.sound.play("branch_break");
+    });
+
+	jQuery('a.button').click(function(){
+		jQuery('body,.main,.main .content,.main > .container').addClass('see');
+		jQuery(this).fadeOut();
+		jQuery('a.b_close').fadeIn();
+		return false
+	});
+
+	jQuery('a.b_close').click(function(){
+		jQuery('body,.main,.main .content,.main > .container').removeClass('see');
+		jQuery(this).fadeOut();
+		jQuery('a.button').fadeIn();
+		return false
+	});
+
 	jQuery('.main aside.left ul li .item').slideUp(0);
 	jQuery('.main aside.left ul li').eq(0).addClass('active').find('.item').slideDown();
 
@@ -14,6 +54,92 @@ jQuery(document).ready(function () {
 		}
 		return false;
 	});
+
+	jQuery('.active_but').click(function(){
+		if ( jQuery( this ).hasClass('active') ) {
+			jQuery( this ).removeClass('active');
+			jQuery( '.main .cart .item:last-child' ).removeClass('active');
+		} else {
+			jQuery( this ).addClass('active');
+			jQuery( '.main .cart .item:last-child' ).addClass('active');
+		}
+		return false;
+	});
+
+	jQuery('.main .cart .item:last-child li').click(function(){
+		jQuery( '.main .cart .item:last-child' ).removeClass('active');
+		jQuery('.active_but.active').removeClass('active');
+	})
+
+	jQuery('.education ul').on('click', 'li:not(.active)', function() {
+      $(this).addClass('active').siblings().removeClass('active').parents('.education .box').find('.slide').removeClass('active').slideUp().eq($(this).index()).addClass('active').slideDown();
+      return false;
+    });
+
+    jQuery('.education ul').on('click', 'li.active', function() {
+    	jQuery(this).removeClass('active').parents('.education .box').find('.slide').removeClass('active').slideUp();
+    });
+
+	// jQuery('.box .item a').click(function(){
+
+	// 	if ( jQuery( this ).parent().hasClass('active') ) {
+	// 		jQuery( '.box .item' ).removeClass('active');
+	// 		jQuery( this ).parents().find('.slide').slideUp();
+	// 	} else {
+	// 		jQuery( '.box .item' ).removeClass('active');
+	// 		jQuery( this ).parent().addClass('active').index(this);
+	// 		jQuery( this ).parents().find('.slide').eq(jQuery(this).index(this)).slideDown();
+
+	// 		jQuery('html, body').animate({
+	// 	        scrollTop: 1000
+	// 	    }, 2000);
+	// 	}
+	// 	return false;
+	// });
+
+	// jQuery('.section .inner').on('click', 'a.next', function(){
+	
+	jQuery('.section .inner .next').click(function(){
+		jQuery("body,html").animate({
+			scrollTop:0
+		},1000);
+	});
+
+	
+	jQuery('.section .inner .order').click(function(){
+		return
+	})
+
+	jQuery('.section .inner').click(function(){
+
+		jQuery( this ).next('.inner').slideDown().addClass('active').animate({scrollTop:jQuery(this).height()}, 'slow').index();
+		jQuery( this ).addClass('slice').index();
+
+		// jQuery('.inner.active').animate({scrollTop: 0}, 700);
+		// jQuery('html, body').animate({scrollTop:jQuery('.inner').height()}, 'slow');
+
+		jQuery('.cart ul li').eq(jQuery(this).index()).addClass('active');
+
+		return false;
+	});
+
+	// (function($) {
+	// 	$(function() {
+	// 	  $('.education ul').on('click', 'li:not(.active)', function() {
+	// 	  	$('.education .slide').removeClass('active').slideUp();
+	// 	    $(this)
+	// 	    	.addClass('active').siblings().removeClass('active')
+	// 	    	.closest('.education .box')
+	// 	    	.find('.slide')
+	// 	    	.removeClass('active').slideUp()
+	// 	    	.eq($(this).index())
+	// 	    	.addClass('active').slideDown();
+	// 	  });
+
+	// 	});
+	// 	})(jQuery);
+
+	
 
 	(function($) {
 		$(function() {
@@ -104,6 +230,7 @@ jQuery(document).ready(function () {
 
 	jQuery('.close,.bgc').click(function(){
 		jQuery('.popup,.bgc').fadeOut();
+		jQuery('.header').removeClass('active');
 		return false
 	});
 
@@ -159,10 +286,10 @@ jQuery(document).ready(function () {
 		}
 	});
 
-	// jQuery("nav li").on("click","a", function (event) {
-	// 	var id  = jQuery(this).attr('href'),
-	// 		top = jQuery(id).offset().top;
-	// 	jQuery('body,html').animate({scrollTop: top + 20}, 1500);
-	// });
+	jQuery(".item li").on("click","a", function (event) {
+		var id  = jQuery(this).attr('href'),
+			top = jQuery(id).offset().top;
+		jQuery('.main .cart .item').eq(0).animate({scrollTop: top}, 1500);
+	});
 
 });

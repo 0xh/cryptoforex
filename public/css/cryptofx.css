@@ -1,4 +1,5 @@
 @import url("/vendor/font-awesome/fonts/fontawesome-webfont.woff2");
+
 #chartdiv {
   width: 100%;
   height: 500px;
@@ -6,6 +7,46 @@
   margin-bottom: 20px;
   position: relative;
 }
+.content.see #chartdiv{height: 100%;}
+button,
+input[type='button'] {
+  color: rgba(56,105,128,0.9);
+  border: solid 1px rgba(56,105,128,0.9);
+  transition: all 0.2 ease-in;
+  background-color: #fff;
+  border-radius: 4px;
+}
+button:hover,
+input[type='button']:hover {
+  background-color: rgba(56,105,128,0.9);
+  color: #fff;
+}
+button.active,
+button:active,
+input[type='button'].active,
+input[type='button']:active {
+  background-color: #386980;
+  color: #fff;
+  border: solid 1px #386980;
+}
+.content.flex.column .btn-group {
+  display: block;
+  position: absolute;
+  left: 5px;
+  bottom: 30px;
+}
+
+#chartdiv_p {
+  width: 100%;
+  height: 500px;
+  padding: 2%;
+  margin-bottom: 20px;
+  position: relative;
+}
+#chartdiv_p .amChartsPeriodSelector{display: none;}
+#chartdiv_p .amcharts-export-menu{display: none;}
+.popup_order .content.flex.column .btn-group{bottom: 0;}
+.content.see #chartdiv_p{height: 100%;}
 button,
 input[type='button'] {
   color: rgba(56,105,128,0.9);

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Account;
+use App\Currency;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -64,12 +66,28 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'surname' => $data['surname'],
             'email' => $data['email'],
             'phone' => $data['phone'],
             'password' => bcrypt($data['password']),
         ]);
+        $currency = Currency::where('code','USD')->first();
+        $accountDemo = Account::create([
+            'status'=>'open',
+            'currency_id'=>$currency->id,
+            'user_id'=>$user->id,
+            'amount'=>'10000',
+            'type'=>'demo'
+        ]);
+        $accoun = Account::create([
+            'status'=>'open',
+            'currency_id'=>$currency->id,
+            'user_id'=>$user->id,
+            'amount'=>'0',
+            'type'=>'real'
+        ]);
+        return $user;
     }
 }

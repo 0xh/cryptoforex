@@ -22,8 +22,30 @@
             'csrfToken' => csrf_token(),
         ]) !!};
     </script>
+    <script>
+    var currency = {
+        data:{},
+        value: function(a,c){
+            var symb = (c=='' || this.data[c] == undefined)?'':this.data[c].unicode+' ';
+            return symb+parseFloat(a).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+        },
+        image:function(c){
+            return (c=='' || this.data[c] == undefined)?'':this.data[c].image;
+        }
+    };
+    @if(isset($currencies))
+        @foreach($currencies as $currency)
+            currency.data["{{$currency->code}}"]={
+                id:{{$currency->id}},
+                symbol:'{{$currency->symbol}}',
+                unicode:'{{$currency->unicode}}',
+                image:'{{$currency->image}}'
+            };
+        @endforeach
+    @endif
+    </script>
 </head>
-<body>
+<body class="home">
         @include('layouts.top')
         @yield('content')
 
@@ -37,6 +59,7 @@
             </div>
           </div>
         </footer>
+
 
         <div id="top"></div>
 
@@ -356,6 +379,8 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
+    <script src="{{ asset('js/objects.js') }}"></script>
+
 
     <!--  Vendor amCharts -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
