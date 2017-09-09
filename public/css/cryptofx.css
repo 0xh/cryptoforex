@@ -8,6 +8,7 @@
   position: relative;
 }
 .content.see #chartdiv{height: 100%;}
+
 button,
 input[type='button'] {
   color: rgba(56,105,128,0.9);
@@ -74,3 +75,8 @@ input[type='button']:active {
   left: 5px;
   bottom: 30px;
 }
+
+
+.amcharts-period-input-selected{background-color: rgba(56,105,128,0.9) !important;color: #fff !important;}
+
+.btn-group button.active{}

@@ -99,27 +99,28 @@ jQuery(document).ready(function () {
 
 	// jQuery('.section .inner').on('click', 'a.next', function(){
 	
-	jQuery('.section .inner .next').click(function(){
-		jQuery("body,html").animate({
-			scrollTop:0
-		},1000);
-	});
+	// jQuery('.section .inner .next').click(function(){
+	// 	jQuery("body,html").animate({
+	// 		scrollTop:0
+	// 	},1000);
+	// });
 
 	
 	jQuery('.section .inner .order').click(function(){
 		return
 	})
 
-	jQuery('.section .inner').click(function(){
+	var $ = jQuery;
 
-		jQuery( this ).next('.inner').slideDown().addClass('active').animate({scrollTop:jQuery(this).height()}, 'slow').index();
-		jQuery( this ).addClass('slice').index();
 
-		// jQuery('.inner.active').animate({scrollTop: 0}, 700);
-		// jQuery('html, body').animate({scrollTop:jQuery('.inner').height()}, 'slow');
-
-		jQuery('.cart ul li').eq(jQuery(this).index()).addClass('active');
-
+	jQuery('.inner .next').click(function(){ var parent = $(this).parent();
+		parent.addClass('slice').next().slideDown(1000).addClass('active');
+		var h = $('.cart .item .back').height();
+		h += $('header').height();
+		parent.next().prevAll().each(function(){
+			h += $(this).height() + parseInt( $(this).css('padding-top') ) + parseInt( $(this).css('padding-bottom') );
+		});
+		jQuery('.cart .item').stop().animate({scrollTop: h}, 1000);
 		return false;
 	});
 

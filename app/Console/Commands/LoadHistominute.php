@@ -52,7 +52,7 @@ class LoadHistominute extends Command
             $rq= [
                 "fsym"=>$fsym->code,
                 "tsym"=>$tsym->code,
-                "limit"=>60
+                "limit"=>1000
             ];
             $hists = $crapi->histominute($rq);
             foreach ($hists->Data as $i => $hist) {

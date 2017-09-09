@@ -41,7 +41,7 @@
 
                 <div class="bot">
                     <ul class="flex">
-                        <li class="active"><a href="#" class="b03">Аналитика</a></li>
+                        <li class="active"><a href="./page/analitica" class="b03">Аналитика</a></li>
                     </ul>
                 </div>
             </div>

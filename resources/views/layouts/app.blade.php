@@ -17,6 +17,7 @@
     <!--  Vendor styles -->
     <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
     <!-- Scripts -->
+    
     <script>
         window.Laravel = {!! json_encode([
             'csrfToken' => csrf_token(),
@@ -380,6 +381,7 @@
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
     <script src="{{ asset('js/objects.js') }}"></script>
+    <script src="{{ asset('js/ion.sound.js') }}"></script>
 
 
     <!--  Vendor amCharts -->

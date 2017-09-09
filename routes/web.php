@@ -14,7 +14,8 @@
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/page/{page}', 'HomeController@page')->name('pages');
 Route::get('/data/test/{type}', 'DataController@test')->name('test');
-Route::get('/data/amcharts/{type}', 'DataController@amcharts')->name('amcharts');
+// Route::get('/data/amcharts/{type}', 'DataController@amcharts')->name('amcharts');
+Route::get('/data/amcharts/{type}', 'HistoController@index')->name('amcharts');
 // Route::get('/design', function () { return view('welcome'); });
 Auth::routes();
 
@@ -37,3 +38,4 @@ Route::get('/user/add','UserController@store')->name('useradd');
 Route::get('/user/{id}/edit','UserController@update')->name('useredit');
 Route::get('/user/{id}/delete','UserController@destroy')->name('userdelete');
 Route::get('/userrights','UserController@rights')->name('userrights');
+Route::get('/usermeta','UserController@metaData')->name('usermeta');

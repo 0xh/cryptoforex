@@ -18,35 +18,36 @@
         ]) !!};
     </script>
     <script>
-    window.onloads = [];
-    var currency = {
-        data:{},
-        value: function(a,c){
-            var symb = (c=='' || this.data[c] == undefined)?'':this.data[c].unicode,sign = (parseFloat(a)<0)?'-':'',val = Math.abs(parseFloat(a));
+        window.animationTime = 256;
+        window.onloads = [];
+        var currency = {
+            data:{},
+            value: function(a,c){
+                var symb = (c=='' || this.data[c] == undefined)?'':this.data[c].unicode,sign = (parseFloat(a)<0)?'-':'',val = Math.abs(parseFloat(a));
 
-            return sign+symb+val.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-        },
-        image:function(c){
-            return (c=='' || this.data[c] == undefined)?'':this.data[c].image;
-        }
-    };
-    @if(isset($currencies))
-        @foreach($currencies as $currency)
-            currency.data["{{$currency->code}}"]={
-                id:{{$currency->id}},
-                symbol:'{{$currency->symbol}}',
-                unicode:'{{$currency->unicode}}',
-                image:'{{$currency->image}}'
-            };
-        @endforeach
-    @endif
+                return sign+symb+val.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            },
+            image:function(c){
+                return (c=='' || this.data[c] == undefined)?'':this.data[c].image;
+            }
+        };
+        @if(isset($currencies))
+            @foreach($currencies as $currency)
+                currency.data["{{$currency->code}}"]={
+                    id:{{$currency->id}},
+                    symbol:'{{$currency->symbol}}',
+                    unicode:'{{$currency->unicode}}',
+                    image:'{{$currency->image}}'
+                };
+            @endforeach
+        @endif
     </script>
 </head>
 <body>
     <header class="header">
         <div class="container">
             <div class="logo">
-                <a href="{{ url('/crm' )}}"><img src="/images/logo.png" alt=""></a>
+                <a href="{{ url('/' )}}"><img src="/images/logo.png" alt=""></a>
             </div>
             @if (Auth::guest())
                 <a class="out" href="{{ url('/login') }}">Login</a>
@@ -216,91 +217,6 @@
       </div>
   </main>
 
-  <div class="popup dashboard">
-      <div class="close"></div>
-      <div class="top">
-          <div class="item">
-              <span>User Dashboard</span>
-          </div>
-          <div class="item">
-              <div class="item-bank">
-                  <a href="#">
-                      <span></span>
-                      79 901.89
-                  </a>
-              </div>
-              <div class="item-chart">
-                  <a href="#">
-                      <span></span>
-                      10 157.67
-                  </a>
-              </div>
-          </div>
-      </div>
-      <div class="bot">
-          <div class="item">
-              <div class="left">
-                  <strong>Data User</strong>
-                  <ul>
-                      <li>First name</li>
-                      <li>Last name</li>
-                      <li>Created</li>
-                      <li>E-mail</li>
-                      <li>Phone number</li>
-                      <li>Country</li>
-                      <li>Source</li>
-                      <li>Source Description</li>
-                  </ul>
-                  <a href="#" class="back">Back</a>
-              </div>
-              <div class="right">
-                  <a href="#" class="edit">Edit data user</a>
-                  <ul>
-                      <li>Fred</li>
-                      <li>Collins</li>
-                      <li>05-22-2017 15:27:17</li>
-                      <li>Fred.Collins@alfadiamonds.com</li>
-                      <li>+0000000000000</li>
-                      <li>Belgium</li>
-                      <li>Information</li>
-                      <li>More information</li>
-                  </ul>
-              </div>
-          </div>
-          <div class="item">
-              <div class="item_con">
-                  <strong>Tasks Panel</strong>
-                  <a href="#" class="add">Add Task</a>
-                  <p class="task">Task need to do</p>
-                  <div class="popup task_popup">
-                      <textarea name="task" id="task"></textarea>
-                  </div>
-              </div>
-              <div class="item_con">
-                  <strong>Comments</strong>
-                  <p class="coment">No Comments</p>
-                  <textarea name="coment" id="coment" placeholder="Enter comment text"></textarea>
-                  <div class="item_abs">
-                      <a href="#">Add Comment</a>
-                  </div>
-              </div>
-          </div>
-          <div class="popup_tabs">
-              <ul>
-                  <li>Leads</li>
-                  <li>Users</li>
-                  <li>History</li>
-                  <li class="active">Send E-mail</li>
-                  <li>Charts</li>
-                  <li>Commissions</li>
-                  <li>Diamonds in sell</li>
-                  <li>My diamonds</li>
-              </ul>
-              <textarea name="popup_tabs" id="popup_tabs" placeholder="Enter your text or use templates"></textarea>
-          </div>
-          <div class="form_bot"></div>
-      </div>
-  </div>
 
 
 
@@ -4442,9 +4358,16 @@
 
   <div class="bgc"></div>
   <!-- Script-->
+  <!--  Vendor amCharts -->
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+  <script src="https://www.amcharts.com/lib/3/serial.js"></script>
+  <script src="https://www.amcharts.com/lib/3/amstock.js"></script>
+  <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+  
   <script src="/crmd2/js/main.js"></script>
   <script src="/crmd2/js/i.js"></script>
   <script src="{{ asset('js/loader.js') }}"></script>
+  <script src="{{ asset('js/cryptofx.fn.js') }}"></script>
 </body>
 </html>

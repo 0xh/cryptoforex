@@ -56,8 +56,8 @@
     <script>
         window.onloads.push(function(){
             $("#deals").on("click",function(){
-                jQuery('.popup,.bgc').fadeOut(700);
-        	    jQuery('.deals,.bgc').fadeIn(700);
+                jQuery('.popup,.bgc').fadeOut((window.animationTime!=undefined)?window.animationTime:256);
+        	    jQuery('.deals,.bgc').fadeIn((window.animationTime!=undefined)?window.animationTime:256);
             });
         });
         window.onloads.push(function(){
@@ -89,8 +89,8 @@
                         $pp.html(pp);
 
                         // $('.edit').click(function(){
-                        //     $('.popup,.bgc').fadeOut(700);
-                        //     $('.dashboard,.bgc').fadeIn(700);
+                        //     $('.popup,.bgc').fadeOut((window.animationTime!=undefined)?window.animationTime:256);
+                        //     $('.dashboard,.bgc').fadeIn((window.animationTime!=undefined)?window.animationTime:256);
                         // });
                     },
                     add:function(){},
@@ -103,8 +103,8 @@
                                 var user = d[0];
                                 $('.edit_user').attr('data-action','/user/'+id+'/edit');
                                 for(var i in user)$('.edit_user form [data-name="'+i+'"]').val(user[i]);
-                                $('.popup,.bgc').fadeOut(200);
-                                $('.edit_user,.bgc').fadeIn(200);
+                                $('.popup,.bgc').fadeOut((window.animationTime!=undefined)?window.animationTime:256);
+                                $('.edit_user,.bgc').fadeIn((window.animationTime!=undefined)?window.animationTime:256);
                                 // cf.submiter($('.edit_user'));
                             }
                         });
@@ -115,7 +115,7 @@
             });
             window.crmDealList = crm.deal.list;
             window.crmDealCallback = function(d){
-                // $('.popup,.bgc').fadeOut(400);
+                // $('.popup,.bgc').fadeOut((window.animationTime!=undefined)?window.animationTime:256);
                 document.location.reload();
             }
         });

@@ -130,4 +130,18 @@ class UserController extends Controller{
     public function rights(){
         return response()->json(UserRights::all());
     }
+    public function metaData(Request $rq){
+        $user = User::find($rq->input("user_id"));
+        $ud = [
+            "meta_name" =>$rq->input("meta_name"),
+            "meta_value" =>$rq->input("meta_value"),
+            "user_id" => $user->id
+        ];
+        $um = UserMeta::user($user)->where('meta_name',$ud["meta_name"])->first();
+        if(!is_null($ud["meta_value"]) && $ud["meta_value"]!="" ){
+            if(is_null($um)||$um == false)$um=UserMeta::create($ud);
+            else $um->update($ud);
+        }
+        return response()->json($um);
+    }
 }

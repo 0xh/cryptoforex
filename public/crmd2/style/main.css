@@ -3521,6 +3521,13 @@ body {
     display: none
 }
 
+footer{background-color: #2e3f51;}
+footer .item{padding: 15px 0;}
+footer .item.flex{display: -webkit-box;display: -webkit-flex;display: -ms-flexbox;display: flex;-webkit-box-pack: justify;-webkit-justify-content: space-between;-ms-flex-pack: justify;justify-content: space-between;-webkit-box-align: center;-webkit-align-items: center;-ms-flex-align: center;align-items: center;position: relative;z-index: 1;}
+footer .item>p{width: 72%;text-align: center;font-size: 14px;color: #fff;margin: 0;}
+footer .item .copyright{width: 28%;text-align: center;}
+footer .item .copyright p{font-size: 14px;color: #fff;margin: 0;}
+
 @media screen and (max-width:1265px) {
     .container {
         width: 1184px

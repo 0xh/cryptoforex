@@ -37,4 +37,14 @@ class UserMeta extends Model
     {
         return $query->where('user_id', '=', $user->id);
     }
+    /**
+     * Scope a query to only include popular users.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByName($query,$n)
+    {
+        return $query->where('meta_name', '=', $n);
+    }
 }
