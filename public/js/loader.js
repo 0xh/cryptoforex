@@ -39,8 +39,10 @@ var cf={
             if(cf._actions.length==0)return;
             var dt = new Date().getTime();
             for(var i in cf._actions){
-                if((dt-cf._actions[i].last)>cf._actions[i].refresh*1000){
+
+                if((dt-cf._actions[i].last)>cf._actions[i].refresh){
                     var args = (cf._actions[i].arguments == undefined)?null:cf._actions[i].arguments;
+                    // console.debug("refresher executing...",cf._actions[i]);
                     cf._actions[i].run(args);
                     cf._actions[i].last = dt;
                 }
@@ -48,7 +50,7 @@ var cf={
             }
         };
         setInterval(this.execute,1000);
-        console.debug("refresher constructor called");
+        // console.debug("refresher constructor called");
     },
     pagination:function(d){
         var s='',first = true,perpage = 12,pages = Math.ceil(d.length/perpage);
@@ -65,8 +67,9 @@ var cf={
         return s;
     },
     loader:function(){
+        // console.debug(arguments);
         var container=arguments.length?$(arguments[0]):null;
-        var fresher = arguments.length?$(arguments[1]):new Fresher;
+        var _frshr = arguments.length?$(arguments[1]):new cf.refresher();
         this.opts = {
             container:container,
             autostart: false,
@@ -103,11 +106,15 @@ var cf={
         };
         // console.debug(this.opts);
         if(this.opts.autostart)this.execute(this.opts);
+
         if(parseInt(this.opts.refresh)>0){
-            fresher.bind({
+            var bnd = {
                 run:this.execute,
+                refresh:parseInt(this.opts.refresh),
                 arguments:this.opts
-            });
+            };
+            // console.debug("loader refresh:", _frshr[0],bnd);
+            _frshr[0].bind(bnd);
             // setTimeout(this.execute,this.refresh,60000);
             // setInterval(this.execute,this.refresh,this.opts);
         }
@@ -162,6 +169,10 @@ $(document).ready(function(){
     });
     $(".submiter").each(function(){
         cf.submiter(this);
+    });
+
+    $(".order").on("click",function(){
+        graphControl.makeChart(6000,"chartdiv_p");
     });
 });
 

@@ -24,7 +24,7 @@ class DealController extends Controller{
     public function index(Request $rq){
         $res = [];
         $user = $rq->user();
-        $status = $rq->input("status","all");
+        $status = $rq->input("status","open");
         $selector = ($user->rights_id<=1)?Deal::where('user_id',$user->id):Deal::where('id','>','0');
         if($status!="all"){
             $status = DealStatus::where('code',$status)->first();

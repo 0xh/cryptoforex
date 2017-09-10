@@ -17,7 +17,7 @@
     <!--  Vendor styles -->
     <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
     <!-- Scripts -->
-    
+
     <script>
         window.Laravel = {!! json_encode([
             'csrfToken' => csrf_token(),
@@ -395,6 +395,7 @@
     <script src="https://www.amcharts.com/lib/3/plugins/dataloader/dataloader.min.js" type="text/javascript"></script>
     <!--  Own tools -->
     <script src="{{ asset('js/cryptofx.js') }}"></script>
+    <script src="{{ asset('js/cryptofx.fn.js') }}"></script>
     <script src="{{ asset('js/loader.js') }}"></script>
 </body>
 </html>

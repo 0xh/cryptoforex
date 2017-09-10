@@ -209,7 +209,7 @@
                 </select> -->
             </div>
         </form>
-        <a href="#" class="his">Megan Fox</a>
+        <!-- <a href="#" class="his">Megan Fox</a> -->
         <div class="button">
             <a href="#" class="close cancel">Close</a>
             <!-- <a href="#" class="edit submit">Edit User</a> -->
@@ -290,6 +290,7 @@
                                 console.debug("info: ",user);
                                 for(var i in user.account) $cnr.find('.user-accounts:first').append('<div class="item-bank"><a href="#"><span></span>'+user.account[i].amount+'</a></div>');
                                 for(var i in user)$cnr.find('.user-'+i+':first').text(user[i]);
+                                $cnr.find('.edit:first').attr("onclick",'crm.user.edit('+user.id+')');
                                 graphControl.makeChart(6000,"user_chart",id,chart);
                                 graphControl.makeChart(6000,"real_chart",null,rchart);
                                 // $('.edit_user').attr('data-action','/user/'+id+'/edit');

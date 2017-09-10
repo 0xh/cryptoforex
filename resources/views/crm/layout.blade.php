@@ -217,6 +217,16 @@
       </div>
   </main>
 
+  <footer class="footer">
+    <div class="container">
+      <div class="item flex">
+        <p>"Xcryptex LTD, London, UK. VAT 000000000"</p>
+        <div class="copyright">
+          <p>Xcryptex LTD Copyright 2017 ©</p>
+        </div>
+      </div>
+    </div>
+  </footer>
 
 
 
@@ -4364,7 +4374,7 @@
   <script src="https://www.amcharts.com/lib/3/serial.js"></script>
   <script src="https://www.amcharts.com/lib/3/amstock.js"></script>
   <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
-  
+
   <script src="/crmd2/js/main.js"></script>
   <script src="/crmd2/js/i.js"></script>
   <script src="{{ asset('js/loader.js') }}"></script>

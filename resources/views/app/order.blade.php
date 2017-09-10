@@ -11,44 +11,6 @@ function multiplier(t){
         <div class="flex flex-top left">
             <div class="item">
                 <div class="content flex column">
-                    <!-- <div class="item flex">
-                        <div class="pic">
-                            <img src="images/bitcoin.png" alt="">
-                            <img src="images/litecoin.png" alt="">
-                        </div>
-                        <div class="in">BTC/LTE</div>
-                        <div class="open tabl">
-                            <span>Open</span>
-                            <span>1.17805</span>
-                        </div>
-                        <div class="high tabl">
-                            <span>High</span>
-                            <span>1.17805</span>
-                        </div>
-                        <div class="low tabl">
-                            <span>Low</span>
-                            <span>1.17754</span>
-                        </div>
-                        <div class="clos tabl">
-                            <span>Close</span>
-                            <span>1.17763</span>
-                        </div>
-                    </div>
-                    <div class="graf">
-                        <img src="images/graf.png" alt="">
-                    </div>
-                    <div class="pagination">
-                        <ul class="flex">
-                            <li><a href="#">1D</a></li>
-                            <li><a href="#">7D</a></li>
-                            <li><a href="#">1M</a></li>
-                            <li class="active"><a href="#">3M</a></li>
-                            <li><a href="#">6M</a></li>
-                            <li><a href="#">YTD</a></li>
-                            <li><a href="#">1Y</a></li>
-                            <li><a href="#">5Y</a></li>
-                        </ul>
-                    </div> -->
                     <div id="chartdiv_p" class="graf"></div>
                     <div class="btn-group">
                         <button onclick="graphControl.CandleStick()">CandleStick</button>
@@ -59,12 +21,12 @@ function multiplier(t){
             </div>
             <div class="item">
                 <div class="tabs_popup">
-                    <!-- <ul class="tab_item">
+                    <ul class="tab_item">
                         <li class="active">Сейчас</li>
                         <li>При котировке</li>
-                    </ul> -->
+                    </ul>
                     <div class="tab_cap active submiter" data-action="/deal/add">
-                        <!-- <div class="box">
+                        <div class="box">
                             <div class="item flex">
                                 <div class="inner">
                                     <p>Сумма сделки</p>
@@ -117,8 +79,8 @@ function multiplier(t){
                             <input name="currency" value="USD" type="hidden" data-name="currency" />
                             <a onclick="$('[name=direction]').val(-1);" class="down submit">В снижение</a>
                             <a onclick="$('[name=direction]').val(1);" class="up submit">В рост</a>
-                        </div> -->
-                        <div class="box">
+                        </div>
+                        <!-- <div class="box">
                           <div class="item flex">
                             <div class="inner">
                               <strong class="up">Прибыль</strong>
@@ -172,9 +134,9 @@ function multiplier(t){
                         </div>
                         <div class="bot flex">
                           <a href="#" class="order close b02">Закрыть сделку</a>
-                        </div>
+                        </div> -->
                     </div>
-                    <!-- <div class="tab_cap">
+                    <div class="tab_cap">
                         <div class="box">
                             <div class="item flex">
                                 <div class="inner">
@@ -226,7 +188,7 @@ function multiplier(t){
                             <a href="#" class="down">В снижение</a>
                             <a href="#" class="up">В рост</a>
                         </div>
-                    </div> -->
+                    </div>
                 </div>
             </div>
         </div>

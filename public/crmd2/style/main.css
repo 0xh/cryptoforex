@@ -1164,11 +1164,15 @@ body {
 .edit_user form {
     width: 100%
 }
+.edit_user form:before,
+.edit_user form:after{content: '';display: block;clear: both;}
 
-.edit_user form .item {
+.popup.edit_user form .item {
     width: 560px;
     float: left;
-    margin-right: 30px
+    margin-right: 30px;
+    background: none;
+    min-height: inherit
 }
 
 .edit_user form .item:after, .edit_user form .item:before {
@@ -1195,12 +1199,16 @@ body {
 
 .edit_user a.his {
     display: inline-block;
-    font-size: 14px;
-    line-height: 48px;
-    color: #2a2882;
-    padding-bottom: 20px;
-    border-bottom: 3px solid #262626;
-    padding-right: 50px
+    font-size: 16px;
+    color: #fff;
+    background: #2a2882;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 5px
+}
+
+.edit_user a.his:hover{
+    background: #283b82
 }
 
 .edit_user a.his:after, .edit_user a.his:before {
@@ -1210,8 +1218,7 @@ body {
 }
 
 .edit_user .button {
-    float: right;
-    margin-top: 40px
+    float: right
 }
 
 .edit_user .button:after, .edit_user .button:before {
@@ -1228,7 +1235,9 @@ body {
     -webkit-border-radius: 3px;
     border-radius: 3px;
     text-decoration: none;
-    margin: 0 10px
+    margin: 0 10px;
+    display: inline-block;
+    vertical-align: middle
 }
 
 .in_sell, .instruments, .users {
@@ -1238,6 +1247,9 @@ body {
     margin: 0 auto;
     top: 50%
 }
+.edit_user .button a.close:hover{
+    background: #626171
+}
 
 .edit_user .button a.close {
     background: #616171
@@ -1245,6 +1257,10 @@ body {
 
 .edit_user .button a.edit {
     background: #42893b
+}
+
+.edit_user .button a.edit:hover{
+    background: #3b894c
 }
 
 .in_sell {
@@ -2643,7 +2659,7 @@ body {
 
 .user {
     position: fixed;
-    width: 90%;
+    width: 96%;
     left: 0;
     margin: 0 auto;
     top: 50%;
@@ -2670,7 +2686,7 @@ body {
 
 .user table thead td {
     color: #1d1d1d;
-    padding: 10px;
+    padding: 5px;
     font-size: 12px;
     position: relative
 }
@@ -2705,8 +2721,10 @@ body {
 .user table tbody tr td {
     font-size: 11px;
     color: #1d1d1d;
-    padding: 10px
+    padding: 5px
 }
+
+.user table tbody tr td:first-child{text-align: center;}
 
 .user table tbody tr td a {
     font-size: 12px;
@@ -2814,7 +2832,7 @@ body {
     background: #9697a1;
     position: absolute;
     padding: 20px;
-    margin-top: 12px;
+    top: 45px;
     left: 265px;
     color: #fff
 }

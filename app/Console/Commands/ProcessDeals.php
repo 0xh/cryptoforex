@@ -46,12 +46,14 @@ class ProcessDeals extends Command
      * @return mixed
      */
     public function handle(){
+        echo "Proccess deals stated ....\n";
         $closedDealStatus = DealStatus::where('code','close')->first();
         // $deals = Deal::orderBy('id')->get();
         $deals = Deal::where('status_id','<>',$closedDealStatus->id)->orderBy('id')->get();
         $ticks = time();
         while(time()-$ticks<60){
             foreach($deals as $deal){
+                // echo "Deal: ".json_encode($deal)."\n";
                 DealMechanic::fork($deal);
             }
             usleep(100);

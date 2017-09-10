@@ -6,6 +6,20 @@ jQuery(document).ready(function () {
 		return false;
 	});
 
+
+	// jQuery('.main .content .item ul li p a').click(function(){
+	// 	jQuery(this).parent().parent().parent().parent().find('.popup').fadeIn();
+	// 	jQuery('.popup_filter').fadeOut();
+	// });
+
+	// jQuery('.user table tbody tr td a').fadeOut();
+
+	
+
+	// jQuery('.close,.bgc').click(function(){
+	// 	jQuery('.popup,.bgc').fadeOut();
+	// });
+
 	jQuery('.close,.bgc').click(function(){
 	    jQuery('.popup,.bgc').fadeOut(700);
 	});

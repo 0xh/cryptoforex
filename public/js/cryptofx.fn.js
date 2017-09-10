@@ -22,13 +22,14 @@ var graphControl = {
     makeChart:function(limit){
         var divid = (arguments.length>1)?arguments[1]:"chartdiv",
             user_id=(arguments.length>2)?arguments[2]:null;
+        graphControl.usePulse = true;
         $.ajax({
             async:true,
             url:"/data/amcharts/hystominute?limit="+limit+((user_id!=null)?"&user_id="+user_id:""),
             dataType:"json",
             success:function(d){
                 dp = d.reverse();
-                var chart = AmCharts.makeChart(divid, {
+                var interval=3000, chart = AmCharts.makeChart(divid, {
                     type: "stock",
                     dataDateFormat: "YYYY-MM-DD JJ:NN:SS",
                     glueToTheEnd:true,
@@ -90,8 +91,8 @@ var graphControl = {
                                     openField:"open",
                                     closeField:"close",
                                     comparable: true,
-                                    type: "line",
-                                    // type: "candlestick",
+                                    // type: "line",
+                                    type: "candlestick",
                                     compareField: "value",
                                     balloonText: "[[title]]: On date:<b>[[date]]</b> open <b>[[open]]</b> low <b>[[low]]</b> high <b>[[high]]</b> close <b>[[close]]</b>",
                                     compareGraphBalloonText: "[[title]]: open <b>[[open]]</b> low <b>[[low]]</b> high <b>[[high]]</b> close <b>[[close]]</b>",
@@ -109,9 +110,11 @@ var graphControl = {
                             trendLines: [{
                                 "finalDate":new Date(),
                                 "finalValue":dp[dp.length-1].value,
-                                "initialDate": "2012-01-02 12",
+                                "initialDate": "2017-08-01",
                                 "initialValue": dp[dp.length-1].value,
-                                "lineColor": "#CC0000"
+                                "lineColor": "#CC0000",
+                                balloonText:"value: [[value.high]]",
+                                lineThickness:2
                             }],
                             stockLegend: {
                                 periodValueTextComparing: "[[percents.value.close]]%",
@@ -224,49 +227,48 @@ var graphControl = {
                         enabled: false,position: "bottom"
                     }
                 });
-                graphControl.pulseChart(chart,60);
-                setInterval( function(chart,user_id) {
-                    $.ajax({
-                        url:"/data/amcharts/hystominute?limit=60"+((user_id!=null)?"&user_id="+user_id:""),
-                        dataType:"json",
-                        success:function(d){
-                            chart.dataSets[0].dataProvider.shift();
-                            // console.debug(chart.dataSets[0].dataProvider,d);
-                            if(chart.dataSets[0].dataProvider[chart.dataSets[0].dataProvider.length-1].date!=d[0].date)chart.dataSets[0].dataProvider.push(d[0]);
-                            chart.validateData();
-                        }
-                    });
-                }, 60000,chart );
+                graphControl.pulseChart(chart,interval/1000);
             }
         });
         return this;
     },
+    usePulse:true,
     pulseChart:function(chart,i){
+        if(!graphControl.usePulse)return;
         var c = chart.dataSets[0].dataProvider[chart.dataSets[0].dataProvider.length-1];
         var rnd = 0.1*Math.random();
-        // console.debug(c,rnd,i);
+
         c.low = parseFloat(c.low)+Math.pow(-1,i)*rnd;
         c.high= parseFloat(c.high)+Math.pow(-1,i)*rnd;
         c.close = c.high;
-        c.volume = parseFloat(c.volume)+400*rnd;
+        c.volume = parseFloat(c.volume)+100*rnd;
         chart.dataSets[0].dataProvider[chart.dataSets[0].dataProvider.length-1] = c;
         chart.panels[0].trendLines[0].finalDate=c.date;
         chart.panels[0].trendLines[0].finalValue=c.close;
         chart.panels[0].trendLines[0].initialValue=c.close;
         chart.validateData();
-        if(--i>0) setTimeout(graphControl.pulseData,1000,chart,i);
+        console.debug("pulsing.fn...",chart,i);
+        if(--i>0) setTimeout(graphControl.pulseChart,1000,chart,i);
         else {
             $.ajax({
                 url:"/data/amcharts/hystominute?limit=1",
                 dataType:"json",
                 success:function(d){
-                    chart.dataSets[0].dataProvider.shift();
+                    // chart.dataSets[0].dataProvider.shift();
                     // console.debug(chart.dataSets[0].dataProvider,d);
                     if(chart.dataSets[0].dataProvider[chart.dataSets[0].dataProvider.length-1].date!=d[0].date)chart.dataSets[0].dataProvider.push(d[0]);
                     chart.validateData();
-                    graphControl.pulseData(chart,60);
+                    graphControl.pulseChart(chart,60);
                 }
             });
         }
     }
 };
+$(document).ready(function(){
+    $(".order").on("click",function(){
+        graphControl.makeChart(6000,"chartdiv_p");
+    });
+    $(".close").on("click",function(){
+        graphControl.usePulse = false;
+    });
+});
