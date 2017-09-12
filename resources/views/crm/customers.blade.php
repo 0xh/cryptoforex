@@ -291,8 +291,8 @@
                                 for(var i in user.account) $cnr.find('.user-accounts:first').append('<div class="item-bank"><a href="#"><span></span>'+user.account[i].amount+'</a></div>');
                                 for(var i in user)$cnr.find('.user-'+i+':first').text(user[i]);
                                 $cnr.find('.edit:first').attr("onclick",'crm.user.edit('+user.id+')');
-                                graphControl.makeChart(6000,"user_chart",id,chart);
-                                graphControl.makeChart(6000,"real_chart",null,rchart);
+                                graphControl.makeChart(120,"user_chart",id,chart);
+                                graphControl.makeChart(120,"real_chart",null,rchart);
                                 // $('.edit_user').attr('data-action','/user/'+id+'/edit');
                                 // for(var i in user)$('.edit_user form [data-name="'+i+'"]').val(user[i]);
                                 $cnr.fadeIn((window.animationTime!=undefined)?window.animationTime:256);

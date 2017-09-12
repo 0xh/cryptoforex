@@ -1,4 +1,12 @@
 var mainChart = undefined;
+function hideAmchartLabel(){
+    var ahref = $('[href="http://www.amcharts.com/javascript-charts/"]');
+    if(ahref.length){
+        console.debug(ahref.text());
+        ahref.remove();
+    }
+    else setTimeout(hideAmchartLabel,800);
+};
 var graphControl = {
     Line:function(){
         mainChart.panels[0].stockGraphs[0].type = "line";
@@ -19,17 +27,113 @@ var graphControl = {
         mainChart.panels[0].stockGraphs[0].fillAlphas = 1;
         mainChart.validateNow();
     },
+    makeMiniChart:function(){
+        var opts = $.extend({eid:"",iid:1},arguments.length?arguments[0]:{});
+        $.ajax({
+            async:true,
+            url:"/data/amcharts/hystominute?limit=60&instrument_id="+opts.iid,
+            dataType:"json",
+            success:function(d){
+                dp = d.reverse();
+                margin:"-80px",
+                AmCharts.makeChart(opts.eid,{
+                    "type": "serial",
+                    "dataProvider": dp,
+                    "valueAxes": [{
+                         enabled:false,
+                         autoGridCount:false,
+                         labelsEnabled:false
+                    }],
+                    categoryAxes:[{labelsEnabled:false}],
+  "graphs": [{
+    "id": "g1",
+    "fillAlphas": 0.4,
+    "valueField": "value",
+    // "balloonText": "<div style='margin:5px; font-size:19px;'>Visits:<b>[[value]]</b></div>"
+  }],
+  "chartCursor": {
+      enabled:false,
+    "categoryBalloonDateFormat": "JJ:NN, DD MMMM",
+    "cursorPosition": "mouse",
+    "selectWithoutZooming": true,
+    "listeners": [{
+      "event": "selected",
+      "method": function(event) {
+        var start = new Date(event.start);
+        var end = new Date(event.end);
+        document.getElementById('info').innerHTML = "Selected: " + start.toLocaleTimeString() + " -- " + end.toLocaleTimeString()
+      }
+    }]
+  },
+  "categoryField": "date",
+  "categoryAxis": {
+    "minPeriod": "mm",
+    "parseDates": true
+  }
+});
+                // AmCharts.makeChart(opts.eid,{
+                //     type: "stock",
+                //     categoryField: "date",
+                //     categoryAxis: {
+                //         minPeriod: "mm",
+                //         parseDates: true
+                //     },
+                //     dataProvider: dp,
+                //     panels: [
+                //         {
+                //             showCategoryAxis: false,
+                //             title: "",
+                //             creditsPosition: "bottom-left",
+                //             stockGraphs: [
+                //                 {
+                //                     id: "g1",
+                //                     valueField: "value",
+                //                     lowField: "low",
+                //                     highField:"high",
+                //                     openField:"open",
+                //                     closeField:"close",
+                //                     comparable: true,
+                //                     type: "line",
+                //                     // type: "candlestick",
+                //                     compareField: "value",
+                //                     balloonText: "[[title]]: On date:<b>[[date]]</b> open <b>[[open]]</b> low <b>[[low]]</b> high <b>[[high]]</b> close <b>[[close]]</b>",
+                //                     compareGraphBalloonText: "[[title]]: open <b>[[open]]</b> low <b>[[low]]</b> high <b>[[high]]</b> close <b>[[close]]</b>",
+                //                     // fillColor: "#38697f",
+                //                     lineColor: "#38697f",
+                //                     fillAlphas:1,
+                //                     negativeFillColors: "#db4c3c",
+                //                     negativeLineColor:  "#db4c3c",
+                //                     negativeFillAlphas:1,
+                //                     plotAreaBorderColor: "#855252",
+                //                     dateFormat: "hh:mm:ss",
+                //                     animationPlayed: true
+                //                 }
+                //             ],
+                //         }
+                //     ],
+                //     chartCursorSettings:{
+                //         enabled:false
+                //     },
+                //     chartScrollbarSettings:{
+                //         enabled:false
+                //     }
+                // });
+            }
+        });
+
+        hideAmchartLabel();
+    },
     makeChart:function(limit){
         var divid = (arguments.length>1)?arguments[1]:"chartdiv",
             user_id=(arguments.length>2)?arguments[2]:null;
-        graphControl.usePulse = true;
+        graphControl.usePulse = useControlGraphPulseData;
         $.ajax({
             async:true,
             url:"/data/amcharts/hystominute?limit="+limit+((user_id!=null)?"&user_id="+user_id:""),
             dataType:"json",
             success:function(d){
                 dp = d.reverse();
-                var interval=3000, chart = AmCharts.makeChart(divid, {
+                var interval=30000, chart = AmCharts.makeChart(divid, {
                     type: "stock",
                     dataDateFormat: "YYYY-MM-DD JJ:NN:SS",
                     glueToTheEnd:true,
@@ -227,16 +331,16 @@ var graphControl = {
                         enabled: false,position: "bottom"
                     }
                 });
-                graphControl.pulseChart(chart,interval/1000);
+                graphControl.pulseChart(chart,interval/usePulseDataTimeout);
             }
         });
         return this;
     },
-    usePulse:true,
+    usePulse:useControlGraphPulseData,
     pulseChart:function(chart,i){
         if(!graphControl.usePulse)return;
         var c = chart.dataSets[0].dataProvider[chart.dataSets[0].dataProvider.length-1];
-        var rnd = 0.1*Math.random();
+        var rnd = usePulseDemfer*Math.random();
 
         c.low = parseFloat(c.low)+Math.pow(-1,i)*rnd;
         c.high= parseFloat(c.high)+Math.pow(-1,i)*rnd;
@@ -247,8 +351,17 @@ var graphControl = {
         chart.panels[0].trendLines[0].finalValue=c.close;
         chart.panels[0].trendLines[0].initialValue=c.close;
         chart.validateData();
-        console.debug("pulsing.fn...",chart,i);
-        if(--i>0) setTimeout(graphControl.pulseChart,1000,chart,i);
+        $('.deal-profit>span').each(function(){
+            try{
+                var cv = parseFloat($(this).text());
+                // console.debug($(this).closest('.deal-row').text());
+                cv*=(1+rnd);
+                $(this).text(cv.toFixed(4));
+            }
+            catch(e){console.error((e));}
+        });
+        // console.debug("pulsing.fn...",chart,i);
+        if(--i>0) setTimeout(graphControl.pulseChart,usePulseDataTimeout,chart,i);
         else {
             $.ajax({
                 url:"/data/amcharts/hystominute?limit=1",
@@ -266,9 +379,10 @@ var graphControl = {
 };
 $(document).ready(function(){
     $(".order").on("click",function(){
-        graphControl.makeChart(6000,"chartdiv_p");
+        graphControl.makeChart(200,"chartdiv_p");
     });
     $(".close").on("click",function(){
         graphControl.usePulse = false;
     });
+
 });

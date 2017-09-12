@@ -28,6 +28,7 @@ Route::get('/instrument','InstrumentController@index')->name('instruments');
 //Deals
 Route::get('/deal','DealController@index')->name('deals');
 Route::get('/deal/add','DealController@store')->name('dealadd');
+Route::get('/deal/delete','DealController@destroy')->name('dealdel');
 
 
 // CRM
@@ -39,3 +40,5 @@ Route::get('/user/{id}/edit','UserController@update')->name('useredit');
 Route::get('/user/{id}/delete','UserController@destroy')->name('userdelete');
 Route::get('/userrights','UserController@rights')->name('userrights');
 Route::get('/usermeta','UserController@metaData')->name('usermeta');
+
+Route::get('/account','UserController@useraccount')->name('useraccount');

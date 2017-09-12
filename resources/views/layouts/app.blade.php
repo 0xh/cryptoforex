@@ -23,6 +23,7 @@
             'csrfToken' => csrf_token(),
         ]) !!};
     </script>
+
     <script>
     var currency = {
         data:{},
@@ -376,26 +377,162 @@
             Пожалуйста, обратите внимание на имеющиеся у вас открытые позиции по криптовалютам. До указанного времени принудительного закрытия позиций у вас есть возможность самостоятельного выбора момента их закрытия.
           </p>
         </div>
+        <div class="popup popup_deal_info" style="z-index:1000;">
+            <div class="close b02"></div>
+            <div class="flex flex-top">
+                <div class="flex flex-top left">
+                    <div class="item">
+                        <div class="content flex column">
+                            <!-- <div class="item flex">
+                                <div class="pic">
+                                    <img src="images/bitcoin.png" alt="">
+                                    <img src="images/litecoin.png" alt="">
+                                </div>
+                                <div class="in">BTC/LTE</div>
+                                <div class="open tabl">
+                                    <span>Open</span>
+                                    <span>1.17805</span>
+                                </div>
+                                <div class="high tabl">
+                                    <span>High</span>
+                                    <span>1.17805</span>
+                                </div>
+                                <div class="low tabl">
+                                    <span>Low</span>
+                                    <span>1.17754</span>
+                                </div>
+                                <div class="clos tabl">
+                                    <span>Close</span>
+                                    <span>1.17763</span>
+                                </div>
+                            </div>
+                            <div class="graf">
+                                <img src="images/graf.png" alt="">
+                            </div>
+                            <div class="pagination">
+                                <ul class="flex">
+                                    <li><a href="#">1D</a></li>
+                                    <li><a href="#">7D</a></li>
+                                    <li><a href="#">1M</a></li>
+                                    <li class="active"><a href="#">3M</a></li>
+                                    <li><a href="#">6M</a></li>
+                                    <li><a href="#">YTD</a></li>
+                                    <li><a href="#">1Y</a></li>
+                                    <li><a href="#">5Y</a></li>
+                                </ul>
+                            </div> -->
+                            <div id="chartdiv_p1" class="graph"></div>
+                            <div class="btn-group">
+                                <button onclick="graphControl.CandleStick()">CandleStick</button>
+                                <button onclick="graphControl.Line()">Line</button>
+                                <button onclick="graphControl.OHLC()">OHLC</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="tabs_popup">
+                            <!-- <ul class="tab_item">
+                                <li class="active">Сейчас</li>
+                                <li>При котировке</li>
+                            </ul> -->
+                            <div class="tab_cap active submiter" data-action="/deal/delete" data-callback="pageReload">
+                                <div class="box">
+                                  <div class="item flex">
+                                    <div class="inner">
+                                      <strong class="up">Прибыль</strong>
+                                    </div>
+                                    <div class="inner deal-profit">
+                                        <span class="up">27 $</span>
+                                    </div>
+                                  </div>
+                                  <div class="item flex">
+                                    <div class="inner">
+                                      <strong>Пара</strong>
+                                    </div>
+                                    <div class="inner flex">
+                                      <strong><span>BTC</span>/<span>BCH</span></strong>
+                                    </div>
+                                  </div>
+                                  <div class="item flex">
+                                    <div class="inner">
+                                      <strong>Время открытия</strong>
+                                    </div>
+                                    <div class="inner deal-time">
+                                      <p><span class="time">11:00 06.09.17</span></p>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="box">
+                                  <div class="item flex">
+                                    <div class="inner">
+                                      <p>Сумма сделки</p>
+                                    </div>
+                                    <div class="inner deal-amount">
+                                      <p>100$</p>
+                                    </div>
+                                  </div>
+                                  <div class="item flex">
+                                    <div class="inner">
+                                      <p>Кредитное плечо</p>
+                                    </div>
+                                    <div class="inner deal-multiplier">
+                                      <p>5000$</p>
+                                    </div>
+                                  </div>
+                                  <div class="item flex">
+                                    <div class="inner">
+                                      <p>Комиссия сделки</p>
+                                    </div>
+                                    <div class="inner">
+                                      <p>0.023%</p>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="bot flex">
+                                    <input type="hidden" name="deal_id" data-name="deal_id" id="deal_id"  />
+                                    <a href="#" class="order submit close b02">Закрыть сделку</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right">
+                    <div class="deal loader" data-action="/deal" data-autostart="true" data-refresh="30000" data-function="userDeals"></div>
+                    <div class="bot">
+                        <ul class="flex">
+                            <li class="active"><a href="#">Отчет</a></li>
+                            <li><a href="#">Закрытые</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <!--  Vendor amCharts -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+        <script src="https://www.amcharts.com/lib/3/serial.js"></script>
+        <script src="https://www.amcharts.com/lib/3/amstock.js"></script>
+        <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+        <!-- <script src="https://www.amcharts.com/lib/3/themes/none.js"></script> -->
+        <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+        <script src="https://www.amcharts.com/lib/3/plugins/dataloader/dataloader.min.js" type="text/javascript"></script>
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
     <script src="{{ asset('js/objects.js') }}"></script>
     <script src="{{ asset('js/ion.sound.js') }}"></script>
+    <script src="{{ asset('js/settings.js') }}"></script>
 
-
-    <!--  Vendor amCharts -->
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
-    <script src="https://www.amcharts.com/lib/3/serial.js"></script>
-    <script src="https://www.amcharts.com/lib/3/amstock.js"></script>
-    <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
-    <!-- <script src="https://www.amcharts.com/lib/3/themes/none.js"></script> -->
-    <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
-    <script src="https://www.amcharts.com/lib/3/plugins/dataloader/dataloader.min.js" type="text/javascript"></script>
     <!--  Own tools -->
     <script src="{{ asset('js/cryptofx.js') }}"></script>
     <script src="{{ asset('js/cryptofx.fn.js') }}"></script>
     <script src="{{ asset('js/loader.js') }}"></script>
+    <script>
+        $(document).ready(function(){
+            new cf.loader($(".loader-instruments"),Fresher);
+        });
+
+    </script>
 </body>
 </html>

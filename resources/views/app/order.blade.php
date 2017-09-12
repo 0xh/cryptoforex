@@ -11,7 +11,7 @@ function multiplier(t){
         <div class="flex flex-top left">
             <div class="item">
                 <div class="content flex column">
-                    <div id="chartdiv_p" class="graf"></div>
+                    <div id="chartdiv_p" class="graph"></div>
                     <div class="btn-group">
                         <button onclick="graphControl.CandleStick()">CandleStick</button>
                         <button onclick="graphControl.Line()">Line</button>
@@ -25,14 +25,14 @@ function multiplier(t){
                         <li class="active">Сейчас</li>
                         <li>При котировке</li>
                     </ul>
-                    <div class="tab_cap active submiter" data-action="/deal/add">
+                    <div class="tab_cap active submiter" data-action="/deal/add" data-callback="pageReload">
                         <div class="box">
                             <div class="item flex">
                                 <div class="inner">
                                     <p>Сумма сделки</p>
                                 </div>
                                 <div class="inner">
-                                    <input type="text" name="num" placeholder="1000" data-name="amount">
+                                    <input type="text" name="num" placeholder="1000" data-name="amount" value="100">
                                 </div>
                             </div>
                             <div class="item flex">
@@ -40,7 +40,7 @@ function multiplier(t){
                                     <p>Кредитное плечо</p>
                                 </div>
                                 <div class="inner flex">
-                                    <input type="text" name="kr" placeholder="20"  data-name="multiplier" onchange="multiplier(this)" class="multiplier" data-target=".multiplier-result">
+                                    <input type="text" name="kr" placeholder="20"  value="20" data-name="multiplier" onchange="multiplier(this)" class="multiplier" data-target=".multiplier-result">
                                     <p>=</p>
                                     <p><span class="multiplier-result">$20 000</span></p>
                                 </div>
@@ -77,8 +77,8 @@ function multiplier(t){
                             <input name="instrument_id" value="1" type="hidden" data-name="instrument_id"/>
                             <input name="direction" value="1" type="hidden" data-name="direction"/>
                             <input name="currency" value="USD" type="hidden" data-name="currency" />
-                            <a onclick="$('[name=direction]').val(-1);" class="down submit">В снижение</a>
-                            <a onclick="$('[name=direction]').val(1);" class="up submit">В рост</a>
+                            <a onclick="$('[name=direction]').val(-1);" class="down submit btn">В снижение</a>
+                            <a onclick="$('[name=direction]').val(1);" class="up submit btn">В рост</a>
                         </div>
                         <!-- <div class="box">
                           <div class="item flex">
@@ -193,7 +193,7 @@ function multiplier(t){
             </div>
         </div>
         <div class="right">
-            <div class="deal loader" data-action="/deal" data-autostart="true" data-refresh="10000" data-function="userDeals"></div>
+            <!-- <div class="deal loader" data-action="/deal" data-autostart="true" data-refresh="10000" data-function="userDeals"></div> -->
             <div class="bot">
                 <ul class="flex">
                     <li class="active"><a href="#">Отчет</a></li>

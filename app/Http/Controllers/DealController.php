@@ -8,6 +8,7 @@ use App\DealStatus;
 use App\DealHistory;
 use App\Currency;
 use App\Price;
+use App\Account;
 use App\Instrument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +31,7 @@ class DealController extends Controller{
             $status = DealStatus::where('code',$status)->first();
             if(!is_null($status))$selector = $selector->where("status_id",$status->id);
         }
-        $deals = $selector->get();
+        $deals = $selector->orderBy('id','desc')->get();
         foreach($deals as $deal){
             $row = $deal->toArray();
             $row["instrument"] = Instrument::find($deal->instrument_id)->toArray();
@@ -64,8 +65,12 @@ class DealController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function store(Request $rq){
-        $dealStatus = DealStatus::where('code',$rq->input('status','new'))->first();
+        $amount = floatval ($rq->input("amount",0));
+        $dealStatus = DealStatus::where('code',$rq->input('status','open'))->first();
         $user = $rq->user();
+        $account = Account::where('user_id',$user->id)->where('type',$rq->input('account_type','demo'))->first();
+        $account->amount-=$amount;
+        $account->save();
         $currency = Currency::where('code',$rq->input('currency'))->first();
         $price = Price::where('instrument_id',$rq->input('instrument_id'))->orderBy('id','desc')->first();
         $dealData = [
@@ -76,7 +81,7 @@ class DealController extends Controller{
             'direction'=>$rq->input("direction"),
             'stop_high'=>$rq->input("stop_high"),
             'stop_low'=>$rq->input("stop_low"),
-            'amount'=>floatval($rq->input("amount")),
+            'amount'=>$amount,
             'currency_id'=>$currency->id,
             'multiplier'=>$rq->input('multiplier',1)
         ];
@@ -130,8 +135,28 @@ class DealController extends Controller{
      * @param  \App\Deal  $deal
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Deal $deal)
+    public function destroy(Request $rq)
     {
-        //
+        $dealStatus = DealStatus::where('code',$rq->input('status','close'))->first();
+        $user = $rq->user();
+        $account = Account::where('user_id',$user->id)->where('type',$rq->input('account_type','demo'))->first();
+        $deal = Deal::find($rq->input("deal_id"));
+        $account->amount+=$deal->profit;
+        $account->save();
+        $price = Price::where('instrument_id',$deal->instrument_id)->orderBy('id','desc')->first();
+
+        DealHistory::create([
+            'deal_id'=>$deal->id,
+            'old_status_id'=>$deal->status_id,
+            'new_status_id'=>$dealStatus->id,
+            'changed_user_id'=>$user->id,
+            'description'=>'Interface opened'
+        ]);
+        $deal->update([
+            "stop_price_id"=>$price->id,
+            "status_id" => $dealStatus->id
+        ]);
+        return response()->json($deal,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+
     }
 }

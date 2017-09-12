@@ -130,6 +130,11 @@ class UserController extends Controller{
     public function rights(){
         return response()->json(UserRights::all());
     }
+    public function useraccount(Request $rq){
+        $user = User::find($rq->input("user_id"));
+        $account = Account::where('user_id',$user->id)->get();
+        return response()->json($account);
+    }
     public function metaData(Request $rq){
         $user = User::find($rq->input("user_id"));
         $ud = [

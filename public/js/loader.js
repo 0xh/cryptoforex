@@ -2,6 +2,9 @@
 function cfDataLoader(){
 
 }
+function pageReload(){
+    document.location.reload();
+}
 var cf={
     _statdata:{},
     getDataByField:function(s,field,v){
@@ -39,7 +42,7 @@ var cf={
             if(cf._actions.length==0)return;
             var dt = new Date().getTime();
             for(var i in cf._actions){
-
+                // console.debug("refresher #"+i,(dt-cf._actions[i].last),'>',cf._actions[i].refresh);
                 if((dt-cf._actions[i].last)>cf._actions[i].refresh){
                     var args = (cf._actions[i].arguments == undefined)?null:cf._actions[i].arguments;
                     // console.debug("refresher executing...",cf._actions[i]);
@@ -159,11 +162,12 @@ var cf={
     }
 
 };
+window.Fresher = new cf.refresher();
 $(document).ready(function(){
     for(var i in window.onloads){
         window.onloads[i]();
     }
-    var Fresher = new cf.refresher();
+    // window.Fresher = new cf.refresher();
     $(".loader").each(function(){
         new cf.loader(this,Fresher);
     });
@@ -172,7 +176,7 @@ $(document).ready(function(){
     });
 
     $(".order").on("click",function(){
-        graphControl.makeChart(6000,"chartdiv_p");
+        graphControl.makeChart(120,"chartdiv_p");
     });
 });
 

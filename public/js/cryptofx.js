@@ -1,9 +1,9 @@
-var usePulseData = true;
+
 var mainChart = undefined;
 var pulseData = function(chart,i){
     var c = chart.dataSets[0].dataProvider[chart.dataSets[0].dataProvider.length-1];
 
-    var rnd = .1*Math.random();
+    var rnd = usePulseDemfer*Math.random();
     // console.debug(c,rnd,i);
     c.low = parseFloat(c.low)+Math.pow(-1,i)*rnd;
     c.high= parseFloat(c.high)+Math.pow(-1,i)*rnd;
@@ -14,7 +14,16 @@ var pulseData = function(chart,i){
     chart.panels[0].trendLines[0].finalValue=c.close;
     chart.panels[0].trendLines[0].initialValue=c.close;
     chart.validateData();
-    if(--i>0) setTimeout(pulseData,1000,chart,i);
+    $('.deal-row > div.inner.profit').each(function(){
+        try{
+            var cv = parseFloat($(this).text());
+            // console.debug($(this).closest('.deal-row').text());
+            cv*=(1+rnd);
+            $(this).text(cv.toFixed(4));
+        }
+        catch(e){console.error((e));}
+    });
+    if(--i>0) setTimeout(pulseData,usePulseDataTimeout,chart,i);
     else {
         $.ajax({
             url:"/data/amcharts/hystominute?limit=1",
@@ -238,7 +247,7 @@ var getData = function(limit,divid){
             if(usePulseData)pulseData(mainChart,60);
             setInterval( function(chart) {
                 $.ajax({
-                    url:"/data/amcharts/hystominute?limit=60",
+                    url:"/data/amcharts/hystominute?limit=2",
                     dataType:"json",
                     success:function(d){
                         chart.dataSets[0].dataProvider.shift();
@@ -253,4 +262,4 @@ var getData = function(limit,divid){
     return res;
 }
 
-getData(20000);
+getData(200);

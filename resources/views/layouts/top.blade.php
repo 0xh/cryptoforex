@@ -17,8 +17,8 @@
                         <div class="top br flex">
                             <p class="active">Демо счет</p>
                             <div>
-                                <input type="checkbox" class="checkbox" id="checkbox">
-                                <label for="checkbox"></label>
+                                <input type="checkbox" class="checkbox account-type" id="checkbox" value="demo">
+                                <label for="checkbox" class=" account-type-switcher"></label>
                             </div>
                             <p>Реальный счет</p>
                         </div>
@@ -40,7 +40,32 @@
 
                     </ul>
                 </nav>
-                <div class="inner flex">
+                <script>
+                    var user_accounts = [];
+                    function displayuseraccount(d){
+                        var c = $('.account-display');
+                        c.html('');
+                        c.append('<span class="'+d.type+'">'+d.type+'</span>');
+                        $('<span class="money">'+currency.value(d.amount,'USD')+'</span>').appendTo(c).on("click",function(){
+                            new cf.loader($('.account-display'),Fresher);
+                        });
+                    }
+                    function userAccount(c,data,x,s){
+                        for(var i in data){
+                            var d = data[i];
+                            user_accounts[d.type] = d;
+                        }
+                        displayuseraccount(user_accounts.demo);
+                        $(".account-type-switcher").unbind("click").on("click",function(){
+                            var vt = $('.account-type').val();
+                            vt = (vt=='demo')?'real':'demo';
+                            $('.account-type,[name=account_type]').val(vt);
+
+                            displayuseraccount(user_accounts[vt]);
+                        });
+                    }
+                </script>
+                <div class="inner flex loader account-display" data-action="/account?type=demo&user_id={{Auth::user()->id}}" data-autostart="true" data-refresh="60000" data-function="userAccount">
                   <span class="demo">Демо счет</span>
                   <span class="money">10 000 $</span>
                 </div>

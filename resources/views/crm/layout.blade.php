@@ -4374,10 +4374,11 @@
   <script src="https://www.amcharts.com/lib/3/serial.js"></script>
   <script src="https://www.amcharts.com/lib/3/amstock.js"></script>
   <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
-
+  <script src="{{ asset('js/settings.js') }}"></script>
   <script src="/crmd2/js/main.js"></script>
   <script src="/crmd2/js/i.js"></script>
   <script src="{{ asset('js/loader.js') }}"></script>
   <script src="{{ asset('js/cryptofx.fn.js') }}"></script>
+
 </body>
 </html>
