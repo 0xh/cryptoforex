@@ -144,7 +144,10 @@ class DealController extends Controller{
         $account->amount+=$deal->profit;
         $account->save();
         $price = Price::where('instrument_id',$deal->instrument_id)->orderBy('id','desc')->first();
-
+        $deal->update([
+            "close_price_id"=>$price->id,
+            "status_id" => $dealStatus->id
+        ]);
         DealHistory::create([
             'deal_id'=>$deal->id,
             'old_status_id'=>$deal->status_id,
@@ -152,10 +155,7 @@ class DealController extends Controller{
             'changed_user_id'=>$user->id,
             'description'=>'Interface opened'
         ]);
-        $deal->update([
-            "stop_price_id"=>$price->id,
-            "status_id" => $dealStatus->id
-        ]);
+
         return response()->json($deal,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
 
     }

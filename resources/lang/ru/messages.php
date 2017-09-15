@@ -16,5 +16,8 @@ return [
     'login' => 'Вход',
     'logout' => 'Выход',
     'register' => 'Регистрация',
+    'customers' => 'Пользователи',
+    'instruments' => 'Инструменты',
+    'deals' => 'Сделки',
 
 ];

@@ -5,21 +5,21 @@ var pulseData = function(chart,i){
 
     var rnd = usePulseDemfer*Math.random();
     // console.debug(c,rnd,i);
-    c.low = parseFloat(c.low)+Math.pow(-1,i)*rnd;
-    c.high= parseFloat(c.high)+Math.pow(-1,i)*rnd;
+    c.low = parseFloat(c.low)+parseFloat(c.low)*Math.pow(-1,i)*rnd;
+    c.high= parseFloat(c.high)+parseFloat(c.high)*Math.pow(-1,i)*rnd;
     c.close = c.high;
-    c.volume = parseFloat(c.volume)+400*rnd;
+    c.volume = parseFloat(c.volume)+parseFloat(c.volume)*rnd;
     chart.dataSets[0].dataProvider[chart.dataSets[0].dataProvider.length-1] = c;
     chart.panels[0].trendLines[0].finalDate=c.date;
     chart.panels[0].trendLines[0].finalValue=c.close;
     chart.panels[0].trendLines[0].initialValue=c.close;
     chart.validateData();
-    $('.deal-row > div.inner.profit').each(function(){
+    $('.deal-row .profit').each(function(){
         try{
-            var cv = parseFloat($(this).text());
+            var cv = parseFloat($(this).text().replace(/[^\.\d]+/,''));
             // console.debug($(this).closest('.deal-row').text());
             cv*=(1+rnd);
-            $(this).text(cv.toFixed(4));
+            $(this).text(currency.value(cv.toFixed(4),'USD'));
         }
         catch(e){console.error((e));}
     });
@@ -39,12 +39,13 @@ var pulseData = function(chart,i){
     }
 }
 var getData = function(limit,divid){
-    var res={},divid = (arguments.length>1)?arguments[1]:"chartdiv";
+    var res={},divid = (arguments.length>1)?arguments[1]:"chartdiv",instrument_id = arguments.length>2?arguments[2]:1;
     $.ajax({
         async:true,
-        url:"/data/amcharts/hystominute?limit="+limit,
+        url:"/data/amcharts/hystominute?limit="+limit+'&instrument_id='+instrument_id,
         dataType:"json",
         success:function(d){
+            var chTitle = (window.instrument != undefined )?(window.instrument.title):"BTC/BCH";
             dp = d.reverse();
             mainChart = AmCharts.makeChart(divid, {
                 type: "stock",
@@ -56,7 +57,7 @@ var getData = function(limit,divid){
                 pathToImages: "https://www.amcharts.com/lib/3/images/",
                 dataSets: [{
                         color:"#04bf85",
-                        title: "BTC/BCH",
+                        title: chTitle,
                         dataProvider: dp,//getData(12000),
                         categoryField: "date",
                         fieldMappings: [
@@ -111,7 +112,7 @@ var getData = function(limit,divid){
                                 type: "candlestick",
                                 compareField: "value",
                                 balloonText: "[[title]]: On date:<b>[[date]]</b> open <b>[[open]]</b> low <b>[[low]]</b> high <b>[[high]]</b> close <b>[[close]]</b>",
-                                compareGraphBalloonText: "[[title]]: open <b>[[open]]</b> low <b>[[low]]</b> high <b>[[high]]</b> close <b>[[close]]</b>",
+                                compareGraphBalloonText: "<strong style='font-size:16px'>[[title]]</strong>: open <b>[[open]]</b> low <b>[[low]]</b> high <b>[[high]]</b> close <b>[[close]]</b>",
                                 fillColor: "#38697f",
                                 lineColor: "#38697f",
                                 fillAlphas:1,
@@ -247,7 +248,7 @@ var getData = function(limit,divid){
             if(usePulseData)pulseData(mainChart,60);
             setInterval( function(chart) {
                 $.ajax({
-                    url:"/data/amcharts/hystominute?limit=2",
+                    url:"/data/amcharts/hystominute?limit=2&instrument_id="+instrument_id,
                     dataType:"json",
                     success:function(d){
                         chart.dataSets[0].dataProvider.shift();
@@ -262,4 +263,4 @@ var getData = function(limit,divid){
     return res;
 }
 
-getData(200);
+// getData(200);

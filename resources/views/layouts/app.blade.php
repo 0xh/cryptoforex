@@ -436,6 +436,7 @@
                                 <li>При котировке</li>
                             </ul> -->
                             <div class="tab_cap active submiter" data-action="/deal/delete" data-callback="pageReload">
+                            <!-- <div class="tab_cap active submiter" data-action="/deal/delete"> -->
                                 <div class="box">
                                   <div class="item flex">
                                     <div class="inner">

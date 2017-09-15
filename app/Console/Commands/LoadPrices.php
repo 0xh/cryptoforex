@@ -61,15 +61,16 @@ class LoadPrices extends Command
                 $tosymCode = $tsym->code;
 
 
-                if(floatval($oldprice->price) != floatval($rawpr->$tosymCode)){
+                if(is_null($oldprice) || $oldprice === false || floatval($oldprice->price) != floatval($rawpr->$tosymCode)){
                     echo "!!! CHANGED\t";
                     $price = Price::create([
                         'price'=>$rawpr->$tosymCode,
                         'instrument_id'=>$instrument->id,
                         'source_id'=>$source->id
                     ]);
+                    echo $fsym->code."/".$tsym->code.": was ".(is_null($oldprice)?"-":$oldprice->price)." - now ".$rawpr->$tosymCode."\n";
                 }
-                echo $fsym->code."/".$tsym->code.": was ".$oldprice->price." - now ".$rawpr->$tosymCode."\n";
+
             }
             echo "{$ticks}\n";
             --$ticks;

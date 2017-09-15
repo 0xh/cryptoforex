@@ -18,7 +18,7 @@
         </li>
     </ul>
 </div>
-<div class="item">
+<!-- <div class="item">
     <strong>Diamonds Operations</strong>
     <ul>
         <li>
@@ -47,7 +47,8 @@
             <p class="last_num">22</p>
         </li>
     </ul>
-</div>
+</div> -->
+
 <div class="item task">
     <strong class="active">Tasks<span>22</span></strong>
     <ul>
@@ -91,7 +92,7 @@
         </li>
     </ul>
 </div>
-<div class="item">
+<!-- <div class="item">
     <strong>Group Investment</strong>
     <ul>
         <li>
@@ -105,7 +106,7 @@
             <p class="last_num">2</p>
         </li>
     </ul>
-</div>
+</div> -->
 <div class="item">
     <strong>Marketing</strong>
     <ul>

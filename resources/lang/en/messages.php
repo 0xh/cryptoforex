@@ -16,5 +16,9 @@ return [
     'login' => 'Sign in',
     'logout' => 'Sign out',
     'register' => 'Sign up',
+    'customers' => 'Customers',
+    'instruments' => 'Instruments',
+    'deals' => 'Deals',
+    'users' => 'Users',
 
 ];

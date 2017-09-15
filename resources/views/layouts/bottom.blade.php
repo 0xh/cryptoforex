@@ -5,15 +5,15 @@
         <ul class="tabs__caption flex width">
           <li class="flex active">
             <span>История сделок</span>
-            <span class="all">вся история > </span>
+            <span class="all">вся история</span>
           </li>
           <li class="flex">
             <span>Новости и прогнозы</span>
-            <span class="all">Все новости > </span>
+            <span class="all">Все новости</span>
           </li>
           <li class="flex">
             <span>Обучение торговле</span>
-            <span class="all">Вебинары > </span>
+            <span class="all">Вебинары</span>
           </li>
         </ul>
 
@@ -25,7 +25,8 @@
                 function historyDeals(container,d,x,s){
                     container.html('');
                     for(var i in d){
-                        var row=d[i],s='<tr></tr>',
+
+                        var row=d[i],s='<tr class="deal-row" onclick=\'dealInfo('+JSON.stringify(row)+')\' id="deal-'+row.id+'">',
                             inst = row.instrument.from_currency.code+'/'+row.instrument.to_currency.code,
                             prct = 100*(1-row.profit/row.amount);
 
@@ -34,7 +35,7 @@
                         s+= '<td class="'+((row.direction==1)?"down":"up")+'">'+new Date(row.open_price.created_at*1000)+' - '+row.open_price.price+'</td>';
                         s+= (row.close_price!=undefined)?'<td>'+new Date(row.close_price.created_at*1000)+' - '+row.close_price.price+'</td>':'<td>&nbsp;</td>';
                         s+= '<td>'+currency.value(row.amount,'USD')+' <span>x'+row.multiplier+'</span></td>';
-                        s+= '<td>'+currency.value(row.profit,'USD')+'</td>';
+                        s+= '<td class="'+((row.close_price==undefined)?'profit':"")+'">'+currency.value(row.profit,'USD')+'</td>';
                         s+= '<td class="'+((row.profit>0)?"green":"red")+'">'+prct.toFixed(2)+'%</td>'
                         s+='</tr>';
                         container.append(s);
@@ -50,7 +51,7 @@
                   <th>получено</th>
                   <th>прибыль%</th>
                 </thead>
-                <tbody class="loader" data-action="/deal?status=all&user_id={{Auth::user()->id}}" data-autostart="true" data-refresh="60000" data-function="historyDeals"></tbody>
+                <tbody class="loader" data-action="/deal?status=all&user_id={{Auth::user()->id}}" data-autostart="true" data-refresh="8000" data-function="historyDeals"></tbody>
                 </table>
               @endif
 

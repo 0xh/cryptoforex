@@ -24,7 +24,7 @@ class InstrumentController extends Controller
             $fsym = Currency::find($row->from_currency_id);
             $title = $fsym->code."/".$tsym->code;
             $prices =Price::where('instrument_id',$row->id)->orderBy('id', 'desc')->limit(2)->get();
-            $diff = 100*floatval($prices[0]->price)/floatval( $prices[1]->price) - 100;
+            $diff =(!is_null($prices) && !empty($price))?(100*floatval($prices[0]->price)/floatval( $prices[1]->price) - 100):0;
             $direction = ($diff<0)?-1:1;
             $res[] = [
                 "id" => $row->id,

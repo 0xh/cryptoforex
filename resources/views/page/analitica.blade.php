@@ -3,106 +3,10 @@
 <main class="main">
     <div class="container">
     	<div class="charts1 flex flex-top">
-    		<script src="//www.amcharts.com/lib/3/amcharts.js"></script>
-			<script src="//www.amcharts.com/lib/3/pie.js"></script>
-			<script src="//www.amcharts.com/lib/3/themes/light.js"></script>
-			<script src="//www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
-			<link rel="stylesheet" href="//www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
     		<div class="item">
-    			<script>
-    				var chart = AmCharts.makeChart( "chart_pie", {
-					  "type": "pie",
-					  "theme": "light",
-					  "dataProvider": [ {
-					    "title": "BTC/LTE",
-					    "value": 100
-					  }, {
-					    "title": "BTC/LTE",
-					    "value": 400
-					  } ],
-					  "titleField": "title",
-					  "valueField": "value",
-					  "labelRadius": 5,
-
-					  "radius": "42%",
-					  "innerRadius": "60%",
-					  "labelText": "[[title]]",
-					  "export": {
-					    "enabled": true
-					  }
-					} );
-    			</script>
-    			<div id="chart_pie" style="width: 100%;height: 500px;"></div>
-    			
+    			<div id="chart_pie" style="width: 100%;height: 500px;"></div>    			
     		</div>
     		<div class="item">
-    			<script>
-    				var chart = AmCharts.makeChart("chart_pie2", {
-					  "type": "pie",
-					  "startDuration": 0,
-					   "theme": "light",
-					  "addClassNames": true,
-					  "legend":{
-					   	"position":"top",
-					    "marginRight":0,
-					    "autoMargins":false
-					  },
-					  "innerRadius": "30%",
-					  "defs": {
-					    "filter": [{
-					      "id": "shadow",
-					      "width": "200%",
-					      "height": "200%",
-					      "feOffset": {
-					        "result": "offOut",
-					        "in": "SourceAlpha",
-					        "dx": 0,
-					        "dy": 0
-					      },
-					      "feGaussianBlur": {
-					        "result": "blurOut",
-					        "in": "offOut",
-					        "stdDeviation": 5
-					      },
-					      "feBlend": {
-					        "in": "SourceGraphic",
-					        "in2": "blurOut",
-					        "mode": "normal"
-					      }
-					    }]
-					  },
-					  "dataProvider": [{
-					    "country": "USA/BTC",
-					    "litres": 200
-					  }, {
-					    "country": "USA/BTC",
-					    "litres": 100
-					  }, {
-					    "country": "USA/BTC",
-					    "litres": 150
-					  }],
-					  "valueField": "litres",
-					  "titleField": "country",
-					  "export": {
-					    "enabled": true
-					  }
-					});
-
-					chart.addListener("init", handleInit);
-
-					chart.addListener("rollOverSlice", function(e) {
-					  handleRollOver(e);
-					});
-
-					function handleInit(){
-					  chart.legend.addListener("rollOverItem", handleRollOver);
-					}
-
-					function handleRollOver(e){
-					  var wedge = e.dataItem.wedge.node;
-					  wedge.parentNode.appendChild(wedge);
-					}
-    			</script>
     			<div id="chart_pie2" style="width: 100%;height: 500px;font-size: 12px;"></div>
     		</div>
     	</div>

@@ -48,7 +48,8 @@ class HistoController extends Controller
         // $url ="https://min-api.cryptocompare.com/data/".$type."?fsym=".$tq["fsym"]."&tsym=".$tq['tsym']."&limit=".$tq['limit']."&aggregate=1&e=CCCAGG";
         // $res = $this->_fetchJSON($url);
         // $res = $this->_amchartFormat($res);
-        return response()->json($res);
+        return response()->json($res)->header('Access-Control-Allow-Origin', '*')
+            ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     }
 
     /**

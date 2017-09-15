@@ -20,11 +20,19 @@
                 </div>
             </div> -->
             <script>
+                window.instruments = [];
+                window.instrument = null;
                 function userInstruments(container,d,x,s){
                     // console.debug("userInstruments",container,d);
+                    var firstInstrument = true;
                     for(var i in d){
                         var row=d[i],inst = row.title,elementId = 'instrument_chart_id_'+row.id;
-                        s='<div class="instrument-bar">';
+                        if(firstInstrument){
+                            firstInstrument = false;
+                            window.instrument = row;
+                        }
+                        window.instruments[row.id]= row;
+                        s='<div class="instrument-bar" id="instrument_id_'+row.id+'" onclick="chooseInstrument('+row.id+')">';
                         s+='<div class="mini-chart" id="'+elementId+'"></div>';
                         s+='<div class="title">'+row.from_currency.code+'/'+row.to_currency.code+'</div>';
                         s+='<div class="percents"><span class="'+((row.direction>0)?"up":"down")+'">'+currency.value(row.diff,'')+'%</span></div>';
@@ -36,6 +44,15 @@
                             iid:row.id
                         });
                     }
+                    chooseInstrument(window.instrument.id)
+                }
+                function chooseInstrument(id){
+                    $('.instrument-bar').removeClass('active');
+                    $('#instrument_id_'+id).addClass('active');
+                    $('[name=instrument_id]').val(id);
+                    window.instrument = window.instruments[id];
+                    $("#charttitle").html('<h1>'+window.instrument.title+'</h1>');
+                    getData(120,"chartdiv",id);
                 }
             </script>
             <div class="item flex flex-top loader-instruments" data-action="/instrument" data-autostart="true" data-refresh="0" data-function="userInstruments"></div>
