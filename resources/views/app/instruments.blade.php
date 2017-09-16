@@ -24,7 +24,7 @@
                 window.instrument = null;
                 function userInstruments(container,d,x,s){
                     // console.debug("userInstruments",container,d);
-                    var firstInstrument = true;
+                    var firstInstrument = true, informer = '';
                     for(var i in d){
                         var row=d[i],inst = row.title,elementId = 'instrument_chart_id_'+row.id;
                         if(firstInstrument){
@@ -32,6 +32,10 @@
                             window.instrument = row;
                         }
                         window.instruments[row.id]= row;
+                        //<img src="/images/trade-down.png" alt="down"> EUR/USD <span style="color:#FF3100">1.1965</span>
+                        informer+= (row.direction>0)?'<img src="/images/trade-up.png" alt="up">':'<img src="/images/trade-down.png" alt="fown"> '
+                        informer+= row.from_currency.code+'/'+row.to_currency.code+' <span style="color:#FF3100">'+currency.value(row.price,'')+'</span> | ';
+
                         s='<div class="instrument-bar" id="instrument_id_'+row.id+'" onclick="chooseInstrument('+row.id+')">';
                         s+='<div class="mini-chart" id="'+elementId+'"></div>';
                         s+='<div class="title">'+row.from_currency.code+'/'+row.to_currency.code+'</div>';
@@ -44,6 +48,7 @@
                             iid:row.id
                         });
                     }
+                    $('#informer').html(informer);
                     chooseInstrument(window.instrument.id)
                 }
                 function chooseInstrument(id){
