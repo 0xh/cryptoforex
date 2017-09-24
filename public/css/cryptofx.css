@@ -1,0 +1,130 @@
+@import url("/vendor/font-awesome/fonts/fontawesome-webfont.woff2");
+.currency-sym {
+  display: inline-block;
+  font-family: 'Fontawesome';
+}
+#chartdiv {
+  width: 100%;
+  /*height: 507px;*/
+  padding: 2%;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+@media screen and (max-width: 1366px) {
+  #chartdiv{height: 507px;}
+}
+
+.content.see #chartdiv{
+  height: 100%;
+}
+.graph {
+  width: 100%;
+  height: 500px;
+  padding: 2%;
+  margin-bottom: 20px;
+  position: relative;
+}
+.graph .amChartsButton,
+.graph .amChartsButtonSelected {
+  width: auto !important;
+}
+button,
+input[type='button'] {
+  color: rgba(56,105,128,0.9);
+  border: solid 1px rgba(56,105,128,0.9);
+  transition: all 0.2 ease-in;
+  background-color: #fff;
+  border-radius: 4px;
+}
+button:hover,
+input[type='button']:hover {
+  background-color: rgba(56,105,128,0.9);
+  color: #fff;
+}
+button.active,
+button:active,
+input[type='button'].active,
+input[type='button']:active {
+  background-color: #386980;
+  color: #fff;
+  border: solid 1px #386980;
+}
+.content.flex.column .btn-group {
+  display: block;
+  position: absolute;
+  left: 5px;
+  bottom: 30px;
+}
+.amcharts-period-input-selected {
+  background-color: rgba(56,105,128,0.9) !important;
+  color: #fff !important;
+}
+.deal-row {
+  cursor: pointer;
+}
+.deal-row:hover {
+  background-color: rgba(0,0,0,0.2);
+}
+.btn {
+  font-size: 16px;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 16px;
+  color: rgba(255,255,255,0.8);
+}
+.btn:hover {
+  color: #fff;
+}
+.instrument-bar {
+  background-color: #edf4fb;
+  cursor: pointer;
+  width: 50%;
+  height: 96px;
+  padding: 5px;
+  border: 1px solid #8c8c8c;
+  position: relative;
+}
+.instrument-bar:hover{
+    background-color: rgba(0,0,0,.08);
+}
+.instrument-bar.active{
+    background-color: rgba(0,0,10,.12);
+}
+.instrument-bar .mini-chart {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+.instrument-bar .title {
+  font-size: 11px;
+  position: absolute;
+  left: 5px;
+  top: 5px;
+}
+.instrument-bar .diff {
+  font-size: 14px;
+  font-weight: bold;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  color: rgba(0,0,0,0.8);
+}
+.instrument-bar .percents {
+  font-size: 10px;
+  position: absolute;
+  left: 5px;
+  bottom: 5px;
+  color: rgba(0,0,0,0.9);
+}
+.instrument-bar .pic {
+  width: 36px;
+}
+.instrument-bar .pic img {
+  display: inline-block;
+}
+.graf-title{
+
+}

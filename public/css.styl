@@ -1,0 +1,95 @@
+// out: css/cryptofx.css
+@import(url('/vendor/font-awesome/fonts/fontawesome-webfont.woff2'))
+activeColor(o)
+    rgba(56,105,128,o);
+    // #38697f
+.currency-sym
+    display: inline-block;
+    font-family: 'Fontawesome';
+#chartdiv
+    width: 100%;
+    height: 500px;
+    padding:2%;
+    margin-bottom: 20px;
+    position: relative;
+.graph{
+    width: 100%;
+    height: 500px;
+    padding:2%;
+    margin-bottom: 20px;
+    position: relative;
+}
+.graph .amChartsButton,.graph .amChartsButtonSelected{
+    width:auto !important;
+}
+button,input[type='button']
+    color: activeColor(.9);
+    border: solid 1px activeColor(.9);
+    transition: all .2 ease-in;
+    background-color: #fff;
+    border-radius: 4px;
+button:hover,input[type='button']:hover
+    background-color: activeColor(.9);
+    color: #fff;
+button.active,button:active,input[type='button'].active,input[type='button']:active
+    background-color: activeColor(1);
+    color: #fff;
+    border: solid 1px activeColor(1);
+.content.flex.column .btn-group
+    display: block;
+    position: absolute;
+    left:5px;
+    bottom: 30px;
+.amcharts-period-input-selected
+    background-color: rgba(56,105,128,0.9) !important;
+    color: #fff !important;
+.deal-row
+    cursor:pointer;
+.deal-row:hover
+    background-color: rgba(0,0,0,.2);
+.btn
+    font-size: 16px;
+    height:40px;
+    line-height: 40px;
+    padding:0 16px;
+    color:rgba(255,255,255,.8);
+.btn:hover
+    color:rgba(255,255,255,1);
+.instrument-bar
+    background-color: #edf4fb;
+    cursor: pointer;
+    width: 50%;
+    height: 96px;
+    padding: 5px;
+    border: 1px solid #8c8c8c;
+    position: relative;
+    .mini-chart
+        position: absolute;
+        left:0;
+        top: 0;
+        width:100%;
+        height: 100%;
+    .title
+        font-size: 11px;
+
+        position: absolute;
+        left:5px;
+        top: 5px;
+    .diff
+        font-size: 14px;
+        font-weight: bold;
+
+        position: absolute;
+        right:5px;
+        top: 5px;
+        color:rgba(0,0,0,.8);
+    .percents
+        font-size: 10px;
+        position: absolute;
+        left:5px;
+        bottom: 5px;
+        color:rgba(0,0,0,.9);
+    .pic
+        width:36px;
+        img
+            display: inline-block;

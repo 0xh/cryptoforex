@@ -1,0 +1,75 @@
+.popup {
+  position: fixed;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  top: 50%;
+  width: 90%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+.popup .content {
+  background: #ddd;
+  padding: 15px 25px;
+}
+.popup strong {
+  background: #666773;
+  font-size: 32px;
+  text-transform: uppercase;
+  display: block;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+}
+.popup table {
+  border-collapse: collapse;
+}
+.popup.register,
+.popup.login {
+  width: 70%;
+}
+form .form-group {
+  font-size: 20px;
+  padding: 15px 0;
+  width: 90%;
+  margin: 0 5%;
+  position: relative;
+}
+form .form-group label {
+  color: rgba(0,0,0,0.4);
+  display: block;
+  font-size: 80%;
+}
+form .form-group input {
+  font-size: inherit;
+  padding: 0 1em;
+  width: 100%;
+  height: 2em;
+  line-height: 2em;
+  color: rgba(0,0,0,0.8);
+}
+form .form-group input[type=submit] {
+  border: solid 1px #808080;
+  color: #808080;
+  background-color: #fff;
+  transition: all 0.2s ease-in;
+  cursor: pointer;
+  margin-bottom: 10px;
+  height: 3em;
+  line-height: 3em;
+}
+form .form-group input[type=submit]:hover {
+  border: solid 1px #808080;
+  color: #fff;
+  background-color: #808080;
+}
+form .form-group .checkbox label {
+  height: 2em;
+  line-height: 2em;
+}
+form .form-group .checkbox label input[type=checkbox] {
+  width: auto;
+  height: 2em;
+  line-height: 2em;
+}

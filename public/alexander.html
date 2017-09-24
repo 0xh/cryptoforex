@@ -1,0 +1,529 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Chart template</title>
+</head>
+<style type="text/css">
+    label {
+        display:inline-block;
+        width:80px;
+    }
+</style>
+<script type="text/javascript">
+
+var canvas;
+
+var ctx;         // График 1
+
+// Ширина и высота Canvas
+var f_width = 800;
+var f_height = 400;
+
+// Визуальные параметры
+var min_y = 6.50;   // Минимальное значение по оси Y
+var max_y = 9.00;   // Максимальное значение по оси Y
+var step_y = 0.01;   // Шаг по оси Y(значение до которого округляем(отображаемое))
+var chart_font = "12px Arial";
+
+var max_label_count = 6;    // Максимальное кол-во текстовых меток по оси X
+
+
+var min_x = 0;   // Минимальное значение по оси X
+var max_x = 10;   // Максимальное значение по оси X
+
+// Переменные для генерации пиксельной матрицы по оси X
+var array_x_points = [];
+
+// Оси координат
+var axis_y = 30;        // Смещение от начала координат в пикселях(отображение значений сетки по Y)
+var axis_x = 30;        // Смещение от начала координат в пикселях(отображение значений сетки по X)
+
+// Переменные для генерации пиксельной матрицы по оси Y
+var array_y_points=[];       // Массив значений сетки(невидимой)
+
+// Параметры маркера
+var marker_width = 20;      // Толщина маркера
+
+/*******************************************************************************
+* Описание:   Функция создает матрицу графика 
+* Примечание: Нет.
+* Параметры:  Нет.
+* Возвращает: Нет.
+*/
+function chart_scaling()
+{
+    // Генерация матрицы по Y(Масштабирование)
+    // Область вывода данных
+    var step_y_array = (f_height-axis_x)/((max_y-min_y)/step_y); // Шаг значений матрицы(одна точка)
+    for (var i=0; i<((max_y-min_y)/step_y); i++)
+    {
+        array_y_points.push(axis_x + step_y_array*i);
+    }  
+
+    // Генерация матрицы по Х(Масштабирование)
+    // Область вывода данных
+    var step_x_array = (f_width-axis_y)/(max_x-min_x);
+    marker_width = step_x_array;
+    for (var i=0; i<(max_x-min_x); i++)
+    {
+        array_x_points.push(axis_y + step_x_array*i);
+    }
+}
+
+/*******************************************************************************
+* Описание:   Функция создает новый холст 
+* Примечание: Нет.
+* Параметры:  nameCanvas - имя холста.
+* Возвращает: Нет.
+*/
+function create_canvas(nameCanvas)
+{
+    // Динамически создаем канву
+    var fCanvas = document.createElement("canvas");
+    fCanvas.id = nameCanvas;
+    fCanvas.style.border = "1px solid";
+
+    var div = document.getElementById("chart_area");
+    div.appendChild(fCanvas);
+
+    var EOL = document.createElement("br");
+    div.appendChild(EOL);
+
+    var debug_panel = document.createElement("textarea");
+    debug_panel.id = "chart_points";
+    debug_panel.cols = "45";
+    debug_panel.rows = "10";
+    div.appendChild(debug_panel);
+
+    return fCanvas;
+}
+
+/*******************************************************************************
+* Описание:   Функция рисует графическое представление графика 
+* Примечание: Нет.
+* Параметры:  fCanvas - холст.
+* Возвращает: fCtx - контекст холста.
+*/
+function create_field(fCanvas, nameCanvas)
+{
+    // Инициализация canvas
+    fCanvas = document.getElementById(nameCanvas);
+    fCanvas.width  = f_width;
+    fCanvas.height = f_height;
+    var fCtx = fCanvas.getContext("2d");
+
+    // Масштабируем график в зависимости от заданных параметров
+    // min_y, max_y, step_y, min_x, max_x
+    chart_scaling();
+
+    // Рисуем сетку по Y
+    var net_y_step = 0.5;                             // Шаг сетки по Y
+    var net_y_count = (max_y-min_y)/net_y_step;         // Количество линий сетки по оси Y         
+    var net_y_p_size = (f_height-axis_x)/net_y_count;            // Размер шага сетки(в пикселях)
+
+    fCtx.beginPath();
+    for (var i=1; i<net_y_count; i++)
+    {
+        fCtx.lineWidth = 1;
+        fCtx.moveTo(axis_y, (net_y_p_size*i + axis_x));
+        fCtx.lineTo(f_width, (net_y_p_size*i + axis_x)); 
+        fCtx.strokeStyle = "#c0c0c0"; 
+
+        fCtx.font = chart_font;
+        fCtx.textAlign = "center";
+        fCtx.fillText((max_y-net_y_step*i), 10, (net_y_p_size*i + axis_x));          
+    }
+    fCtx.stroke();
+
+    return fCtx;
+}
+
+var data = [
+    // pos X, max, open, close, min, text
+];  
+
+/*******************************************************************************
+* Описание:   Функция рисует свечу. 
+* Примечание: Нет.
+* Параметры:  - fCtx - контекст холста,
+*             - pos_x - позиция на оси Х,
+*             - maxCandle - точка максимума, 
+              - openCandle - точка открытия, 
+              - closeCandle - точка закрытия, 
+              - minCandle - точка минимума.
+* Возвращает: Нет.
+*/
+function drawCandle(fCtx, posX, maxCandle, openCandle, closeCandle, minCandle)
+{
+    // Определяем цвет "свечи"
+    // Зеленый - открытие меньше закрытия
+    // Красный - закрытие меньше открытия
+    var color;
+    if (openCandle < closeCandle) {
+        color = '#04bf85';
+    } else {
+        color = '#db4c3c';
+    }                        
+
+    // Рисуем "открытие" и "закрытие"
+    fCtx.beginPath();
+    fCtx.lineWidth = marker_width;
+    fCtx.moveTo(posX, openCandle);
+    fCtx.lineTo(posX, closeCandle);
+    fCtx.strokeStyle = color;
+    fCtx.stroke();   
+
+    // Рисуем "максимум" и "минимум"
+    fCtx.beginPath();
+    fCtx.lineWidth = 2;
+    fCtx.moveTo(posX, maxCandle);
+    fCtx.lineTo(posX, minCandle);
+    fCtx.strokeStyle = color;
+    fCtx.stroke();
+}
+
+var periodSMA = 4;
+var label_index = 1;
+
+/*******************************************************************************
+* Описание:   Функция рисует текстовую метку свечи. 
+* Примечание: Нет.
+* Параметры:  - fCtx - контекст холста,
+*             - posX - позиция на оси Х,
+*             - markerPos - позиция маркера,
+*             - textLabel - текст метки.
+* Возвращает: Нет.
+*/
+function drawXLabel(fCtx, posX, markerPos, textLabel)
+{
+    // Подписываем точку по оси X
+    fCtx.font = chart_font;
+    fCtx.textAlign = "center";
+        
+    // Рассчитываем количество текстовых меток,
+    // которые возможно отобразить на оси X, 
+    // и которые визуально будут разлечимы
+    var text_size = (fCtx.measureText(textLabel).width);            // Получаем длину текста в пикселях
+    if (marker_width > text_size) {                 // Если размер маркера, больше размера текста, то выводим метку
+        fCtx.fillStyle = "#000000";
+        fCtx.fill();
+        fCtx.fillText(textLabel, posX, 10);
+    } else {                                        // В противном случае метка выводится не всегда
+        // Период вывода метки(над какой свечей будем выводить текст)
+        var label_period = Math.floor(max_x/max_label_count);                 
+
+        if ((label_period*label_index) == markerPos) {
+            fCtx.fillStyle = "#000000";
+            fCtx.fill();            
+            fCtx.fillText(textLabel, posX, 10);
+
+            // Выводим линию по оси X
+            fCtx.beginPath();
+            fCtx.lineWidth = 1;
+            fCtx.moveTo(posX, axis_x);
+            fCtx.lineTo(posX, f_height);
+            fCtx.strokeStyle = "#c0c0c0";
+            fCtx.stroke();             
+
+            // Если достигли ограничения
+            // кол-ва меток, сбрасываем его       
+            if (label_index==(max_label_count-1)) {
+                label_index=1;
+            } else {
+                label_index++;
+            }
+        }   
+    }    
+}
+
+/*******************************************************************************
+* Описание:   Функция добавления свечи на график 
+* Примечание: Нет.
+* Параметры:  - fCtx - контекст холста,
+              - max - точка максимума, 
+              - open - точка открытия, 
+              - close - точка закрытия, 
+              - min - точка минимума, 
+              - pos_x - позиция на оси Х,
+              - point_text - текст свечи по оси Х.
+* Возвращает: Нет.
+*/
+function add_point(fCtx, pos_x, max, open, close, min, point_text)
+{
+    // Формируем текст точки
+    // для отображении на оси X
+    var marker_pos = pos_x;
+
+    // Проверяем не вылезли ли за размеры экрана
+    // если вылезли, то масштабируем график
+    if (pos_x == max_x) {
+        max_x = pos_x+1;
+        update_chart(fCtx);
+    } 
+
+    // Расчет позиции(по пикселям) относительно pos_x
+    pos_x *= marker_width;                          
+    pos_x += (marker_width/2)+axis_y;             // Смещаем позицию относительно начала координат оси Х
+
+    // Расчет позиции вывода по Y(open)
+    var index = Math.round((open-min_y)/step_y);
+    if (index >= array_y_points.length) {index--;}                // Во избежании выхода за пределы массива
+    var position_open = f_height - array_y_points[index] + axis_x;
+
+    // Расчет позиции вывода по Y(close)
+    index = Math.round((close-min_y)/step_y);
+    if (index >= array_y_points.length) {index--;}                // Во избежании выхода за пределы массива
+    var position_close = f_height - array_y_points[index] + axis_x;
+
+    // Расчет позиции вывода по Y(max)
+    index = Math.round((max-min_y)/step_y);
+    if (index >= array_y_points.length) {index--;}                // Во избежании выхода за пределы массива
+    var position_max = f_height - array_y_points[index] + axis_x;
+
+    // Расчет позиции вывода по Y(min)
+    index = Math.round((min-min_y)/step_y);
+    if (index >= array_y_points.length) {index--;}                // Во избежании выхода за пределы массива
+    var position_min = f_height - array_y_points[index] + axis_x;
+
+    // Отображаем "свечу"
+    drawCandle(fCtx, pos_x, position_max, position_open, position_close, position_min);
+
+    // Отображаем метку "свечи" по оси X
+    drawXLabel(fCtx, pos_x, marker_pos, point_text);  
+}
+
+/*******************************************************************************
+* Описание:   Функция рисует SMA. 
+* Примечание: Нет.
+* Параметры:  - fCtx - контекст холста,
+*             - posX - позиция на оси Х,
+*             - posY - позиция на оси Y.
+* Возвращает: Нет.
+*/
+function drawSMA(fCtx, posX, posY)
+{
+    // Рисуем среднее значение
+    fCtx.beginPath();
+    fCtx.lineWidth = 1;
+    fCtx.arc(posX, posY, 3, 0, 2*Math.PI);
+    fCtx.fillStyle = "#0000ff";
+    fCtx.fill();
+    fCtx.strokeStyle = "#0000ff";
+    fCtx.stroke();
+}
+
+/*******************************************************************************
+* Описание:   Функция обновляет график 
+* Примечание: Нет.
+* Параметры:  - fCtx - контекст холста.
+* Возвращает: Нет.
+*/
+function update_chart(fCtx)
+{
+    fCtx.clearRect(0, 0, f_width, f_height);             // Чистим канву
+    fCtx = create_field(canvas, "graph1");                                     // Пересоздаем поле графика(с новым масштабом)
+
+    label_index=1;                      // Сбрасываем индекс текстовой метки
+        
+    // Грузим новые данные
+    for (var i=0; i<data.length; i++)                                        
+    {
+        add_point(fCtx, data[i][0], data[i][1], data[i][2], data[i][3], data[i][4], data[i][5]);
+
+        // Складываем предыдущие четыре значения закрытия
+        if (data[i][0] >= periodSMA-1) {
+
+            middle = (data[i][3]+data[i-1][3]+data[i-2][3]+data[i-3][3])/periodSMA;
+
+            pos_x = data[i][0];
+            pos_x *= marker_width;                          
+            pos_x += (marker_width/2)+axis_y;             // Смещаем позицию относительно начала координат оси Х
+
+            // Расчет позиции вывода по Y(close)
+            var index = Math.round((middle-min_y)/step_y);
+            if (index >= array_y_points.length) {index--;}                // Во избежании выхода за пределы массива
+            var pos_y = f_height - array_y_points[index] + axis_x;
+
+            // Рисуем среднее значение
+            drawSMA(fCtx, pos_x, pos_y);         
+        }
+    }        
+}
+
+/*******************************************************************************
+* Описание:   Функция чистит график 
+* Примечание: Нет.
+* Параметры:  - fCtx - контекст холста.
+* Возвращает: Нет.
+*/
+function clear_chart(fCtx)
+{
+    data.length = 0;                            // Чистим массив данных
+    fCtx.clearRect(0, 0, f_width, f_height);
+    fCtx = create_field(canvas, "graph1");    
+}
+
+/*******************************************************************************
+* Описание:   Функция создает график. 
+* Примечание: Нет.
+* Параметры:  - fCanvas - холст.
+* Возвращает: Нет.
+*/
+function createChart(fCanvas) 
+{
+    canvas = create_canvas("graph1");
+    ctx = create_field(canvas, "graph1");
+}
+
+
+//----------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
+// ТЕСТОВЫЕ ФУНКЦИИ
+//----------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
+
+// Генерируем пометку времени для точки графика -------------------------------------
+var time = [0, 0, 0];
+function calculate_time(new_hours, new_minuts, new_seconds)
+{
+    var str_time=[];         // Строковое представление времени
+
+    time[2]+=new_seconds;
+    if (time[2] > 59) {
+        time[2] = 0;
+        new_minuts++;
+    }
+
+    time[1]+=new_minuts;
+    if (time[1] > 59) {
+        time[1] = 0;
+        new_hours++;
+    }
+
+    time[0]+=new_hours;
+    if (time[0] > 23) {
+
+    }
+
+    for (var i=0; i<time.length; i++)
+    {
+        if (time[i] < 10) {
+            str_time[i] = "0" + time[i];
+        } else {
+            str_time[i] = time[i];
+        }
+    }
+
+    return str_time[0] + ":" + str_time[1] + ":" + str_time[2];
+}
+
+// Функция генерирует рандомное число ----------------------------------------------
+function getRandomArbitary(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+// Функция выводит рандомные значения на график ------------------------------------
+var random_timer;
+var position_x = 0;
+var index = 0;
+
+    function add_random_data()
+    {
+        // Генерируем случайные точки максимум, открытие, закрытие, минимум
+        var max_value = getRandomArbitary(min_y, max_y);
+        var min_value = getRandomArbitary(min_y, max_value);
+        var open_value = getRandomArbitary(min_value, max_value);
+        var close_value = getRandomArbitary(min_value, max_value);
+
+        // Добавляем новую точку
+        data.push([position_x, max_value, open_value, close_value, min_value, calculate_time(0, 0, 1)]);                     // Добавляем данные
+        update_chart(ctx);
+
+        // Выводим в окно для отображения точки(отладка)
+        document.getElementById('chart_points').value += "[" + position_x + "]," + 
+                                                            "max-" + max_value.toFixed(2) + 
+                                                            "min-" + min_value.toFixed(2) + 
+                                                            "open-" + open_value.toFixed(2) + 
+                                                            "close-" + close_value.toFixed(2) + ";\n";     
+        // Увеличиваем координату точки по оси Х                                                    
+        position_x++;
+
+        // Заново запускаем таймер
+        random_timer = setTimeout(add_random_data, 1000);     
+    }
+
+// Функция останавливает таймер, который генерирует рандомный график --------------------------
+    function random_stop()
+    {
+        time[0] = 0;
+        time[1] = 0;
+        time[2] = 0;
+        clearTimeout(random_timer);
+    }
+
+// Функция запускает таймер, который генерирует рандомный график --------------------------
+    function random_data()
+    {
+        random_stop();
+        position_x = 0;
+        clear_chart(ctx);
+
+        document.getElementById('chart_points').value = "";
+        random_timer = setTimeout(add_random_data, 1000);
+    }
+
+function add_data()
+{
+    var max_value = parseFloat(document.getElementById('point_max').value);
+    var min_value = parseFloat(document.getElementById('point_min').value);
+    var open_value = parseFloat(document.getElementById('point_open').value);
+    var close_value = parseFloat(document.getElementById('point_close').value);    
+
+    // Добавляем новую точку
+//    data.push([position_x, max_value, open_value, close_value, min_value]);                     // Добавляем данные
+    data.push([position_x, max_value, open_value, close_value, min_value, calculate_time(0, 0, 1)]);
+    update_chart(ctx);
+
+    // Выводим в окно для отображения точки(отладка)
+    document.getElementById('chart_points').value += "[" + position_x + "]," + 
+                                                        "max-" + max_value + 
+                                                        "min-" + min_value + 
+                                                        "open-" + open_value + 
+                                                        "close-" + close_value + ";\n";     
+    // Увеличиваем координату точки по оси Х                                                    
+    position_x++;
+}
+
+</script>
+<body onload="createChart(canvas)">
+    <div id="chart_area" style="float: left;">
+        <!--canvas id="chart_canvas" style="border:1px solid #000000;"></canvas><br-->
+        <!--br><textarea id="chart_points" rows="10" cols="45"></textarea-->
+    </div>
+
+    <div style="width: 200px; float: left;">
+
+        <!-- Поле "Point parameters:" -->
+        <fieldset>
+            <legend>Point parameters:</legend>
+            <label>point_max:   </label><input type="text" id = "point_max" style="width: 50px;" value="8.5"><br>
+            <label>point_open:  </label><input type="text" id = "point_open" style="width: 50px;" value="8.0"><br>
+            <label>point_close: </label><input type="text" id = "point_close" style="width: 50px;" value="7.5"><br>
+            <label>point_min:   </label><input type="text" id = "point_min" style="width: 50px;" value="7.0"><br> 
+            <button onclick="add_data()">Add point</button>  
+        </fieldset><br>
+            
+        <!-- Поле "Random data:" -->
+        <fieldset>
+            <legend>Random data:</legend>
+            <label>start time: </label><input type="text" id = "start_time" style="width: 50px;"><br>
+            <button onclick="random_data()">start Random</button><br>
+            <button onclick="random_stop()">stop Random</button>
+        </fieldset><br>
+    </div>
+
+</body>
+</html>
