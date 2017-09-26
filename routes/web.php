@@ -42,3 +42,23 @@ Route::get('/userrights','UserController@rights')->name('userrights');
 Route::get('/usermeta','UserController@metaData')->name('usermeta');
 
 Route::get('/account','UserController@useraccount')->name('useraccount');
+/*Task JSON data */
+Route::get('/j/task','TaskController@index')->name('json_task_list');
+Route::get('/j/task/add','TaskController@add')->name('json_task_add');
+Route::get('/j/task/{id}/edit','TaskController@edit')->name('json_task_edit');
+Route::get('/j/task/{id}/delete','TaskController@delete')->name('json_task_delete');
+Route::get('/j/task/status','TaskController@statuses')->name('json_task_status');
+Route::get('/j/task/type','TaskController@types')->name('json_task_type');
+/* USer JSON data*/
+Route::get('/{format}/user','UserController@index')->name('user.list');
+Route::get('/{format}/user/find/{id?}','UserController@index')->name('user.find');
+Route::get('/{format}/user/update/{id}','UserController@update')->name('user.update');
+Route::get('/{format}/user/add','Auth\RegisterController@create')->name('user.register');
+/* Deal controller JSON */
+Route::get('/{format}/deal','DealController@index')->name('deal.list');
+Route::get('/{format}/deal/add','DealController@store')->name('deal.add');
+Route::get('/{format}/deal/{id}/update','DealController@update')->name('deal.add');
+Route::get('/{format}/deal/delete','DealController@destroy')->name('deal.delete');
+/* Instruments */
+Route::get('/{format}/instrument','InstrumentController@index')->name('instrument.list');
+Route::get('/{format}/instrument/{id}/update','InstrumentController@update')->name('instrument.update');

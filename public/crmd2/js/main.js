@@ -7,6 +7,38 @@ jQuery(document).ready(function () {
 	});
 
 
+	jQuery('#user').click(function(){
+	    jQuery('.user').fadeIn(700);
+	});
+
+	jQuery('.new').click(function(){
+	    jQuery('.new_user').fadeIn(700);
+	});
+
+	jQuery('#deals').click(function(){
+	    jQuery('.popup.deals').fadeIn(700);
+	});
+
+	jQuery('.new').click(function(){
+	    jQuery('.new_user').fadeIn(700);
+	});
+
+	jQuery('#edit_user').click(function(){
+	    jQuery('.edit_user').fadeIn(700);
+	});
+
+	(function($) {
+		$(function() {
+
+		  $('ul.tabs_dashbord').on('click', 'li:not(.active)', function() {
+		    $(this)
+		      .addClass('active').siblings().removeClass('active')
+		      .closest('div.tabs_dash').find('div.tabs_dash_con').removeClass('active').eq($(this).index()).addClass('active');
+		  });
+
+		});
+		})(jQuery);
+
 	// jQuery('.main .content .item ul li p a').click(function(){
 	// 	jQuery(this).parent().parent().parent().parent().find('.popup').fadeIn();
 	// 	jQuery('.popup_filter').fadeOut();
@@ -20,8 +52,9 @@ jQuery(document).ready(function () {
 	// 	jQuery('.popup,.bgc').fadeOut();
 	// });
 
-	jQuery('.close,.bgc').click(function(){
-	    jQuery('.popup,.bgc').fadeOut(700);
+	jQuery('.close').click(function(){
+		jQuery(this).parent().fadeOut(700);
+		jQuery(this).parents().find('.bgc').fadeOut(700);
 	});
 
 	jQuery('#cust_in-sell').click(function(){
@@ -66,9 +99,7 @@ jQuery(document).ready(function () {
 	    jQuery('.sold_diamond,.bgc').fadeIn(700);
 	});
 
-	jQuery('#user').click(function(){
-	    jQuery('.user,.bgc').fadeIn(700);
-	});
+	
 
 	jQuery('#leads').click(function(){
 	    jQuery('.leads,.bgc').fadeIn(700);
@@ -78,15 +109,9 @@ jQuery(document).ready(function () {
 	    jQuery('.user_history,.bgc').fadeIn(700);
 	});
 
-	jQuery('.new').click(function(){
-		jQuery('.popup,.bgc').fadeOut(700);
-	    jQuery('.new_user,.bgc').fadeIn(700);
-	});
+	
 
-	jQuery('#edit_user').click(function(){
-		jQuery('.popup,.bgc').fadeOut(700);
-	    jQuery('.edit_user,.bgc').fadeIn(700);
-	});
+	
 
 	// jQuery('.user table tbody tr td a').click(function(){
 	// 	jQuery('.popup,.bgc').fadeOut(700);
@@ -188,11 +213,6 @@ jQuery(document).ready(function () {
 
 	jQuery('.main .content .item.task a.more').click(function(){
 		jQuery('.popup_task,.bgc').fadeIn(700);
-	});
-
-	jQuery('a#edit_user').click(function(){
-		jQuery('.popup,.bgc').fadeOut(700);
-		jQuery('.edit_user,.bgc').fadeIn(700);
 	});
 
 

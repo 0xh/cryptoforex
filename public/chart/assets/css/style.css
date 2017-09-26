@@ -1,0 +1,6 @@
+#main{
+    display: flex; 
+}
+button:hover{
+    cursor: pointer;
+}

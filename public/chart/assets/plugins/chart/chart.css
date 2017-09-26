@@ -1,0 +1,30 @@
+@import url(https://fonts.googleapis.com/css?family=Ubuntu);
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+
+html,
+body {
+  /*overflow: hidden;
+  margin: 0;
+  padding: 0;
+  height: 100%*/
+}
+
+body {
+  /*display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #111;*/
+}
+.tooltip-inner{
+    color: #333!important;
+    text-align: left;
+    background-color: white!important;
+    border: solid 1px green;
+    word-break: break-word;
+}
+.stock-graph, .stock-graph:hover{
+    cursor: crosshair;
+}
+.stock-graph:active{
+    cursor: -webkit-grabbing!important;
+}

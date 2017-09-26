@@ -13,12 +13,12 @@
     	<div class="table_carts">
             <table class="width">
               <thead>
-                <th>Актив</th>
-                <th>Дата/время/цена открытия</th>
-                <th>Дата/время/цена закрытия</th>
-                <th>вложено</th>
-                <th>получено</th>
-                <th>прибыль%</th>
+                <th>@lang('messages.Assets')</th>
+                <th>@lang('messages.D/T/O')</th>
+                <th>@lang('messages.D/T/C')</th>
+                <th>@lang('messages.invested')</th>
+                <th>@lang('messages.received')</th>
+                <th>@lang('messages.Profit') %</th>
               </thead>
               <tbody>
                 <tr>

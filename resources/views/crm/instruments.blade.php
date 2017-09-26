@@ -1,5 +1,5 @@
 <div class="item">
-    <strong>@lang('messages.instruments')</strong>
+    <strong>@lang('messages.instruments')<span>22</span></strong>
     <ul>
         @if(isset($instruments))
         <li>

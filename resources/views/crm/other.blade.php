@@ -1,5 +1,5 @@
-<div class="item">
-    <strong>No Name</strong>
+<!-- <div class="item">
+    <strong>No Name<span>22</span></strong>
     <ul>
         <li>
             <p><a href="#" id="cust_in-sell">Customers Diamonds in Sell</a></p>
@@ -17,7 +17,7 @@
             <p class="last_num">7</p>
         </li>
     </ul>
-</div>
+</div> -->
 <!-- <div class="item">
     <strong>Diamonds Operations</strong>
     <ul>
@@ -73,7 +73,7 @@
 </div>
 
 <div class="item">
-    <strong>Finance</strong>
+    <strong>Finance<span>22</span></strong>
     <ul>
         <li>
             <p><a href="#" id="money_transactions">Money transactions</a></p>
@@ -108,7 +108,7 @@
     </ul>
 </div> -->
 <div class="item">
-    <strong>Marketing</strong>
+    <strong>Marketing<span>22</span></strong>
     <ul>
         <li>
             <p><a href="#" id="affiliate">Affiliate users</a></p>
@@ -122,19 +122,19 @@
         </li>
     </ul>
 </div>
-<div class="item">
-    <strong>E-mail logs</strong>
+<!-- <div class="item">
+    <strong>E-mail logs<span>22</span></strong>
     <ul>
         <li>
             <p><a href="#" id="e-mail">Check e-mail logs ></a></p>
         </li>
     </ul>
-</div>
-<div class="item">
-    <strong>Telephone</strong>
+</div> -->
+<!-- <div class="item">
+    <strong>Telephone<span>22</span></strong>
     <ul>
         <li>
             <p><a href="#" id="telephone">Check telephone calls ></a></p>
         </li>
     </ul>
-</div>
+</div> -->

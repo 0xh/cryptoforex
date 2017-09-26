@@ -1,5 +1,48 @@
 jQuery(document).ready(function () {
 
+	// jQuery( function() {
+	//     jQuery( "#slider" ).slider({
+	//       value:100,
+	//       min: 0,
+	//       max: 500,
+	//       step: 50,
+	//       slide: function( event, ui ) {
+	//         jQuery( "#amount" ).val( "$" + ui.value );
+	//       }
+	//     });
+	//     jQuery( "#amount" ).val( "$" + jQuery( "#slider" ).slider( "value" ) );
+	//   } );
+	  
+	// jQuery('.main aside.left .item .inner').mouseover(function(){
+	// 	jQuery( this ).find('p.viz').fadeOut(),
+	// 	jQuery( this ).find('p.slice').fadeIn()
+	// });
+	
+	jQuery('.main aside.right .deal .tabs_popup .tab_cap .bot a').click(function(){
+		jQuery('.popup_open').fadeIn();
+		return false;
+	});
+
+	jQuery('.popup.popup_open a.order').click(function(){
+		jQuery('.popup_close').fadeIn();
+		return false;
+	});
+	  
+	jQuery('.minus').click(function () {
+        var $input = jQuery(this).parent().find('input');
+        var count = parseInt($input.val()) - 1;
+        count = count < 1 ? 1 : count;
+        $input.val(count);
+        $input.change();
+        return false;
+    });
+    jQuery('.plus').click(function () {
+        var $input = jQuery(this).parent().find('input');
+        $input.val(parseInt($input.val()) + 1);
+        $input.change();
+        return false;
+    });
+
 	ion.sound({
         sounds: [
             {name: "bell_ring"},
@@ -27,17 +70,35 @@ jQuery(document).ready(function () {
     });
 
 	jQuery('a.button').click(function(){
-		jQuery('body,.main,.main .content,.main > .container').addClass('see');
+		jQuery('body,.main,.main .content,.main > .container,aside.right').addClass('see');
 		jQuery(this).fadeOut();
 		jQuery('a.b_close').fadeIn();
+		jQuery('.open').addClass('see');
+		jQuery('aside.right').addClass('see');
 		return false
 	});
 
 	jQuery('a.b_close').click(function(){
-		jQuery('body,.main,.main .content,.main > .container').removeClass('see');
+		jQuery('body,.main,.main .content,.main > .container,aside.right').removeClass('see');
 		jQuery(this).fadeOut();
 		jQuery('a.button').fadeIn();
+		jQuery('.open').removeClass('see');
+		jQuery('aside.right').removeClass('see');
 		return false
+	});
+
+	jQuery('.main .content a.open').click(function(){
+		jQuery('aside.right').addClass('active');
+		jQuery('.content').addClass('active');
+		jQuery( this ).fadeOut();
+		jQuery('.main .content a.closee').fadeIn();
+	});
+
+	jQuery('.main .content a.closee').click(function(){
+		jQuery('aside.right').removeClass('active');
+		jQuery('.content').removeClass('active');
+		jQuery( this ).fadeOut();
+		jQuery('.main .content a.open').fadeIn();
 	});
 
 	jQuery('.main aside.left ul li .item').slideUp(0);
@@ -151,6 +212,10 @@ jQuery(document).ready(function () {
 		      .closest('div.tabs').find('div.tabs__content').removeClass('active').eq($(this).index()).addClass('active');
 		  });
 
+		  $('ul.tabs__caption').on('click', 'li.active', function() {
+		  	$(this).removeClass('active').closest('div.tabs').find('div.tabs__content').removeClass('active')
+		  });
+
 		});
 		})(jQuery);
 
@@ -235,11 +300,12 @@ jQuery(document).ready(function () {
 		return false
 	});
 
-	jQuery('.popup .tabs_popup .tab_cap .box .item.column .inner span').click(function(){
+	jQuery('.tab_cap .box .item.column .inner span').click(function(){
 		if ( jQuery( this ).hasClass('active') ) {
-			jQuery( this ).removeClass('active');
+			jQuery( '.tab_cap .box .item.column .inner span' ).removeClass('active');
 		} else {
-			jQuery('.popup,.bgc').fadeIn();
+			// jQuery('.popup,.bgc').fadeIn();
+			jQuery( '.tab_cap .box .item.column .inner span' ).removeClass('active');
 			jQuery( this ).addClass('active');
 		}
 		return false
@@ -284,6 +350,7 @@ jQuery(document).ready(function () {
 		} else {
 			jQuery(this).addClass('active');
 			jQuery(this).parents().find('nav').addClass('active');
+			jQuery('.notifications').slideUp();
 		}
 	});
 

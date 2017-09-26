@@ -35,58 +35,75 @@
     </script>
     <div class="deal">
         <div class="tabs_popup white">
-          <ul class="tab_item">
+          <!-- <ul class="tab_item">
             <li class="active">Сейчас</li>
             <li>При котировке</li>
-          </ul>
+          </ul> -->
           <div class="submiter tab_cap active" data-action="/deal/add" data-callback="pageReload">
             <div class="box">
-              <div class="item flex">
+              <div class="info flex">
+                <p>BTC/USD</p>
+                <p>3,967.28</p>
+              </div>
+              <strong>@lang('messages.Sumsd')</strong>
+              <div class="number">
+                <input type="text" value="100" size="5"/>
+                <div class="wrap flex">
+                  <span class="minus">-</span>
+                  <span class="plus">+</span>
+                </div>
+              </div>
+              <strong>@lang('messages.Krpl')</strong>
+              <form onsubmit="return false" oninput="level.value = flevel.valueAsNumber">
+                <output for="flying" name="level">0</output>
+                <input name="flevel" id="flying" type="range" min="1" max="20" value="10" step="1">
+              </form>
+              <!-- <div class="item flex">
                 <div class="inner">
-                  <p>Сумма сделки</p>
+                  <p>@lang('messages.Sumsd')</p>
                 </div>
                 <div class="inner">
                   <input type="text" name="num" placeholder="1000" data-name="amount" value="1000">
                 </div>
-              </div>
-              <div class="item flex">
+              </div> -->
+              <!-- <div class="item flex">
                 <div class="inner">
-                  <p>Кредитное плечо</p>
+                  <p>@lang('messages.Krpl')</p>
                 </div>
                 <div class="inner flex">
                   <input type="text" name="kr" placeholder="20" value="20" data-name="multiplier" onchange="multiplier(this)" class="multiplier" data-target=".multiplier-result">
                   <p>=</p>
                   <p><span>$20 000</span></p>
                 </div>
-              </div>
-              <div class="item flex">
+              </div> -->
+              <!-- <div class="item flex">
                 <div class="inner">
-                  <p><span>Комиссия сделки</span></p>
+                  <p><span>@lang('messages.Komsd')</span></p>
                 </div>
                 <div class="inner">
                   <p><span class="kr">2.673%</span></p>
                 </div>
-              </div>
+              </div> -->
             </div>
-            <div class="box">
+            <!-- <div class="box">
               <div class="item flex">
-                <p>Ограничение прибыли / убытка</p>
+                <p>@lang('messages.Profit')</p>
               </div>
               <div class="item flex column">
                 <div class="inner flex">
                   <span class="active"></span>
-                  <p>Прибыль</p>
+                  <p>@lang('messages.Profit')</p>
                   <p>+ 30.00%</p>
                   <input type="text" name="pr" data-name="stop_high" placeholder="300" value=0>
                 </div>
                 <div class="inner flex">
                   <span></span>
-                  <p>Прибыль</p>
+                  <p>@lang('messages.Profit')</p>
                   <p>+ 30.00%</p>
                   <input type="text" name="yb" data-name="stop_low" placeholder="300" value=0>
                 </div>
               </div>
-            </div>
+            </div> -->
             <div class="bot flex">
                 <input name="instrument_id" value="1" type="hidden" data-name="instrument_id"/>
                 <input name="direction" value="1" type="hidden" data-name="direction"/>
@@ -96,18 +113,32 @@
                         <p>3758.</p>
                         <b>60</b>
                     </div>
-                    <b>SELL</b>
+                    <b>@lang('messages.SELL')</b>
                 </a>
                 <a  onclick="$('[name=direction]').val(1);" href="#" class="up flex submit">
                     <div class="flex">
                         <p>3782.</p>
                         <b>50</b>
                     </div>
-                    <b>BUY</b>
+                    <b>@lang('messages.BUY')</b>
                 </a>
             </div>
+            <!-- <div class="work_order flex">
+              <p>BTC/BCH</p>
+              <p class="down"></p>
+              <p>$ <span>180.24</span></p>
+            </div> -->
           </div>
-          <div class="tab_cap submiter" data-action="/deal/add" data-callback="pageReload">
+          <div class="opan_order hidden flex column">
+            <h2>@lang('messages.open')</h2>
+            <div class="work_order flex">
+              <p>BTC/BCH</p>
+              <p class="down"></p>
+              <p>$ <span>180.24</span></p>
+            </div>
+            <a onclick="$('[name=direction]').val(-1);" href="#" class="down flex submit">@lang('messages.open_new')</a>
+          </div>
+          <!-- <div class="tab_cap submiter" data-action="/deal/add" data-callback="pageReload">
             <div class="box">
               <div class="item flex">
                 <div class="inner">
@@ -174,7 +205,7 @@
                     <b>BUY</b>
                 </a>
             </div>
-          </div>
+          </div> -->
         </div>
         <!-- <h2>Активные сделки</h2>
         <div class="flex column">

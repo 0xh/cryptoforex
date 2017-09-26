@@ -44,7 +44,128 @@
     </script>
 </head>
 <body>
-    <header class="header">
+  
+  <header class="header">
+      <div class="container flex">
+        <div class="logo">
+          <a href="/">
+            <img src="images/logo_x.png" alt="">
+          </a>
+        </div>
+        <div class="search">
+          <form action="#">
+            <input type="search" name="search" placeholder="Поиск инструментов. Например: LTE или Litecoin">
+          </form>
+        </div>
+        @if (Auth::guest())
+          <a class="out" href="{{ url('/login') }}">Login</a>
+          <a class="out" href="{{ url('/register') }}">Register</a>
+        @else
+          <div class="akk flex">
+            <div class="item">
+              <nav class="nav">
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form>
+                <p class="menu">Имя аккаунта</p>
+                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="out"><i class="ic prof_out"></i>Log out</a>
+                    <!-- <a href="#"><i class="ic prof_out"></i>выход</a>
+                <!-- <ul class="flex column hidden">
+                  <div class="top br flex">
+                    <p class="active">Демо счет</p>
+                    <div>
+                      <input type="checkbox" class="checkbox" id="checkbox" />
+                      <label for="checkbox"></label>
+                    </div>
+                    <p>Реальный счет</p>
+                  </div>
+                  <div class="br">
+                    <li><a href="#" class="bal"><i class="ic in"></i>Пополнить счет</a></li>
+                    <li><a href="#" class="bal2"><i class="ic out"></i>Вывод средств</a></li>
+                    <li><a href="#" class="his"><i class="ic ic_his"></i>История платежей</a></li>
+                  </div>
+                  <div class="br">
+                    <li><a href="#" class="cab"><i class="ic prof"></i>Управление профилем</a></li>
+                  </div>
+                  <li>
+                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="out"><i class="ic prof_out"></i>Log out</a>
+                    <!-- <a href="#"><i class="ic prof_out"></i>выход</a></li> -->
+                <!--</ul> -->
+              </nav>
+              <!-- <div class="inner flex">
+                <span class="demo">Демо счет</span>
+                <span class="money">10 000 $</span>
+              </div> -->
+            </div>
+            <div class="item">
+              <a href="#" class="mail"></a>
+            </div>
+            <div class="notifications hidden">
+              <div class="top flex">
+                <p>Уведомления</p>
+                <div class="arrow">
+                  <a href="#" class="left"></a>
+                  <a href="#" class="right"></a>
+                </div>
+              </div>
+              <ul>
+                <li class="active">
+                  <a href="#">
+                    Изменение торгового времени 15 августа в связи с Днем Вознесения Девы Марии 2017
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    Закрытие позиций по биткойну и лайткойну
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    Изменение торгового времени 28 августа по Z (FTSE) в связи с летними банковскими выходными в Великобритании
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    Изменение торгового времени 15 августа в связи с Днем Вознесения Девы Марии 2017
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    13 августа переход на летнее время в Чили
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    Изменение торгового времени 15 августа в связи с Днем Вознесения Девы Марии 2017
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    13 августа переход на летнее время в Чили
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="lang">
+              <ul>
+                <li class="active">
+                  <a href="#"><img src="images/flag-eng.png" alt=""></a>
+                </li>
+                <li>
+                  <a href="#"><img src="images/flag-arab.png" alt=""></a>
+                </li>
+                <li>
+                  <a href="#"><img src="images/flag-eng.png" alt=""></a>
+                </li>
+                <li>
+                  <a href="#"><img src="images/flag-arab.png" alt=""></a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        @endif
+        </div>
+    </header>
+
+    <!-- <header class="header">
         <div class="container">
             <div class="logo">
                 <a href="{{ url('/' )}}"><img src="/images/logo.png" alt=""></a>
@@ -207,7 +328,7 @@
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form>
             @endif
       </div>
-  </header>
+  </header> -->
   <main class="main">
       <div class="container">
 
@@ -222,7 +343,7 @@
       <div class="item flex">
         <p>"Xcryptex LTD, London, UK. VAT 000000000"</p>
         <div class="copyright">
-          <p>Xcryptex LTD Copyright 2017 �</p>
+          <p>Xcryptex LTD Copyright 2017 ©</p>
         </div>
       </div>
     </div>
@@ -1832,7 +1953,7 @@
               </div>
           </form>
       </div>
-      <strong>Customersâ€™ diamonds</strong>
+      <strong>CustomersÃ¢â‚¬â„¢ diamonds</strong>
       <div class="close"></div>
       <table>
           <thead>
@@ -4211,7 +4332,7 @@
       </div>
   </div>
 
-  <div class="popup new_user">
+  <!-- <div class="popup new_user">
       <strong>New Users</strong>
       <div class="close"></div>
       <div class="search">
@@ -4364,19 +4485,25 @@
               <span>5</span>/<span>57</span>
           </div>
       </div>
-  </div>
+  </div> -->
 
   <div class="bgc"></div>
+
+  <?php @include('crm.popup') ?>
   <!-- Script-->
   <!--  Vendor amCharts -->
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+  <script src="http://aplicant.good-point.ru/alfa-diamonds/js/jquery.shapeshift-master/core/jquery.shapeshift.min.js"></script>
   <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
   <script src="https://www.amcharts.com/lib/3/serial.js"></script>
   <script src="https://www.amcharts.com/lib/3/amstock.js"></script>
   <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
   <script src="{{ asset('js/settings.js') }}"></script>
   <script src="/crmd2/js/main.js"></script>
+  <script src="/crmd2/js/main_new.js"></script>
   <script src="/crmd2/js/i.js"></script>
+  <!-- <script src="/crmd2/js/jquery.shapeshift.min.js"></script> -->
   <script src="{{ asset('js/loader.js') }}"></script>
   <script src="{{ asset('js/cryptofx.fn.js') }}"></script>
 

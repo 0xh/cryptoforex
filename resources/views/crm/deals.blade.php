@@ -1,5 +1,5 @@
 <div class="item">
-    <strong>@lang('messages.deals')</strong>
+    <strong>@lang('messages.deals')<span>22</span></strong>
     <ul>
         @if(isset($deals))
         <li>
@@ -9,51 +9,8 @@
         </li>
         @endif
     </ul>
-    <div class="popup deals">
-        <div class="search">
-            <form action="#">
-                <input type="search" placeholder="Search">
-                <button type="submit"></button>
-                <!-- <a href="#" class="filter">Show filter</a> -->
-                <p><input type="checkbox" name="online" data-name="online" value="online"> Active Only</p>
-                <!-- <a href="#" class="new">Add user</a> -->
-                <!-- <div class="popup popup_filter">
-                    <input type="radio" name="radio" data-name="radio" value="Admin"> Admin<br>
-                    <input type="radio" name="radio" data-name="radio" value="Manager"> Manager<br>
-                    <input type="radio" name="radio" data-name="radio" value="Client"> Client<br>
-                    <input type="radio" name="radio" data-name="radio" value="Affiliate"> Affiliate<br>
-                    <input type="radio" name="radio" data-name="radio" value="Super_Admin"> Super Admin<br>
-                    <input type="radio" name="radio" data-name="radio" value="Fired"> Fired
-                </div> -->
-            </form>
-        </div>
-        <strong>Deals</strong>
-        <div class="close"></div>
-        <table>
-            <thead>
-                <tr>
-
-                    <td>ID <div class="arrow"><span></span><span></span></div></td>
-                    <td>Registred <div class="arrow"><span></span><span></span></div></td>
-                    <td>Updated <div class="arrow"><span></span><span></span></div></td>
-                    <td>User<div class="arrow"><span></span><span></span></div></td>
-                    <td>Instrument <div class="arrow"><span></span><span></span></div></td>
-                    <td>Status <div class="arrow"><span></span><span></span></div></td>
-
-                    <td>Amount <div class="arrow"><span></span><span></span></div></td>
-                    <td>Multiplier <div class="arrow"><span></span><span></span></div></td>
-                    <td>Direction <div class="arrow"><span></span><span></span></div></td>
-                    <td>Profit <div class="arrow"><span></span><span></span></div></td>
-                    <td>Stops <div class="arrow"><span></span><span></span></div></td>
-
-
-                    <td></td>
-                </tr>
-            </thead>
-            <tbody class="loader" data-action="/deal" data-function="crmDealList" data-autostart="true" data-trigger=""></tbody>
-        </table>
-    </div>
-    <script>
+    
+    <!-- <script>
         window.onloads.push(function(){
             $("#deals").on("click",function(){
                 jQuery('.popup,.bgc').fadeOut((window.animationTime!=undefined)?window.animationTime:256);
@@ -119,5 +76,5 @@
                 document.location.reload();
             }
         });
-    </script>
+    </script> -->
 </div>

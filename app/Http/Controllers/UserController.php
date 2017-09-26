@@ -7,6 +7,8 @@ use App\Account;
 use App\User;
 use App\UserMeta;
 use App\UserRights;
+use App\UserStatus;
+use App\UserHierarchy;
 use App\Currency;
 use App\Instrument;
 use App\Deal;
@@ -27,7 +29,7 @@ class UserController extends Controller{
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $rq,$id=null){
+    public function index(Request $rq,$format='json',$id=null){
         if(Auth::guest())return route('home');
         $user = $rq->user();
         if($user->rights_id<=1)return route('home');
@@ -42,6 +44,10 @@ class UserController extends Controller{
             $resor["country"] = is_null($country)?"-":$country->value;
             $resor["last_login"] = is_null($ll)?'':$ll->meta_value;
             $resor["last_ip"] = is_null($lip)?'':$lip->meta_value;
+            $manager = UserHierarchy::where('user_id','=',$user->id)->first();
+            $resor["manager"] = is_null($manager)?[]:User::find($manager->parent_user_id);
+            $resor["status"] = UserStatus::find($user->status_id);
+            $resor["rights"] = UserRights::find($user->rights_id);
             $resor["account"] = [];
             // $resor["created_at"] =date("Y-m-d H:i:s",$user->created_at);
             $accounts = Account::user($user)->get();
@@ -50,7 +56,7 @@ class UserController extends Controller{
             }
             $res[]=$resor;
         }
-        return response()->json($res);
+        return response()->json($res,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
     }
 
     /**
@@ -69,9 +75,30 @@ class UserController extends Controller{
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $rq){
+        list($data,$res,$code)=[[],false,200];
+        try{
+            $data['name'] = $rq->input('name',false);
+            $data['surname'] = $rq->input('surname',false);
+            $data['rights_id'] = $rq->input('rights_id',false);
+            $data['email'] = $rq->input('email',false);
+            $data['phone'] = $rq->input('phone',false);
+            $data['password'] = $rq->input('password',false);
+            $data['status_id'] = $rq->input('status_id',false);
+            if($data['rights_id']==false)$data['rights_id']=UserRights::where('name','=','client')->first()->id;
+            if($data['status_id']==false)$data['status_id']=UserStatus::where('code','=','newclient')->first()->id;
+            $user = User::create($data);
+            $res = $user->toArray();
+            $res['new_password'] = $password;
+        }
+        catch(Exception $e){
+            $code = 500;
+            $res = [
+                "error"=>$e->getCode(),
+                "message"=>$e->getMessage()
+            ];
+        }
+        return response()->json($res,$code,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
     }
 
     /**
@@ -103,12 +130,30 @@ class UserController extends Controller{
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id){
-        $user = User::findOrFail($id);
-        $udata = $request->all();
-        if(isset($udata["password"]))$udata["password"]=bcrypt($udata["password"]);
-        $user->update($udata);
-        return response()->json($user);
+    public function update(Request $rq,$format='json',$id){
+        list($res,$code)=[["error"=>"404","message"=>"User {$id} not found."],404];
+        try{
+            $user = User::findOrFail($id);
+            $udata = $rq->all();
+            if(isset($udata["password"]))$udata["password"]=bcrypt($udata["password"]);
+            if(isset($udata["manager_id"])){
+                $parent = User::findOrFail($udata["manager_id"]);
+                $uh = UserHierarchy::user($user)->first();
+                is_null($uh)?UserHierarchy::create(["user_id"=>$user->id,"parent_user_id"=>$parent->id]):$uh->update(["parent_user_id"=>$parent->id]);
+            }
+            if(isset($udata["country"]))
+                UserMeta::user($id)->name('country')->first()->update(['meta_value'=>$udata['country']]);
+            $user->update($udata);
+            return $this->index($rq,$format,$user->id);
+        }
+        catch(\Exception $e){
+            $code = 500;
+            $res = [
+                "error"=>$e->getCode(),
+                "message"=>$e->getMessage()
+            ];
+        }
+        return response()->json($res,$code,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
     }
 
     /**

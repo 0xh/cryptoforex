@@ -1,7 +1,7 @@
 <aside class="left">
     <ul>
         <li>
-            <a href="#">Инструменты</a>
+            <a href="#">@lang('messages.Instruments')</a>
             <!-- <div class="item flex flex-top" style="flex-wrap: wrap;">
                 <script>
 
@@ -60,11 +60,151 @@
                     getData(120,"chartdiv",id);
                 }
             </script>
-            <div class="item flex flex-top loader-instruments" data-action="/instrument" data-autostart="true" data-refresh="0" data-function="userInstruments"></div>
+            <div class="item flex flex-top loader-instruments" data-action="/instrument" data-autostart="false" data-refresh="0" data-function="userInstruments" style="display: none !important;"></div>
+
+            <!-- Новая версия -->
+
+            <div class="item item2 flex flex-top">
+                <div class="inner width flex flex-top red">
+                    <div class="box">
+                        <strong>Eur/USD</strong>
+                        <p class="viz"><i class="down"></i>(0.008%)</p>
+                        <p class="hidden slice">Eur/USD</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">L.1.19524</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">H.1.20079</p>
+                        <p class="hidden slice"><i class="down"></i>(0.18%)</p>
+                    </div>
+                </div>
+                <div class="inner width flex flex-top green">
+                    <div class="box">
+                        <strong>Eur/USD</strong>
+                        <p class="viz"><i class="down"></i>(0.008%)</p>
+                        <p class="hidden slice">Eur/USD</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">L.1.19524</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">H.1.20079</p>
+                        <p class="hidden slice"><i class="down"></i>(0.18%)</p>
+                    </div>
+                </div>
+                <div class="inner width flex flex-top red">
+                    <div class="box">
+                        <strong>Eur/USD</strong>
+                        <p class="viz"><i class="down"></i>(0.008%)</p>
+                        <p class="hidden slice">Eur/USD</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">L.1.19524</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">H.1.20079</p>
+                        <p class="hidden slice"><i class="down"></i>(0.18%)</p>
+                    </div>
+                </div>
+                <div class="inner width flex flex-top green">
+                    <div class="box">
+                        <strong>Eur/USD</strong>
+                        <p class="viz"><i class="down"></i>(0.008%)</p>
+                        <p class="hidden slice">Eur/USD</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">L.1.19524</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">H.1.20079</p>
+                        <p class="hidden slice"><i class="down"></i>(0.18%)</p>
+                    </div>
+                </div>
+            </div>
         </li>
         <li>
-            <a href="#">Популярные пары</a>
-            <div class="item flex flex-top loader-instruments" data-action="/instrument" data-autostart="true" data-refresh="0" data-function="userInstruments"></div>
+            <a href="#">@lang('messages.Poppar')</a>
+            <!-- <div class="item flex flex-top loader-instruments" data-action="/instrument" data-autostart="true" data-refresh="0" data-function="userInstruments"></div> -->
+
+            <!-- Новая версия -->
+
+            <div class="item item2 flex flex-top">
+                <div class="inner width flex flex-top red">
+                    <div class="box">
+                        <strong>Eur/USD</strong>
+                        <p class="viz"><i class="down"></i>(0.008%)</p>
+                        <p class="hidden slice">Eur/USD</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">L.1.19524</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">H.1.20079</p>
+                        <p class="hidden slice"><i class="down"></i>(0.18%)</p>
+                    </div>
+                </div>
+                <div class="inner width flex flex-top green">
+                    <div class="box">
+                        <strong>Eur/USD</strong>
+                        <p class="viz"><i class="down"></i>(0.008%)</p>
+                        <p class="hidden slice">Eur/USD</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">L.1.19524</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">H.1.20079</p>
+                        <p class="hidden slice"><i class="down"></i>(0.18%)</p>
+                    </div>
+                </div>
+                <div class="inner width flex flex-top red">
+                    <div class="box">
+                        <strong>Eur/USD</strong>
+                        <p class="viz"><i class="down"></i>(0.008%)</p>
+                        <p class="hidden slice">Eur/USD</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">L.1.19524</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">H.1.20079</p>
+                        <p class="hidden slice"><i class="down"></i>(0.18%)</p>
+                    </div>
+                </div>
+                <div class="inner width flex flex-top green">
+                    <div class="box">
+                        <strong>Eur/USD</strong>
+                        <p class="viz"><i class="down"></i>(0.008%)</p>
+                        <p class="hidden slice">Eur/USD</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">L.1.19524</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">H.1.20079</p>
+                        <p class="hidden slice"><i class="down"></i>(0.18%)</p>
+                    </div>
+                </div>
+            </div>
+
+
             <!-- <div class="item flex flex-top">
                 <div class="inner flex column">
                     <div class="pic flex">

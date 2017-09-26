@@ -24,6 +24,6 @@ class Instrument extends Model
      * @var array
      */
     protected $fillable = [
-        'from_currency_id','to_currency_id'
+        'from_currency_id','to_currency_id','comission','enabled'
     ];
 }

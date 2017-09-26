@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="xpodx.ru">
+    <meta name="publisher" content="Dennis A. Klepcha">
+    <meta name="description" content="candlestick chart">
+    <meta name="keywords" content="xpodx.ru, websites, HTML5">
+    <meta name="generator" content="xpodx core">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>Candlestick chart</title>
+    <!--[if lte IE 9]>
+         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"><script>
+    <![endif]-->
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="/chart/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/chart/assets/css/media.css">
+    <link rel="stylesheet" type="text/css" href="/chart/assets/plugins/tether/css/tether.css">
+    <link rel="stylesheet" type="text/css" href="/chart/assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/chart/assets/plugins/chart/chart.css">
+</head>
+<body>
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-12">
+
+                        <div class="row">
+                            <div class="col-md-3 text-left">
+                               <button type="button" id="panel-show-hide" class="btn btn-primary">add panel</button>
+                            </div>
+                            <div class="col-md-9 text-right">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                       <button type="button" id="area-show-hide" class="btn btn-primary">remove area</button>
+                                    </div>
+                                    <div class="col-md-3">
+                                       <button type="button" id="candle-show-hide" class="btn btn-primary">remove candle</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="main" class="stock-graph">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-right">
+                                <div class="btn-group btn-group-sm" id="candle-type" role="group" aria-label="Candle type">
+                                  <button type="button" class="btn btn-secondary">1 min</button>
+                                  <button type="button" class="btn btn-secondary">5 min</button>
+                                  <button type="button" class="btn btn-secondary">15 min</button>
+                                  <button type="button" class="btn btn-secondary">30 min</button>
+                                  <button type="button" class="btn btn-secondary">1 hour</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wheel">0</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+
+                        <div class="row">
+                            <div class="col-md-3 text-left">
+                               <button type="button" id="panel-show-hide_2" class="btn btn-primary">add panel</button>
+                            </div>
+                            <div class="col-md-9 text-right">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                       <button type="button" id="area-show-hide_2" class="btn btn-primary">remove area</button>
+                                    </div>
+                                    <div class="col-md-3">
+                                       <button type="button" id="candle-show-hide_2" class="btn btn-primary">remove candle</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="main_2" class="stock-graph">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-right">
+                                <div class="btn-group btn-group-sm" id="candle-type_2" role="group" aria-label="Candle type">
+                                  <button type="button" class="btn btn-secondary">1 min</button>
+                                  <button type="button" class="btn btn-secondary">5 min</button>
+                                  <button type="button" class="btn btn-secondary">15 min</button>
+                                  <button type="button" class="btn btn-secondary">30 min</button>
+                                  <button type="button" class="btn btn-secondary">1 hour</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wheel">0</div>
+            </div>
+        </div>
+        <div class="row">
+
+        </div>
+    </div>
+    <script type="text/javascript" src="/chart/assets/js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="/chart/assets/plugins/tether/js/tether.min.js"></script>
+    <script type="text/javascript" src="/chart/assets/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/chart/assets/plugins/d3/js/d3.v4.min.js"></script>
+    <script type="text/javascript" src="/chart/assets/plugins/d3/js/moment.js"></script>
+    <script type="text/javascript" src="/chart/assets/plugins/d3/js/utils.js"></script>
+    <script type="text/javascript" src="/chart/assets/plugins/chart/chart.js"></script>
+</body>
+</html>

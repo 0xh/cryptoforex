@@ -33,7 +33,9 @@ class InstrumentController extends Controller
                 "direction" => $direction,
                 "price" =>  $prices[0]->price,
                 "from_currency" => $fsym,
-                "to_currency" => $tsym
+                "to_currency" => $tsym,
+                "commision" => $row->comission,
+                "enabled" => $row->enabled
             ];
         }
         return response()->json($res,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
@@ -89,9 +91,21 @@ class InstrumentController extends Controller
      * @param  \App\Instrument  $instrument
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Instrument $instrument)
-    {
-        //
+    public function update(Request $rq,$forma='json',$id){
+        list($res,$code)=[["error"=>"404","message"=>"User {$id} not found."],404];
+        try{
+            $instrument = Instrument::findOrFail($id);
+            $instrument->update($rq->all());
+            $res = $instrument;
+        }
+        catch(\Exception $e){
+            $code = 500;
+            $res = [
+                "error"=>$e->getCode(),
+                "message"=>$e->getMessage()
+            ];
+        }
+        return response()->json($res,$code,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
     }
 
     /**

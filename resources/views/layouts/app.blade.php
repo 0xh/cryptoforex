@@ -4,7 +4,19 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/images/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -14,6 +26,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/main.css') }}" rel="stylesheet">
     <link href="{{ asset('css/cryptofx.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/polz.css') }}" rel="stylesheet">
     <!--  Vendor styles -->
     <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
     <!-- Scripts -->
@@ -48,10 +61,42 @@
     </script>
 </head>
 <body class="home">
+        <div class="informer-wrap">
+          <div id="informer">
+              <img src="/images/trade-down.png" alt="down"> EUR/USD <span style="color:#FF3100">1.1965</span> | 
+              <img src="/images/trade-down.png" alt="down"> USD/JPY <span style="color:#FF3100">110.16</span> | 
+              <img src="/images/trade-down.png" alt="down"> GBP/USD <span style="color:#FF3100">1.3285</span> | 
+              <img src="/images/trade-down.png" alt="down"> USD/CHF <span style="color:#FF3100">0.9602</span> | 
+              <img src="/images/trade-up.png" alt="up"> USD/CAD <span style="color:#6EAC2C">1.2179</span> | 
+              <img src="/images/trade-down.png" alt="down"> EUR/JPY <span style="color:#FF3100">131.80</span> | 
+              <img src="/images/trade-up.png" alt="up"> AUD/USD <span style="color:#6EAC2C">0.8018</span> | 
+              <img src="/images/trade-up.png" alt="up"> NZD/USD <span style="color:#6EAC2C">0.7283</span> | 
+              <img src="/images/trade-up.png" alt="up"> EUR/GBP <span style="color:#6EAC2C">0.9004</span> | 
+              <img src="/images/trade-down.png" alt="down"> EUR/CHF <span style="color:#FF3100">1.1492</span> | 
+              <img src="/images/trade-down.png" alt="down"> AUD/JPY <span style="color:#FF3100">88.33</span> | 
+              <img src="/images/trade-down.png" alt="down"> GBP/JPY <span style="color:#FF3100">146.34</span> | 
+              <img src="/images/trade-up.png" alt="up"> CHF/JPY <span style="color:#6EAC2C">114.69</span> | 
+              <img src="/images/trade-up.png" alt="up"> EUR/CAD <span style="color:#6EAC2C">1.4572</span> | 
+              <img src="/images/trade-up.png" alt="up"> AUD/CAD <span style="color:#6EAC2C">0.9766</span> | 
+              <img src="/images/trade-down.png" alt="down"> CAD/JPY <span style="color:#FF3100">90.42</span> | 
+              <img src="/images/trade-up.png" alt="up"> NZD/JPY <span style="color:#6EAC2C">80.26</span> | 
+              <img src="/images/trade-down.png" alt="down"> AUD/NZD <span style="color:#FF3100">1.1005</span> | 
+              <img src="/images/trade-down.png" alt="down"> GBP/AUD <span style="color:#FF3100">1.6566</span> | 
+              <img src="/images/trade-down.png" alt="down"> EUR/AUD <span style="color:#FF3100">1.4919</span> | 
+              <img src="/images/trade-down.png" alt="down"> GBP/CHF <span style="color:#FF3100">1.2760</span> | 
+              <img src="/images/trade-down.png" alt="down"> EUR/NZD <span style="color:#FF3100">1.6423</span> | 
+              <img src="/images/trade-down.png" alt="down"> AUD/CHF <span style="color:#FF3100">0.7701</span> | 
+              <img src="/images/trade-down.png" alt="down"> GBP/NZD <span style="color:#FF3100">1.8235</span> | 
+              <img src="/images/trade-down.png" alt="down"> USD/SGD <span style="color:#FF3100">1.3461</span> | 
+              <img src="/images/trade-down.png" alt="down"> USD/HKD <span style="color:#FF3100">7.8096</span> | 
+              <img src="/images/trade-down.png" alt="down"> USD/DKK <span style="color:#FF3100">6.2157</span> | 
+              <img src="/images/trade-down.png" alt="down"> GBP/CAD <span style="color:#FF3100">1.6184</span>
+          </div>
+      </div>
         @include('layouts.top')
         @yield('content')
 
-        <footer class="footer">
+        <footer class="footer blue">
           <div class="container">
             <div class="item flex">
               <p>"Xcryptex LTD, London, UK. VAT 000000000"</p>
@@ -518,6 +563,7 @@
         <!-- <script src="https://www.amcharts.com/lib/3/themes/none.js"></script> -->
         <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
         <script src="https://www.amcharts.com/lib/3/plugins/dataloader/dataloader.min.js" type="text/javascript"></script>
+        <script src="http://mcpants.github.io/jquery.shapeshift/core/jquery.shapeshift.min.js" type="text/javascript"></script>
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
