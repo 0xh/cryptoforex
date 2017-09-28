@@ -29,7 +29,7 @@
         </li>
         @endif
     </ul>
-    
+
     <script>
         window.onloads.push(function(){
             window.crm = $.extend(((window.crm!=undefined)?window.crm:{}),{
@@ -47,29 +47,28 @@
                             s+='<td>'+row.country+'</td>';
                             s+='<td>'+((row.account.demo!=undefined)?currency.value(row.account.demo.amount,"USD"):0)+'</td>';
                             s+='<td>'+((row.account.real!=undefined)?row.account.real.amount:0)+'</td>';
-                            s+='<td>'+row.rights_id+'</td>';
+                            s+='<td>'+row.rights.title+'</td>';
                             s+='<td></td>';
-                            s+='<td></td>';
+                            s+='<td>'+((row.manager.name)?row.manager.name:'')+'</td>';
                             s+='<td>'+new Date(row.last_login*1000)+'</td>';
                             s+='<td>'+row.last_ip+'</td>';
                             s+='<td><a href="#" onclick="crm.user.edit('+row.id+')" id="edit_user">Edit</a><a href="#" onclick="crm.user.info('+row.id+')" class="edit">Info</a></td>';
                             s+='</tr>'
                             container.append(s);
                         }
-                        var pp = cf.pagination(d),$pp = container.parent().closest(".pagination");
+                        var pp = cf.pagination(d),$pp = container.parent().next(".pagination");
                         if(!$pp.length) $pp = $('<div class="pagination"></div>').insertAfter(container.parent());
                         $pp.html(pp);
-
                     },
                     add:function(){},
                     edit:function(id){
                         $.ajax({
-                            url:"/user/"+id,
+                            url:"/json/user/"+id,
                             dataType:"json",
                             success:function(d,x,s){
                                 console.debug(d);
                                 var user = d[0];
-                                $('.edit_user').attr('data-action','/user/'+id+'/edit');
+                                $('.edit_user').attr('data-action','/json/user/'+id+'/update');
                                 for(var i in user)$('.edit_user form [data-name="'+i+'"]').val(user[i]);
                                 // $('.popup,.bgc').fadeOut((window.animationTime!=undefined)?window.animationTime:256);
                                 $('.edit_user').fadeIn((window.animationTime!=undefined)?window.animationTime:256);
@@ -81,16 +80,16 @@
                     info:function(id){
                         this.currentUser = id;
                         $.ajax({
-                            url:"/user/"+id,
+                            url:"/json/user/"+id,
                             dataType:"json",
                             before:function(){
                                 // $('.popup,.bgc').fadeOut((window.animationTime!=undefined)?window.animationTime:256);
                                 // $('.bgc').fadeIn((window.animationTime!=undefined)?window.animationTime:256);
                             },
                             success:function(d,x,s){
-                                var user = d[0],$cnr = $('.dashboard:first'),chart,rchart;
+                                var user = d[0],$cnr = $('.user_dashboard:first'),chart,rchart;
                                 $.ajax({
-                                    url:'/usermeta',
+                                    url:'/json/user/meta',
                                     dataType:"json",
                                     data:{
                                         meta_name:'user_chart_tune',
@@ -105,10 +104,10 @@
                                 for(var i in user.account) $cnr.find('.user-accounts:first').append('<div class="item-bank"><a href="#"><span></span>'+user.account[i].amount+'</a></div>');
                                 for(var i in user)$cnr.find('.user-'+i+':first').text(user[i]);
                                 $cnr.find('.edit:first').attr("onclick",'crm.user.edit('+user.id+')');
-                                graphControl.makeChart(120,"user_chart",id,chart);
-                                graphControl.makeChart(120,"real_chart",null,rchart);
+                                // graphControl.makeChart(120,"user_chart",id,chart);
+                                // graphControl.makeChart(120,"real_chart",null,rchart);
                                 // $('.edit_user').attr('data-action','/user/'+id+'/edit');
-                                // for(var i in user)$('.edit_user form [data-name="'+i+'"]').val(user[i]);
+                                for(var i in user)$('.edit_user form [data-name="'+i+'"]').val(user[i]);
                                 $cnr.fadeIn((window.animationTime!=undefined)?window.animationTime:256);
                             }
                         });
@@ -131,7 +130,7 @@
                         send:function(v){
                             var chart;
                             $.ajax({
-                                url:'/usermeta',
+                                url:'/json/user/meta',
                                 dataType:"json",
                                 data:{
                                     meta_name:'user_chart_tune',
@@ -170,7 +169,7 @@
             window.crmUserList = crm.user.list;
             window.crmUserCallback = function(d){
                 // $('.popup,.bgc').fadeOut((window.animationTime!=undefined)?window.animationTime:256);
-                document.location.reload();
+                // document.location.reload();
             }
         });
     </script>

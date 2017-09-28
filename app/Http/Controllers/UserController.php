@@ -33,15 +33,18 @@ class UserController extends Controller{
         if(Auth::guest())return route('home');
         $user = $rq->user();
         if($user->rights_id<=1)return route('home');
-        if(!is_null($id)) $users = [User::find($id)];
-        else $users = User::all();
+        $users = User::where('id','>','0');
+        if(!is_null($id)) $users = User::find($id);
+        else if($rq->input("status_id",false)!==false && $rq->input("status_id")!= "false") $users = User::where('status_id','=',$rq->input("status_id"));
+        else if($rq->input("rights_id",false)!==false && $rq->input("rights_id")!= "false") $users = User::where('rights_id','=',$rq->input("rights_id"));
+        $users= $users->get();
         $res = [];
         foreach($users as $user){
             $resor = $user->toArray();
-            $country = UserMeta::user($user)->where('meta_name','country')->first();
+            $country = UserMeta::user($user)->meta('country')->first();
             $ll = UserMeta::user($user)->where('meta_name','last_login')->first();
             $lip = UserMeta::user($user)->where('meta_name','last_login_ip')->first();
-            $resor["country"] = is_null($country)?"-":$country->value;
+            $resor["country"] = is_null($country)?"-":$country->meta_value;
             $resor["last_login"] = is_null($ll)?'':$ll->meta_value;
             $resor["last_ip"] = is_null($lip)?'':$lip->meta_value;
             $manager = UserHierarchy::where('user_id','=',$user->id)->first();
@@ -141,8 +144,10 @@ class UserController extends Controller{
                 $uh = UserHierarchy::user($user)->first();
                 is_null($uh)?UserHierarchy::create(["user_id"=>$user->id,"parent_user_id"=>$parent->id]):$uh->update(["parent_user_id"=>$parent->id]);
             }
-            if(isset($udata["country"]))
-                UserMeta::user($id)->name('country')->first()->update(['meta_value'=>$udata['country']]);
+            if(isset($udata["country"])){
+                $country = UserMeta::user($user)->meta('country')->first();
+                $country = is_null($country)?UserMeta::create(['user_id'=>$user->id,"meta_name"=>"country","meta_value"=>$udata['country']]):$country->update(['meta_value'=>$udata['country']]);
+            }
             $user->update($udata);
             return $this->index($rq,$format,$user->id);
         }
@@ -173,7 +178,10 @@ class UserController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function rights(){
-        return response()->json(UserRights::all());
+        return response()->json(UserRights::all(),200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+    }
+    public function status(){
+        return response()->json(UserStatus::all(),200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
     }
     public function useraccount(Request $rq){
         $user = User::find($rq->input("user_id"));

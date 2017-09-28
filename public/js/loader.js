@@ -26,6 +26,7 @@ var cf={
         return cf.getDataByField(s,"title",id);
     },
     _actions:[],
+    _loaders:[],
     _type:"get",
     refresher:function(){
         cf._actions=[];
@@ -70,7 +71,6 @@ var cf={
         return s;
     },
     loader:function(){
-        // console.debug(arguments);
         var container=arguments.length?$(arguments[0]):null;
         var _frshr = arguments.length?$(arguments[1]):new cf.refresher();
         this.opts = {
@@ -80,21 +80,29 @@ var cf={
         };
         if(container == null) return;
         this.attrs = {
+            uid:container.attr("data-name"),
             func:container.attr("data-function"),
             autostart:(container.attr("data-autostart")=="true"),
             action:container.attr("data-action"),
-            refresh:(container.attr("data-refresh")!=undefined)?container.attr("data-refresh"):0
-
+            refresh:(container.attr("data-refresh")!=undefined)?container.attr("data-refresh"):0,
+            trigger:(container.attr("data-trigger")!=undefined)?container.attr("data-trigger"):false,
+            request:(container.attr("data-request")!=undefined)?container.attr("data-request"):false,
+            callback:(container.attr("data-request-function")!=undefined)?container.attr("data-request-function"):false,
         };
         this.opts = $.extend(this.opts,this.attrs);
         this.opts = $.extend(this.opts,((arguments.length>1)?arguments[1]:{}));
-        this.execute = function(opts){
+        // console.debug(this.opts);
+        this.execute = function(){
+            var opts = this.opts;
+            opts.action = opts.container.attr('data-action');
             $.ajax({
                 url:opts.action,
                 type:cf._type,
                 success:function(d,x,s){
                     try{
                         if(opts.container.prop('tagName')=='SELECT'){
+                            opts.container.html('');
+                            opts.container.append('<option value="false">All</option>');
                             for(var i in d){
                                 var id = (d[i].id!=undefined)?d[i].id:'',name=(d[i].title)?d[i].title:((d[i].name)?d[i].name:'');
                                 opts.container.append('<option value="'+id+'">'+name+'</option>');
@@ -103,13 +111,27 @@ var cf={
                         }
                         else window[opts.func](opts.container,d,x,s);
                     }
-                    catch(e){console.error(e);}
+                    catch(e){console.error(opts,e);}
                 }
             });
         };
         // console.debug(this.opts);
         if(this.opts.autostart)this.execute(this.opts);
-
+        if(this.opts.trigger!==false){
+            var opts = this.opts,callback = (this.opts.callback!==false)?this.opts.callback:function(e){
+                var act_form = $($(this).attr("data-form")),act = act_form.attr("data-action"),
+                    act_uid = act_form.attr("data-name"),
+                    name = $(this).attr('data-name'), val =$(this).val(),
+                    re = new RegExp('('+name+')=[^\&]+(\&|$)','i');
+                if(act.match(re)){
+                    act = act.replace(re,'$1='+val+'$2')
+                }else act = act+ (act.match(/\?/)?'&':'?')+name+'='+val;
+                act_form.attr("data-action", act);
+                console.debug(act_form);
+                cf._loaders[act_uid].execute();
+            };
+            this.opts.container.on(this.opts.trigger,callback);
+        }
         if(parseInt(this.opts.refresh)>0){
             var bnd = {
                 run:this.execute,
@@ -121,6 +143,7 @@ var cf={
             // setTimeout(this.execute,this.refresh,60000);
             // setInterval(this.execute,this.refresh,this.opts);
         }
+        cf._loaders[this.opts.uid]= this;
         return this;
     },
     submiter:function(){
@@ -132,8 +155,10 @@ var cf={
                 $c.find("input,select").each(function(){
                     var n,v;
                     n = $(this).attr("data-name");
+                    v = $(this).val();
+                    if($(this).attr('type')=='checkbox')v=$(this).is(':checked')?"1":'0';
                     // n = (n==undefined)?$(this).attr("name"):undefined;
-                    if(n!=undefined && n.length)args[n]= $(this).val();
+                    if(n!=undefined && n.length)args[n]= v;
                 });
                 return args;
             };
