@@ -8,7 +8,10 @@
         </div>
         <div class="akk flex">
             @if (Auth::guest())
-                <p class="menu"><a href="{{ route('login') }}">@lang('messages.login')</a> or <a href="{{ route('register') }}">@lang('messages.register')</a></p>
+                @if(Request::is('login') or Request::is('register'))
+                @else
+                    <p class="menu"><a href="{{ route('login') }}">@lang('messages.login')</a> or <a href="{{ route('register') }}">@lang('messages.register')</a></p>
+                @endif
             @else
             <div class="item">
                 <nav class="nav">
@@ -139,9 +142,13 @@
             @endif
             <div class="lang">
                 <ul>
-                    <li><a href="#"><img src="images/flag-eng.png" alt=""></a></li>
-                    <li><a href="#"><img src="images/flag-arab.png" alt=""></a></li>
-                    <li class="active"><a href="#"><img src="images/Russia.png" alt=""></a></li>
+                    <li>
+                        <a href="#" class="flex center"><img src="images/flag-eng.png" alt=""></a>
+                        <ul class="sub">
+                            <li><a href="#"><img src="images/flag-arab.png" alt=""></a></li>
+                            <li class="active"><a href="#"><img src="images/Russia.png" alt=""></a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>

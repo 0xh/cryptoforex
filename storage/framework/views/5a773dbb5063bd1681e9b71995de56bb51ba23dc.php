@@ -24,9 +24,10 @@
                 window.instrument = null;
                 function userInstruments(container,d,x,s){
                     // console.debug("userInstruments",container,d);
-                    var firstInstrument = true, informer = '';
+                    var firstInstrument = true, informer = '',count=9;
                     for(var i in d){
                         var row=d[i],inst = row.title,elementId = 'instrument_chart_id_'+row.id;
+                        if(--count==0)break;
                         if(firstInstrument){
                             firstInstrument = false;
                             window.instrument = row;
@@ -36,40 +37,74 @@
                         informer+= (row.direction>0)?'<img src="/images/trade-up.png" alt="up">':'<img src="/images/trade-down.png" alt="fown"> '
                         informer+= row.from_currency.code+'/'+row.to_currency.code+' <span style="color:#FF3100">'+currency.value(row.price,'')+'</span> | ';
 
-                        s='<div class="instrument-bar" id="instrument_id_'+row.id+'" onclick="chooseInstrument('+row.id+')">';
-                        s+='<div class="mini-chart" id="'+elementId+'"></div>';
-                        s+='<div class="title">'+row.from_currency.code+'/'+row.to_currency.code+'</div>';
-                        s+='<div class="percents"><span class="'+((row.direction>0)?"up":"down")+'">'+currency.value(row.diff,'')+'%</span></div>';
-                        s+='<div class="diff">'+currency.value(row.price,'')+'</div>';
+                        s='<div class="inner instrument-bar width flex flex-top '+((row.direction>0)?"green":"red")+'" id="instrument_id_'+row.id+'" onclick="chooseInstrument('+row.id+')">';
+                        s+='<div class="box">'
+                                +'<span><img src="'+row.from_currency.image+'" alt=""><img src="'+row.to_currency.image+'" alt=""></span>'
+                                +'<p class="viz"><i class="'+((row.direction>0)?"up":"down")+'"></i>('+currency.value(row.diff,'')+'%)</p><p class="hidden slice">'+inst+'</p>'
+                            +'</div>';
+                        s+='<div class="box">'
+                                +'<strong>'+currency.value(row.price,'')+'<sub>9</sub></strong>'
+                                +'<p class="viz">L.'+currency.value(row.price,'')+'</p>'
+                            +'</div>';
+                        s+='<div class="box">'
+                                +'<strong>'+currency.value(row.price,'')+'<sub>9</sub></strong>'
+                                +'<p class="viz">H.'+currency.value(row.price,'')+'</p>'
+                            +'</div>';
+
+
+                        // s+='<div class="mini-chart" id="'+elementId+'"></div>';
+                        // s+='<div class="title">'+row.from_currency.code+'/'+row.to_currency.code+'</div>';
+                        // s+='<div class="percents"><span class="'+((row.direction>0)?"up":"down")+'">'+currency.value(row.diff,'')+'%</span></div>';
+                        // s+='<div class="diff">'+currency.value(row.price,'')+'</div>';
+
                         s+='</div>';
                         container.append(s);
-                        graphControl.makeMiniChart({
-                            eid:elementId,
-                            iid:row.id
-                        });
+                        // graphControl.makeMiniChart({
+                        //     eid:elementId,
+                        //     iid:row.id
+                        // });
                     }
                     $('#informer').html(informer);
                     chooseInstrument(window.instrument.id)
                 }
                 function chooseInstrument(id){
+
                     $('.instrument-bar').removeClass('active');
                     $('#instrument_id_'+id).addClass('active');
                     $('[name=instrument_id]').val(id);
                     window.instrument = window.instruments[id];
-                    $("#charttitle").html('<h1>'+window.instrument.title+'</h1>');
-                    getData(120,"chartdiv",id);
+                    $("#charttitle").html('<p>'+window.instrument.title+'</p>&nbsp;&nbsp<p>'+window.instrument.price+'</p>');
+                    if(window.MainChart != undefined){
+                        window.MainChart.xhrInstrumentId = id;
+                        window.MainChart.reloadData.call(true);
+                    }else{
+                        window.MainChart = new Chart(document.getElementById('main'), {
+                            xhrInstrumentId: id,     // query type currency number
+                            xhrPeriodFull: 720,    // data max period
+                            dataNum: 60,          // default zoom number of dataset in 1 screen
+                            xhrMaxInterval: 30000,  // renewal full data interval
+                            xhrMinInterval: 2000,    // ticks - min interval to update and redraw last close data
+                            btnVolume: false,       // bottom volume graph default state
+                            colorCandleBodyUp: "#f59" // example to change positive candle body
+                        });
+                    }
                 }
             </script>
-            <div class="item flex flex-top loader-instruments" data-action="/instrument" data-autostart="false" data-refresh="0" data-function="userInstruments" style="display: none !important;"></div>
+
+
 
             <!-- Новая версия -->
 
-            <div class="item item2 flex flex-top">
+            <div class="item item2 flex flex-top loader-instruments" data-action="/json/instrument" data-name="instruments" data-autostart="true" data-refresh="0" data-function="userInstruments"></div>
+            <!-- <div class="item item2 flex flex-top">
                 <div class="inner width flex flex-top red">
                     <div class="box">
-                        <strong>Eur/USD</strong>
+                        <span>
+                            <img src="/images/icon/btc.png" alt="">
+                            <img src="/images/icon/dgb.png" alt="">
+                        </span>
                         <p class="viz"><i class="down"></i>(0.008%)</p>
-                        <p class="hidden slice">Eur/USD</p>
+                        <p class="hidden slice">btc/dgb</p>
                     </div>
                     <div class="box">
                         <strong>1.1967<sub>9</sub></strong>
@@ -83,9 +118,12 @@
                 </div>
                 <div class="inner width flex flex-top green">
                     <div class="box">
-                        <strong>Eur/USD</strong>
+                        <span>
+                            <img src="/images/icon/doge.png" alt="">
+                            <img src="/images/icon/eth.png" alt="">
+                        </span>
                         <p class="viz"><i class="down"></i>(0.008%)</p>
-                        <p class="hidden slice">Eur/USD</p>
+                        <p class="hidden slice">doge/eth</p>
                     </div>
                     <div class="box">
                         <strong>1.1967<sub>9</sub></strong>
@@ -99,9 +137,12 @@
                 </div>
                 <div class="inner width flex flex-top red">
                     <div class="box">
-                        <strong>Eur/USD</strong>
+                        <span>
+                            <img src="/images/icon/msc.png" alt="">
+                            <img src="/images/icon/nvc.png" alt="">
+                        </span>
                         <p class="viz"><i class="down"></i>(0.008%)</p>
-                        <p class="hidden slice">Eur/USD</p>
+                        <p class="hidden slice">msc/nvc</p>
                     </div>
                     <div class="box">
                         <strong>1.1967<sub>9</sub></strong>
@@ -115,9 +156,12 @@
                 </div>
                 <div class="inner width flex flex-top green">
                     <div class="box">
-                        <strong>Eur/USD</strong>
+                        <span>
+                            <img src="/images/icon/ppc.png" alt="">
+                            <img src="/images/icon/rdd.png" alt="">
+                        </span>
                         <p class="viz"><i class="down"></i>(0.008%)</p>
-                        <p class="hidden slice">Eur/USD</p>
+                        <p class="hidden slice">ppc/rdd</p>
                     </div>
                     <div class="box">
                         <strong>1.1967<sub>9</sub></strong>
@@ -129,7 +173,83 @@
                         <p class="hidden slice"><i class="down"></i>(0.18%)</p>
                     </div>
                 </div>
-            </div>
+                <div class="inner width flex flex-top green">
+                    <div class="box">
+                        <span>
+                            <img src="/images/icon/start.png" alt="">
+                            <img src="/images/icon/storj.png" alt="">
+                        </span>
+                        <p class="viz"><i class="down"></i>(0.008%)</p>
+                        <p class="hidden slice">start/storj</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">L.1.19524</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">H.1.20079</p>
+                        <p class="hidden slice"><i class="down"></i>(0.18%)</p>
+                    </div>
+                </div>
+                <div class="inner width flex flex-top green">
+                    <div class="box">
+                        <span>
+                            <img src="/images/icon/usdt.png" alt="">
+                            <img src="/images/icon/usnbt.png" alt="">
+                        </span>
+                        <p class="viz"><i class="down"></i>(0.008%)</p>
+                        <p class="hidden slice">usdt/usnbt</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">L.1.19524</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">H.1.20079</p>
+                        <p class="hidden slice"><i class="down"></i>(0.18%)</p>
+                    </div>
+                </div>
+                <div class="inner width flex flex-top green">
+                    <div class="box">
+                        <span>
+                            <img src="/images/icon/usdt.png" alt="">
+                            <img src="/images/icon/usnbt.png" alt="">
+                        </span>
+                        <p class="viz"><i class="down"></i>(0.008%)</p>
+                        <p class="hidden slice">usdt/usnbt</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">L.1.19524</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">H.1.20079</p>
+                        <p class="hidden slice"><i class="down"></i>(0.18%)</p>
+                    </div>
+                </div>
+                <div class="inner width flex flex-top green">
+                    <div class="box">
+                        <span>
+                            <img src="/images/icon/xcp.png" alt="">
+                            <img src="/images/icon/btc.png" alt="">
+                        </span>
+                        <p class="viz"><i class="down"></i>(0.008%)</p>
+                        <p class="hidden slice">xcp/btc</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">L.1.19524</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">H.1.20079</p>
+                        <p class="hidden slice"><i class="down"></i>(0.18%)</p>
+                    </div>
+                </div>
+            </div> -->
         </li>
         <li>
             <a href="#"><?php echo app('translator')->getFromJson('messages.Poppar'); ?></a>
@@ -140,9 +260,12 @@
             <div class="item item2 flex flex-top">
                 <div class="inner width flex flex-top red">
                     <div class="box">
-                        <strong>Eur/USD</strong>
+                        <span>
+                            <img src="/images/icon/btc.png" alt="">
+                            <img src="/images/icon/dgb.png" alt="">
+                        </span>
                         <p class="viz"><i class="down"></i>(0.008%)</p>
-                        <p class="hidden slice">Eur/USD</p>
+                        <p class="hidden slice">btc/dgb</p>
                     </div>
                     <div class="box">
                         <strong>1.1967<sub>9</sub></strong>
@@ -156,9 +279,12 @@
                 </div>
                 <div class="inner width flex flex-top green">
                     <div class="box">
-                        <strong>Eur/USD</strong>
+                        <span>
+                            <img src="/images/icon/doge.png" alt="">
+                            <img src="/images/icon/eth.png" alt="">
+                        </span>
                         <p class="viz"><i class="down"></i>(0.008%)</p>
-                        <p class="hidden slice">Eur/USD</p>
+                        <p class="hidden slice">doge/eth</p>
                     </div>
                     <div class="box">
                         <strong>1.1967<sub>9</sub></strong>
@@ -172,9 +298,12 @@
                 </div>
                 <div class="inner width flex flex-top red">
                     <div class="box">
-                        <strong>Eur/USD</strong>
+                        <span>
+                            <img src="/images/icon/msc.png" alt="">
+                            <img src="/images/icon/nvc.png" alt="">
+                        </span>
                         <p class="viz"><i class="down"></i>(0.008%)</p>
-                        <p class="hidden slice">Eur/USD</p>
+                        <p class="hidden slice">msc/nvc</p>
                     </div>
                     <div class="box">
                         <strong>1.1967<sub>9</sub></strong>
@@ -188,9 +317,88 @@
                 </div>
                 <div class="inner width flex flex-top green">
                     <div class="box">
-                        <strong>Eur/USD</strong>
+                        <span>
+                            <img src="/images/icon/ppc.png" alt="">
+                            <img src="/images/icon/rdd.png" alt="">
+                        </span>
                         <p class="viz"><i class="down"></i>(0.008%)</p>
-                        <p class="hidden slice">Eur/USD</p>
+                        <p class="hidden slice">ppc/rdd</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">L.1.19524</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">H.1.20079</p>
+                        <p class="hidden slice"><i class="down"></i>(0.18%)</p>
+                    </div>
+                </div>
+                <div class="inner width flex flex-top green">
+                    <div class="box">
+                        <span>
+                            <img src="/images/icon/start.png" alt="">
+                            <img src="/images/icon/storj.png" alt="">
+                        </span>
+                        <p class="viz"><i class="down"></i>(0.008%)</p>
+                        <p class="hidden slice">start/storj</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">L.1.19524</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">H.1.20079</p>
+                        <p class="hidden slice"><i class="down"></i>(0.18%)</p>
+                    </div>
+                </div>
+                <div class="inner width flex flex-top green">
+                    <div class="box">
+                        <span>
+                            <img src="/images/icon/usdt.png" alt="">
+                            <img src="/images/icon/usnbt.png" alt="">
+                        </span>
+                        <p class="viz"><i class="down"></i>(0.008%)</p>
+                        <p class="hidden slice">usdt/usnbt</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">L.1.19524</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">H.1.20079</p>
+                        <p class="hidden slice"><i class="down"></i>(0.18%)</p>
+                    </div>
+                </div>
+                <div class="inner width flex flex-top green">
+                    <div class="box">
+                        <span>
+                            <img src="/images/icon/usdt.png" alt="">
+                            <img src="/images/icon/usnbt.png" alt="">
+                        </span>
+                        <p class="viz"><i class="down"></i>(0.008%)</p>
+                        <p class="hidden slice">usdt/usnbt</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">L.1.19524</p>
+                    </div>
+                    <div class="box">
+                        <strong>1.1967<sub>9</sub></strong>
+                        <p class="viz">H.1.20079</p>
+                        <p class="hidden slice"><i class="down"></i>(0.18%)</p>
+                    </div>
+                </div>
+                <div class="inner width flex flex-top green">
+                    <div class="box">
+                        <span>
+                            <img src="/images/icon/xcp.png" alt="">
+                            <img src="/images/icon/btc.png" alt="">
+                        </span>
+                        <p class="viz"><i class="down"></i>(0.008%)</p>
+                        <p class="hidden slice">xcp/btc</p>
                     </div>
                     <div class="box">
                         <strong>1.1967<sub>9</sub></strong>

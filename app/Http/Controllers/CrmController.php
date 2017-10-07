@@ -8,6 +8,7 @@ use App\User;
 use App\Currency;
 use App\Instrument;
 use App\Deal;
+use App\Transaction;
 use Illuminate\Support\Facades\Auth;
 
 class CrmController extends Controller

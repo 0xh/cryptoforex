@@ -28,15 +28,15 @@
 
                         <div class="row">
                             <div class="col-md-3 text-left">
-                               <button type="button" id="panel-show-hide" class="btn btn-primary">add panel</button>
+                               <button type="button" class="btn btn-primary panel-show-hide">add panel</button>
                             </div>
                             <div class="col-md-9 text-right">
                                 <div class="row">
                                     <div class="col-md-3">
-                                       <button type="button" id="area-show-hide" class="btn btn-primary">remove area</button>
+                                       <button type="button" class="btn btn-primary area-show-hide">remove area</button>
                                     </div>
                                     <div class="col-md-3">
-                                       <button type="button" id="candle-show-hide" class="btn btn-primary">remove candle</button>
+                                       <button type="button" class="btn btn-primary candle-show-hide">remove candle</button>
                                     </div>
                                 </div>
                             </div>
@@ -45,16 +45,15 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12 text-right">
-                                <div class="btn-group btn-group-sm" id="candle-type" role="group" aria-label="Candle type">
-                                  <button type="button" class="btn btn-secondary">1 min</button>
-                                  <button type="button" class="btn btn-secondary">5 min</button>
-                                  <button type="button" class="btn btn-secondary">15 min</button>
-                                  <button type="button" class="btn btn-secondary">30 min</button>
-                                  <button type="button" class="btn btn-secondary">1 hour</button>
+                                <div class="btn-group btn-group-sm candle-type" role="group" aria-label="Candle type">
+                                  <button type="button" period="1 min" class="btn btn-secondary">1 min</button>
+                                  <button type="button" period="5 min" class="btn btn-secondary">5 min</button>
+                                  <button type="button" period="15 min" class="btn btn-secondary">15 min</button>
+                                  <button type="button" period="30 min" class="btn btn-secondary">30 min</button>
+                                  <button type="button" period="1 hour" class="btn btn-secondary">1 hour</button>
                                 </div>
                             </div>
                         </div>
-                        <div class="wheel">0</div>
             </div>
         </div>
         <div class="row">
@@ -62,37 +61,33 @@
 
                         <div class="row">
                             <div class="col-md-3 text-left">
-                               <button type="button" id="panel-show-hide_2" class="btn btn-primary">add panel</button>
+                               <button type="button" class="btn btn-primary panel-show-hide">add panel</button>
                             </div>
                             <div class="col-md-9 text-right">
                                 <div class="row">
                                     <div class="col-md-3">
-                                       <button type="button" id="area-show-hide_2" class="btn btn-primary">remove area</button>
+                                       <button type="button" class="btn btn-primary area-show-hide">remove area</button>
                                     </div>
                                     <div class="col-md-3">
-                                       <button type="button" id="candle-show-hide_2" class="btn btn-primary">remove candle</button>
+                                       <button type="button" class="btn btn-primary candle-show-hide">remove candle</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div id="main_2" class="stock-graph">
+                        <div id="second" class="stock-graph">
                         </div>
                         <div class="row">
                             <div class="col-md-12 text-right">
-                                <div class="btn-group btn-group-sm" id="candle-type_2" role="group" aria-label="Candle type">
-                                  <button type="button" class="btn btn-secondary">1 min</button>
-                                  <button type="button" class="btn btn-secondary">5 min</button>
-                                  <button type="button" class="btn btn-secondary">15 min</button>
-                                  <button type="button" class="btn btn-secondary">30 min</button>
-                                  <button type="button" class="btn btn-secondary">1 hour</button>
+                                <div class="btn-group btn-group-sm candle-type" role="group" aria-label="Candle type">
+                                  <button type="button" period="1 min" class="btn btn-secondary">1 min</button>
+                                  <button type="button" period="5 min" class="btn btn-secondary">5 min</button>
+                                  <button type="button" period="15 min" class="btn btn-secondary">15 min</button>
+                                  <button type="button" period="30 min" class="btn btn-secondary">30 min</button>
+                                  <button type="button" period="1 hour" class="btn btn-secondary">1 hour</button>
                                 </div>
                             </div>
                         </div>
-                        <div class="wheel">0</div>
             </div>
-        </div>
-        <div class="row">
-
         </div>
     </div>
     <script type="text/javascript" src="/chart/assets/js/jquery-3.2.1.min.js"></script>
@@ -102,5 +97,6 @@
     <script type="text/javascript" src="/chart/assets/plugins/d3/js/moment.js"></script>
     <script type="text/javascript" src="/chart/assets/plugins/d3/js/utils.js"></script>
     <script type="text/javascript" src="/chart/assets/plugins/chart/chart.js"></script>
+    <script type="text/javascript" src="/chart/assets/js/script.js"></script>
 </body>
 </html>

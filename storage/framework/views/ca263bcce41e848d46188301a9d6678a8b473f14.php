@@ -27,6 +27,7 @@
     <link href="<?php echo e(asset('css/main.css')); ?>" rel="stylesheet">
     <link href="<?php echo e(asset('css/cryptofx.css')); ?>" rel="stylesheet">
     <link href="<?php echo e(asset('css/polz.css')); ?>" rel="stylesheet">
+    <link href="<?php echo e(asset('css/preload.css')); ?>" rel="stylesheet">
     <!--  Vendor styles -->
     <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
     <!-- Scripts -->
@@ -61,36 +62,162 @@
     </script>
 </head>
 <body class="home">
+  <div id="page-preloader">
+      <div class="diamonds-spinner">
+          <div class="spinner-image">
+              <img src="images/icon/btc.png" alt="." style="display: none">
+          </div>
+          <div class="spinner-image">
+              <img src="images/icon/dgb.png" alt="." style="display: none">
+          </div>
+          <div class="spinner-image">
+              <img src="images/icon/doge.png" alt="." style="display: none">
+          </div>
+          <div class="spinner-image">
+              <img src="images/icon/ppc.png" alt="." style="display: none">
+          </div>
+          <div class="spinner-image">
+              <img src="images/icon/msc.png" alt="." style="display: none">
+          </div>
+          <!-- <div class="spinner-image">
+              <img src="images/icon/ppc.png" alt="." style="display: none">
+          </div>
+          <div class="spinner-image">
+              <img src="images/icon/rdd.png" alt="." style="display: none">
+          </div> -->
+      </div>
+  </div>
+
         <div class="informer-wrap">
           <div id="informer">
-              <img src="/images/trade-down.png" alt="down"> EUR/USD <span style="color:#FF3100">1.1965</span> | 
-              <img src="/images/trade-down.png" alt="down"> USD/JPY <span style="color:#FF3100">110.16</span> | 
-              <img src="/images/trade-down.png" alt="down"> GBP/USD <span style="color:#FF3100">1.3285</span> | 
-              <img src="/images/trade-down.png" alt="down"> USD/CHF <span style="color:#FF3100">0.9602</span> | 
-              <img src="/images/trade-up.png" alt="up"> USD/CAD <span style="color:#6EAC2C">1.2179</span> | 
-              <img src="/images/trade-down.png" alt="down"> EUR/JPY <span style="color:#FF3100">131.80</span> | 
-              <img src="/images/trade-up.png" alt="up"> AUD/USD <span style="color:#6EAC2C">0.8018</span> | 
-              <img src="/images/trade-up.png" alt="up"> NZD/USD <span style="color:#6EAC2C">0.7283</span> | 
-              <img src="/images/trade-up.png" alt="up"> EUR/GBP <span style="color:#6EAC2C">0.9004</span> | 
-              <img src="/images/trade-down.png" alt="down"> EUR/CHF <span style="color:#FF3100">1.1492</span> | 
-              <img src="/images/trade-down.png" alt="down"> AUD/JPY <span style="color:#FF3100">88.33</span> | 
-              <img src="/images/trade-down.png" alt="down"> GBP/JPY <span style="color:#FF3100">146.34</span> | 
-              <img src="/images/trade-up.png" alt="up"> CHF/JPY <span style="color:#6EAC2C">114.69</span> | 
-              <img src="/images/trade-up.png" alt="up"> EUR/CAD <span style="color:#6EAC2C">1.4572</span> | 
-              <img src="/images/trade-up.png" alt="up"> AUD/CAD <span style="color:#6EAC2C">0.9766</span> | 
-              <img src="/images/trade-down.png" alt="down"> CAD/JPY <span style="color:#FF3100">90.42</span> | 
-              <img src="/images/trade-up.png" alt="up"> NZD/JPY <span style="color:#6EAC2C">80.26</span> | 
-              <img src="/images/trade-down.png" alt="down"> AUD/NZD <span style="color:#FF3100">1.1005</span> | 
-              <img src="/images/trade-down.png" alt="down"> GBP/AUD <span style="color:#FF3100">1.6566</span> | 
-              <img src="/images/trade-down.png" alt="down"> EUR/AUD <span style="color:#FF3100">1.4919</span> | 
-              <img src="/images/trade-down.png" alt="down"> GBP/CHF <span style="color:#FF3100">1.2760</span> | 
-              <img src="/images/trade-down.png" alt="down"> EUR/NZD <span style="color:#FF3100">1.6423</span> | 
-              <img src="/images/trade-down.png" alt="down"> AUD/CHF <span style="color:#FF3100">0.7701</span> | 
-              <img src="/images/trade-down.png" alt="down"> GBP/NZD <span style="color:#FF3100">1.8235</span> | 
-              <img src="/images/trade-down.png" alt="down"> USD/SGD <span style="color:#FF3100">1.3461</span> | 
-              <img src="/images/trade-down.png" alt="down"> USD/HKD <span style="color:#FF3100">7.8096</span> | 
-              <img src="/images/trade-down.png" alt="down"> USD/DKK <span style="color:#FF3100">6.2157</span> | 
-              <img src="/images/trade-down.png" alt="down"> GBP/CAD <span style="color:#FF3100">1.6184</span>
+            <div class="flex">
+              <img src="/images/trade-down.png" alt="down">
+              <span class="img">
+                <img src="/images/icon/btc.png" alt="">
+                <img src="/images/icon/dgb.png" alt="">
+              </span>
+              <span style="color:#FF3100">1.1965</span> |
+            </div>
+            <div class="flex">
+              <img src="/images/trade-down.png" alt="down">
+              <span class="img">
+                  <img src="/images/icon/doge.png" alt="">
+                  <img src="/images/icon/eth.png" alt="">
+              </span>
+              <span style="color:#FF3100">110.16</span> |
+            </div>
+            <div class="flex">
+              <img src="/images/trade-down.png" alt="down">
+              <span class="img">
+                  <img src="/images/icon/msc.png" alt="">
+                  <img src="/images/icon/nvc.png" alt="">
+              </span>
+              <span style="color:#FF3100">110.16</span> |
+            </div>
+            <div class="flex">
+              <img src="/images/trade-down.png" alt="down">
+              <span class="img">
+                  <img src="/images/icon/ppc.png" alt="">
+                  <img src="/images/icon/rdd.png" alt="">
+              </span>
+              <span style="color:#FF3100">110.16</span> |
+            </div>
+            <div class="flex">
+              <img src="/images/trade-down.png" alt="down">
+              <span class="img">
+                  <img src="/images/icon/start.png" alt="">
+                  <img src="/images/icon/storj.png" alt="">
+              </span>
+              <span style="color:#FF3100">110.16</span> |
+            </div>
+            <div class="flex">
+              <img src="/images/trade-down.png" alt="down">
+              <span class="img">
+                  <img src="/images/icon/usdt.png" alt="">
+                  <img src="/images/icon/usnbt.png" alt="">
+              </span>
+              <span style="color:#FF3100">110.16</span> |
+            </div>
+            <div class="flex">
+              <img src="/images/trade-down.png" alt="down">
+              <span class="img">
+                  <img src="/images/icon/usdt.png" alt="">
+                  <img src="/images/icon/usnbt.png" alt="">
+              </span>
+              <span style="color:#FF3100">110.16</span> |
+            </div>
+            <div class="flex">
+              <img src="/images/trade-down.png" alt="down">
+              <span class="img">
+                  <img src="/images/icon/xcp.png" alt="">
+                  <img src="/images/icon/btc.png" alt="">
+              </span>
+              <span style="color:#FF3100">110.16</span> |
+            </div>
+            <div class="flex">
+              <img src="/images/trade-down.png" alt="down">
+              <span class="img">
+                <img src="/images/icon/btc.png" alt="">
+                <img src="/images/icon/dgb.png" alt="">
+              </span>
+              <span style="color:#FF3100">1.1965</span> |
+            </div>
+            <div class="flex">
+              <img src="/images/trade-down.png" alt="down">
+              <span class="img">
+                  <img src="/images/icon/doge.png" alt="">
+                  <img src="/images/icon/eth.png" alt="">
+              </span>
+              <span style="color:#FF3100">110.16</span> |
+            </div>
+            <div class="flex">
+              <img src="/images/trade-down.png" alt="down">
+              <span class="img">
+                  <img src="/images/icon/msc.png" alt="">
+                  <img src="/images/icon/nvc.png" alt="">
+              </span>
+              <span style="color:#FF3100">110.16</span> |
+            </div>
+            <div class="flex">
+              <img src="/images/trade-down.png" alt="down">
+              <span class="img">
+                  <img src="/images/icon/ppc.png" alt="">
+                  <img src="/images/icon/rdd.png" alt="">
+              </span>
+              <span style="color:#FF3100">110.16</span> |
+            </div>
+            <div class="flex">
+              <img src="/images/trade-down.png" alt="down">
+              <span class="img">
+                  <img src="/images/icon/start.png" alt="">
+                  <img src="/images/icon/storj.png" alt="">
+              </span>
+              <span style="color:#FF3100">110.16</span> |
+            </div>
+            <div class="flex">
+              <img src="/images/trade-down.png" alt="down">
+              <span class="img">
+                  <img src="/images/icon/usdt.png" alt="">
+                  <img src="/images/icon/usnbt.png" alt="">
+              </span>
+              <span style="color:#FF3100">110.16</span> |
+            </div>
+            <div class="flex">
+              <img src="/images/trade-down.png" alt="down">
+              <span class="img">
+                  <img src="/images/icon/usdt.png" alt="">
+                  <img src="/images/icon/usnbt.png" alt="">
+              </span>
+              <span style="color:#FF3100">110.16</span> |
+            </div>
+            <div class="flex">
+              <img src="/images/trade-down.png" alt="down">
+              <span class="img">
+                  <img src="/images/icon/xcp.png" alt="">
+                  <img src="/images/icon/btc.png" alt="">
+              </span>
+              <span style="color:#FF3100">110.16</span> |
+            </div>
           </div>
       </div>
         <?php echo $__env->make('layouts.top', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
@@ -556,6 +683,8 @@
 
         <!--  Vendor amCharts -->
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+        <script src="http://aplicant.good-point.ru/alfa-diamonds/js/jquery.shapeshift-master/core/jquery.shapeshift.min.js"></script>
         <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
         <script src="https://www.amcharts.com/lib/3/serial.js"></script>
         <script src="https://www.amcharts.com/lib/3/amstock.js"></script>
@@ -564,22 +693,25 @@
         <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
         <script src="https://www.amcharts.com/lib/3/plugins/dataloader/dataloader.min.js" type="text/javascript"></script>
         <script src="http://mcpants.github.io/jquery.shapeshift/core/jquery.shapeshift.min.js" type="text/javascript"></script>
-    <!-- Scripts -->
-    <script src="<?php echo e(asset('js/app.js')); ?>"></script>
-    <script src="<?php echo e(asset('js/main.js')); ?>"></script>
-    <script src="<?php echo e(asset('js/objects.js')); ?>"></script>
-    <script src="<?php echo e(asset('js/ion.sound.js')); ?>"></script>
-    <script src="<?php echo e(asset('js/settings.js')); ?>"></script>
+        <!-- Scripts -->
+        <script src="<?php echo e(asset('js/app.js')); ?>"></script>
+        <script src="https://cdn.jsdelivr.net/jquery.marquee/1.4.0/jquery.marquee.min.js"></script>
+        <script src="<?php echo e(asset('js/main.js')); ?>"></script>
+        <!-- <script src="<?php echo e(asset('js/jquery.li-scroller.1.0.js')); ?>"></script> -->
+        <!-- <script src="<?php echo e(asset('js/jquery.liMarquee.js')); ?>"></script> -->
+        <script src="<?php echo e(asset('js/objects.js')); ?>"></script>
+        <script src="<?php echo e(asset('js/ion.sound.js')); ?>"></script>
+        <script src="<?php echo e(asset('js/settings.js')); ?>"></script>
 
-    <!--  Own tools -->
-    <script src="<?php echo e(asset('js/cryptofx.js')); ?>"></script>
-    <script src="<?php echo e(asset('js/cryptofx.fn.js')); ?>"></script>
-    <script src="<?php echo e(asset('js/loader.js')); ?>"></script>
-    <script>
-        $(document).ready(function(){
-            new cf.loader($(".loader-instruments"),Fresher);
-        });
+        <!--  Own tools -->
+        <script src="<?php echo e(asset('js/cryptofx.js')); ?>"></script>
+        <script src="<?php echo e(asset('js/cryptofx.fn.js')); ?>"></script>
+        <script src="<?php echo e(asset('js/loader.js')); ?>"></script>
+        <script>
+            $(document).ready(function(){
+                new cf.loader($(".loader-instruments"),Fresher);
+            });
 
-    </script>
+        </script>
 </body>
 </html>

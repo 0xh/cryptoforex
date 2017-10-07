@@ -9,9 +9,9 @@ use App\Option;
 use App\Price;
 class DataTune{
     public static function fork(User $user){
-        $usertune = UserMeta::user($user)->byName("user_chart_tune")->first();
+        $usertune = UserMeta::user($user)->meta("user_chart_tune")->first();
         if(is_null($usertune) || $usertune == false) return 1;
-        $utdata = UserMeta::user($user)->byName("user_chart_tune_data")->first();
+        $utdata = UserMeta::user($user)->meta("user_chart_tune_data")->first();
         $data = [
             "last"=>time(),
             "from"=>1,

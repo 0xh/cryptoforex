@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Instrument;
+use App\InstrumentHistory;
 use App\Currency;
 use App\Price;
 use Illuminate\Http\Request;
@@ -14,9 +15,9 @@ class InstrumentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(){
+    public function index(Request $rq, $format='json',$id=false){
         $res = [];
-        $selector = Instrument::whereNotNull('id');
+        $selector = ($id===false)?Instrument::whereNotNull('id'):Instrument::where('id','=',$id);
         // filters {
         // }
         foreach($selector->get() as $row){
@@ -34,7 +35,7 @@ class InstrumentController extends Controller
                 "price" =>  $prices[0]->price,
                 "from_currency" => $fsym,
                 "to_currency" => $tsym,
-                "commision" => $row->comission,
+                "commission" => $row->commission,
                 "enabled" => $row->enabled
             ];
         }
@@ -94,9 +95,19 @@ class InstrumentController extends Controller
     public function update(Request $rq,$forma='json',$id){
         list($res,$code)=[["error"=>"404","message"=>"User {$id} not found."],404];
         try{
+            $code = 200;
             $instrument = Instrument::findOrFail($id);
-            $instrument->update($rq->all());
+            $ud = $rq->all();
+            InstrumentHistory::create([
+                'instrument_id'=>$instrument->id,
+                'old_enabled'=>$instrument->enabled,
+                'new_enabled'=>isset($ud['enabled'])?$ud['enabled']:$instrument->enabled,
+                'old_commission'=>$instrument->commission,
+                'new_commission'=>isset($ud['commission'])?$ud['commission']:$instrument->commission,
+            ]);
+            $instrument->update($ud);
             $res = $instrument;
+
         }
         catch(\Exception $e){
             $code = 500;
@@ -117,5 +128,8 @@ class InstrumentController extends Controller
     public function destroy(Instrument $instrument)
     {
         //
+    }
+    public function history(Request $rq,$format='json',$id){
+        return response()->json(InstrumentHistory::where('instrument_id','=',$id)->orderBy('id','desc')->get(),200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
     }
 }

@@ -13,6 +13,8 @@ use App\Currency;
 use App\Instrument;
 use App\Deal;
 use Illuminate\Support\Facades\Auth;
+use cryptofx\DataArray;
+use Log;
 
 class UserController extends Controller{
     /**
@@ -23,6 +25,7 @@ class UserController extends Controller{
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('online');
     }
     /**
      * Display a listing of the resource.
@@ -34,10 +37,17 @@ class UserController extends Controller{
         $user = $rq->user();
         if($user->rights_id<=1)return route('home');
         $users = User::where('id','>','0');
-        if(!is_null($id)) $users = User::find($id);
-        else if($rq->input("status_id",false)!==false && $rq->input("status_id")!= "false") $users = User::where('status_id','=',$rq->input("status_id"));
-        else if($rq->input("rights_id",false)!==false && $rq->input("rights_id")!= "false") $users = User::where('rights_id','=',$rq->input("rights_id"));
+        if(!is_null($id)) $users = User::where('id','=',$id);
+        if($rq->input("status_id",false)!==false && $rq->input("status_id")!= "false") $users = User::where('status_id','=',$rq->input("status_id"));
+        if($rq->input("rights_id",false)!==false && $rq->input("rights_id")!= "false") $users = User::where('rights_id','=',$rq->input("rights_id"));
+        if($rq->input("online",false)!==false && $rq->input("online")== "1") $users = User::whereRaw("id in (select user_id from user_meta where meta_name='last_login' and meta_value>?)",strtotime("-10 minute"));
+        if($rq->input("country","false")!=="false") $users = User::whereRaw("id in (select user_id from user_meta where meta_name='country' and meta_value = ?)",$rq->input("country"));
+        if($rq->input("manager","false")!=="false" && $rq->input("manager")!= "false") $users = User::whereRaw("id in (select user_id from user_hierarchy where parent_user_id = ?)",$rq->input("manager"));
+        if($rq->input("search","false")!=="false" && $rq->input("search")!= "false") $users = User::whereRaw("(name like '%".$rq->input("search")."%' or surname like '%".$rq->input("search")."%' )");
+
+        Log::debug($users->toSql());
         $users= $users->get();
+
         $res = [];
         foreach($users as $user){
             $resor = $user->toArray();
@@ -49,17 +59,18 @@ class UserController extends Controller{
             $resor["last_ip"] = is_null($lip)?'':$lip->meta_value;
             $manager = UserHierarchy::where('user_id','=',$user->id)->first();
             $resor["manager"] = is_null($manager)?[]:User::find($manager->parent_user_id);
-            $resor["status"] = UserStatus::find($user->status_id);
-            $resor["rights"] = UserRights::find($user->rights_id);
-            $resor["account"] = [];
-            // $resor["created_at"] =date("Y-m-d H:i:s",$user->created_at);
-            $accounts = Account::user($user)->get();
-            foreach ($accounts as $account) {
-                $resor["account"][$account->type]=$account->toArray();
-            }
+            $resor["status"] = $user->status;
+            $resor["rights"] = $user->rights;
+            // $resor["status"] = UserStatus::find($user->status_id);
+            // $resor["rights"] = UserRights::find($user->rights_id);
+            $resor["accounts"] = $user->accounts;
             $res[]=$resor;
         }
-        return response()->json($res,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+        $res = DataArray::sort($res,$rq->input('sort',false));
+        return ($format=='json')
+                ?response()->json($res,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT)
+                :view('crm.user.dashboard',["user"=>$res[0],"deals"=>Deal::byUser($id)->byStatus("open")->get()]);
+            ;
     }
 
     /**
@@ -201,5 +212,15 @@ class UserController extends Controller{
             else $um->update($ud);
         }
         return response()->json($um);
+    }
+    public function countries(Request $rq){
+        $res=[];$sel = UserMeta::where('meta_name','=','country')->distinct()->get();
+        foreach ($sel as $c) {
+            $res[]=[
+                "id"=>$c->meta_value,
+                "title"=>$c->meta_value
+            ];
+        }
+        return response()->json($res,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
     }
 }

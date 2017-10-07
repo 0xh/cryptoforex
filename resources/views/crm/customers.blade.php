@@ -34,19 +34,21 @@
         window.onloads.push(function(){
             window.crm = $.extend(((window.crm!=undefined)?window.crm:{}),{
                 user:{
-                    currentUser:null,
+                    current:null,
                     list:function (container,d,x,s){
                         container.html('');
                         for(var i in d){
                             var s = '<tr data-class="user" data-id="'+d[i].id+'">',row=d[i];
+                            s+='<td><input type="checkbox" data-name="user_selected" value="user_'+row.id+'" data-id="'+row.id+'" /></td>';
                             s+='<td>'+row.id+'</td>';
                             s+='<td>'+new Date(row.created_at*1000)+'</td>';
                             s+='<td>'+row.email+'</td>';
                             s+='<td>'+row.name+' '+row.surname+'</td>';
                             s+='<td>'+row.phone+'</td>';
                             s+='<td>'+row.country+'</td>';
-                            s+='<td>'+((row.account.demo!=undefined)?currency.value(row.account.demo.amount,"USD"):0)+'</td>';
-                            s+='<td>'+((row.account.real!=undefined)?row.account.real.amount:0)+'</td>';
+                            for(var i =0;i <2;++i){
+                                s+=(row.accounts[i]==undefined)?'<td>0</td>':'<td>'+currency.value(row.accounts[i].amount,"USD")+'&nbsp;<sup>'+row.accounts[i].type+'</sup></td>';
+                            }
                             s+='<td>'+row.rights.title+'</td>';
                             s+='<td></td>';
                             s+='<td>'+((row.manager.name)?row.manager.name:'')+'</td>';
@@ -77,8 +79,21 @@
                         });
 
                     },
-                    info:function(id){
-                        this.currentUser = id;
+                    info:function(){
+                        if(!arguments.length)return;
+                        var id = arguments[0];
+                        id=(typeof(id)=="object")?window.crm.user.current:id;
+                        if(id==undefined)return;
+                        this.current = id;
+                        $.ajax({
+                            url:"/html/user/"+id,
+                            dataType:"html",
+                            success:function(d,x,s){
+                                // console.debug(d,x,s);
+                                $('body').append(d);
+                                // crm.user.calendar.init('scheduler_here');
+                            }
+                        });return;
                         $.ajax({
                             url:"/json/user/"+id,
                             dataType:"json",
@@ -100,10 +115,28 @@
                                         crm.user.tune.setcurdata({tune:v});
                                     }
                                 });
-                                console.debug("info: ",user);
-                                for(var i in user.account) $cnr.find('.user-accounts:first').append('<div class="item-bank"><a href="#"><span></span>'+user.account[i].amount+'</a></div>');
-                                for(var i in user)$cnr.find('.user-'+i+':first').text(user[i]);
-                                $cnr.find('.edit:first').attr("onclick",'crm.user.edit('+user.id+')');
+
+                                window.crm.user.instruments($cnr,id);
+                                var udeals = cf._loaders[$cnr.find('#user_deals').attr("data-name")];
+                                udeals.opts.data["user_id"]=user.id;
+                                udeals.execute();
+                                $cnr.find('.finance').html('');
+                                for(var i in user.account){
+                                    var accname = (i=="demo")?'@lang("messages.real")':'@lang("messages.demo")';
+                                    $cnr.find('.finance').append('<div class="item-bank">\
+                                        <h5 class="user-account-name">'+accname+'</h5><a href="#">\
+                                        <span></span>'+user.account[i].amount+'</a>\
+                                        <div class"submiter user-account" id="user_account_'+user.account[i].id+'" data-autostart="true" data-id="'+user.account[i].id+'" data-action="/json/finance/deposit?account_id='+user.account[i].id+'&merchant_id=1" data-callback="crmUserInfo">\
+                                        <input name="amount" data-name="amount"/>\
+                                        <button class="deposit submit" onclick="window.crm.user.deposit(\'user_account_'+user.account[i].id+'\')">@lang("messages.deposit")</button>\
+                                    </div></div>');
+
+                                }
+                                for(var i in user){
+                                    $cnr.find('.user-'+i).html(user[i]);
+                                }
+                                $cnr.find('.edit').attr("onclick",'crm.user.edit('+user.id+')');
+
                                 // graphControl.makeChart(120,"user_chart",id,chart);
                                 // graphControl.makeChart(120,"real_chart",null,rchart);
                                 // $('.edit_user').attr('data-action','/user/'+id+'/edit');
@@ -113,13 +146,70 @@
                         });
 
                     },
+                    deposit:function(i){
+                        var tut = $('#'+i);
+                        cf.submiter(tut);
+                        //console.debug(tut);
+                    },
+                    deals:function(container,d,x,s){
+                        container.html('');
+                        for(var i in d){}
+                        var pp = cf.pagination(d),$pp = container.parent().next(".pagination");
+                        if(!$pp.length) $pp = $('<div class="pagination"></div>').insertAfter(container.parent());
+                        $pp.html(pp);
+                    },
+                    calendar:{
+                        init:function(id) {
+                            scheduler.config.xml_date="%Y-%m-%d %H:%i";
+                            scheduler.templates.week_date_class=function(date,today){
+                                if (date.getDay()==0 || date.getDay()==6)
+                                return "weekday";
+                                return "";
+                            };
+                            scheduler.init(id,new Date(2018,0,13),"week");
+                            scheduler.load("./Scheduler/data/events.xml");
+                        }
+                    },
+                    instruments:function($cnr,id){
+                        var inst_tabs = $cnr.find('.user-instruments-tab'), inst_tab_cons=inst_tabs.parent(), first = true;
+                        inst_tabs.html('');
+                        for(var i in window.crm.instrument.data){
+                            var inst = window.crm.instrument.data[i],s = '';
+                            inst_tabs.append('<li>'+inst.title+'</li>');
+                            s+='<div class="tabs_dash_con user-instrument" data-id="'+inst.id+'">';
+                            s+='<h3>'+inst.title+'</h3>';
+                            s+='<img alt="chart for '+inst.title+'" style="width:60%;height:300px; border:solid 1px grey;float:left;"/>';
+                            s+='<div class="submiter instrument-fee" style="width:30%;float:left;margin-left:10px;">';
+                            s+='<label for="user_instrument_fee">Commission: <input name="fee" value="1"/>%</label>';
+                            s+='<a href="#" class="edit button submit">@lang("messages.save")</a>';
+                            s+='</div>';
+                            s+='<div class="tunner" style="float:left;margin:10px 0 0 10px; border-top:solid 1px grey;width:30%;">';
+                            s+='<span class="user_chart_tune">5%</span>&nbsp;';
+                            s+='<a id="user_chart_up" href="#" class="button" onclick="crm.user.tune.up('+inst.id+')">Up</a>&nbsp;';
+                            s+='<a id="user_chart_up" href="#" class="button" onclick="crm.user.tune.real('+inst.id+')">Real</a>&nbsp;';
+                            s+='<a id="user_chart_up" href="#" class="button" onclick="crm.user.tune.down('+inst.id+')">Down</a>';
+                            s+='</div>';
+                            s+='</div>';
+                            inst_tab_cons.append(s);
+                            /*<div class="tabs_dash_con">
+                                <div class="user-chart-tuner">
+                                    <span id="user_chart_tune">5%</span>&nbsp;
+                                    <a id="user_chart_up" href="#" onclick="crm.user.tune.up()">Up</a>&nbsp;
+                                    <a id="user_chart_up" href="#" onclick="crm.user.tune.real()">Real</a>&nbsp;
+                                    <a id="user_chart_up" href="#" onclick="crm.user.tune.down()">Down</a>
+                                </div>
+                                <div id="user_chart" class="chart"></div>
+                            </div>*/
+                        }
+                        inst_tabs.find('li:first').click();
+                    },
                     tune:{
                         getcurdata:function(){
                             var v = $("#user_chart_tune").text().replace(/%/i,"");
                             v=isNaN(v)?0:parseInt(v);
                             return {
                                 tune:v,
-                                user:crm.user.currentUser
+                                user:crm.user.current
                             };
                         },
                         setcurdata:function(v){
@@ -167,10 +257,66 @@
                 }
             });
             window.crmUserList = crm.user.list;
+            window.crmUserDealList = crm.user.deals;
+            window.crmUserInfo = crm.user.info;
             window.crmUserCallback = function(d){
                 // $('.popup,.bgc').fadeOut((window.animationTime!=undefined)?window.animationTime:256);
                 // document.location.reload();
             }
         });
     </script>
+</div>
+<div class="popup user">
+    <div class="search">
+        <form action="#">
+            <input type="search" placeholder="Search" class="requester" data-name="search" data-trigger="keyup" data-target="user-list"><button type="submit"></button>
+            <!-- <a href="#" class="filter">Show filter</a> -->
+            <p><input type="checkbox" name="online" data-name="online" class="requester" data-trigger="change" data-target="user-list" value="online">@lang('messages.online_users')</p>
+            <!-- <div class="batcher">
+            </div> -->
+            <div class="filter_users">
+                <select class="loader" data-name="manager_id" data-action="/json/user?rights_id=7" data-autostart="true" data-trigger="change" data-target="user-list"></select>
+                <a href="javascript:0;" class="button batcher" data-list="user_selected" data-action="/json/user/{data-id}/update?manager_id={manager_id}" data-target="user-list" onclick="cf.batcher(this);">@lang('message.add_manager')</a>
+            </div>
+
+            <div class="filter_users">
+                <select class="loader requester" data-name="status_id" data-action="/json/user/status" data-autostart="true" data-trigger="change" data-target="user-list"></select>
+            </div>
+            <div class="filter_users">
+                <select class="loader requester" data-name="rights_id" data-action="/json/user/rights" data-autostart="true" data-trigger="change" data-target="user-list"></select>
+            </div>
+            <div class="filter_users">
+                <select class="loader requester" data-name="country" data-action="/json/user/countries" data-autostart="true" data-trigger="change" data-target="user-list"></select>
+            </div>
+
+            <div class="filter_users">
+                <select class=" requester" data-name="source" data-action="/json/user/countries" data-autostart="true" data-trigger="change" data-target="user-list"></select>
+            </div>
+        </form>
+    </div>
+    <strong>Users</strong>
+    <div class="close"></div>
+    <table>
+        <thead>
+            <tr>
+                <td><input type="checkbox" class="check-all" data-list="user_selected" /></td>
+                <td>ID <div class="arrow sorter" data-name="country" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
+                <td>Registred <div class="arrow sorter" data-name="created_at" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
+                <!-- <td>Registred <div class="arrow sorter"><span></span><span></span></div></td> -->
+                <td>Email <div class="arrow sorter" data-name="email" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
+                <td>Name <div class="arrow sorter" data-name="name" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
+                <td>Phone <div class="arrow sorter" data-name="phone" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
+                <td>Country <div class="arrow sorter" data-name="country" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
+                <td>Balance 1 <div class="arrow sorter" data-name="country" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
+                <td>Balance 2 <div class="arrow sorter" data-name="country" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
+                <td>Rights <div class="arrow sorter" data-name="country" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
+                <td>Users <div class="arrow sorter" data-name="country" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
+                <td>Admin <div class="arrow sorter" data-name="country" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
+                <td>Last Online <div class="arrow sorter" data-name="country" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
+                <td>IP <div class="arrow sorter" data-name="country" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody id="user_list" data-name="user-list" class="loader" data-action="/json/user" data-function="crmUserList" data-autostart="true" data-trigger=""></tbody>
+    </table>
 </div>

@@ -17,7 +17,7 @@ class TaskType extends Model
      *
      * @var string
      */
-    public $timestamps = false;;
+    public $timestamps = false;
     /**
      * The attributes that are mass assignable.
      *

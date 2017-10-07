@@ -1,240 +1,206 @@
-(function() {
+function Chart(el, props) {
+        
+        
     var
-        utils = window.utilities,
-        identity = function(v) {
-            return v;
-        };
-
-    var
-
-        PROP_MOUSE_DOWN = '_mouseDown',
-        PROP_DATA_NUM = '_dataNum',
-        PROP_DATE_FROM = '_dateFrom',
+        self = this,
+//        props = utils.isPlainObject(props) ? props : {};
+//        PROP_XHR_NAME = '_xhrName',
+//        PROP_XHR_INSTRUMENT = '_xhrInstrumentId',
+//        PROP_XHR_PERIOD_FULL = '_xhrPeriodFull',
+//        PROP_XHR_PERIOD = '_xhrPeriod',
+//        PROP_XHR_MAX_INTERVAL = '_xhrMaxInterval',
+//        PROP_XHR_MIN_INTERVAL = '_xhrMinInterval',
+//        
+//        PROP_BTN_CANDLE = '_btnCandle',
+//        PROP_BTN_AREA = '_btnArea',
+//        PROP_BTN_VOLUME = '_btnVolume',
+//        PROP_MOUSE_DOWN = '_mouseDown',
+//        PROP_MOUSE_DOWN_X = '_mouseDownX',
+//        PROP_DATA_NUM = '_dataNum',
+//        PROP_DATE_FROM = '_dateFrom',
         PROP_DATE_TO = '_dateTo',
-        PROP_NO_REDRAW = '_noRedraw',
+//        PROP_NO_REDRAW = '_noRedraw',
         PROP_CUR_X = '_curX',
         PROP_CUR_Y = '_curY',
         PROP_CUR_SHOW = '_curShow',
-        PROP_EL = '_el',
-        PROP_GTYPE = '_gtype',
-        PROP_SVG = '_svg',
-        PROP_DATA = '_data',
-        PROP_WIDTH = '_width',
-        PROP_HEIGHT = '_height',
-        PROP_GRAPH_AREA = '_gArea',
-        PROP_GRAPH_CANDLE = '_gCandle',
-        PROP_BAR_PANEL = '_barPanel',
-        PROP_BAR_SPACING = '_barSpacing',
-        PROP_DPROP_LOW = '_propertyLow',
-        PROP_DPROP_HIGH = '_propertyHigh',
-        PROP_DPROP_VOL = '_propertyVolume',
-        PROP_DPROP_DATE = '_propertyDate',
-        PROP_DPROP_CLOSE = '_propertyClose',
-        PROP_DPROP_OPEN = '_propertyOpen',
-        PROP_MAR_CANDLE = '_marginCandle',
+////        PROP_EL = '_el',
+//        PROP_EL_ID = '_elId',
+//        PROP_GTYPE = '_gtype',
+////        PROP_SVG = '_svg',
+//        PROP_DATA = '_data',
+//        PROP_WIDTH = '_width',
+//        PROP_HEIGHT = '_height',
+//        PROP_GRAPH_AREA = '_gArea',
+//        PROP_GRAPH_CANDLE = '_gCandle',
+//        PROP_BAR_PANEL = '_barPanel',
+//        PROP_BAR_SPACING = '_barSpacing',
+//        PROP_DPROP_LOW = '_propertyLow',
+//        PROP_DPROP_HIGH = '_propertyHigh',
+//        PROP_DPROP_VOL = '_propertyVolume',
+//        PROP_DPROP_DATE = '_propertyDate',
+//        PROP_DPROP_CLOSE = '_propertyClose',
+//        PROP_DPROP_OPEN = '_propertyOpen',
+//        PROP_MAR_CANDLE = '_marginCandle',
         PROP_MAR_VOLUME = '_marginVolume',
-        PROP_TICK = '_tick',
-        PROP_COL_CURSOR_X = '_curXColor',
-        PROP_COL_CURSOR_Y = '_curYColor',
-        PROP_COL_CANDBG = '_colorCandleBackground',
-        PROP_COL_BODYDN = '_colorBodyDown',
-        PROP_COL_BODYUP = '_colorBodyUp',
-        PROP_COL_STEMDN = '_colorStemDown',
-        PROP_COL_STEMUP = '_colorStemUp',
-        PROP_COL_VOLBG = '_colorVolBackground',
-        PROP_COL_VOLDN = '_colorVolSell',
-        PROP_COL_VOLUP = '_colorVolBuy',
-        PROP_COL_VOLDNBORD = '_colorVolSellBorder',
-        PROP_COL_VOLUPBORD = '_colorVolBuyBorder',
-        PROP_COL_TICK = '_colorTick',
-        PROP_COL_TICK_HIGH = '_colorTickHigh',
-        PROP_COL_TICK_LOW = '_colorTickLow',
-        PROP_COL_TICKTEXT = '_colorTickText',
-        PROP_COL_TICKBG = '_colorTickBg',
-        PROP_COL_LABTIMEBG = '_colorLabelTimeBackground',
-        PROP_COL_LABTIMEFG = '_colorLabelTimeForeground',
-        PROP_COL_LABCANBG = '_colorLabelCandleBackground',
-        PROP_COL_LABCANFG = '_colorLabelCandleForeground',
-        PROP_COL_LABVOLBG = '_colorLabelVolumeBackground',
-        PROP_COL_LABVOLFG = '_colorLabelVolumeForeground',
-        PROP_LAB_FAM = '_labelFontFamily',
-        PROP_LAB_SIZE = '_labelFontSize';
+//        PROP_TICK = '_tick',
+//        PROP_COL_CURSOR_X = '_curXColor',
+//        PROP_COL_CURSOR_Y = '_curYColor',
+//        PROP_COL_CANDBG = '_colorCandleBackground',
+        PROP_COL_BODYDN = '_colorBodyDown';
+//        PROP_COL_BODYUP = '_colorBodyUp',
+//        PROP_COL_STEMDN = '_colorStemDown',
+//        PROP_COL_STEMUP = '_colorStemUp',
+//        PROP_COL_VOLBG = '_colorVolBackground',
+//        PROP_COL_VOLDN = '_colorVolSell',
+//        PROP_COL_VOLUP = '_colorVolBuy',
+//        PROP_COL_VOLDNBORD = '_colorVolSellBorder',
+//        PROP_COL_VOLUPBORD = '_colorVolBuyBorder',
+//        PROP_COL_TICK = '_colorTick',
+//        PROP_COL_TICK_HIGH = '_colorTickHigh',
+//        PROP_COL_TICK_LOW = '_colorTickLow',
+//        PROP_COL_TICKTEXT = '_colorTickText',
+//        PROP_COL_TICKBG = '_colorTickBg',
+//        PROP_COL_LABTIMEBG = '_colorLabelTimeBackground',
+//        PROP_COL_LABTIMEFG = '_colorLabelTimeForeground',
+//        PROP_COL_LABCANBG = '_colorLabelCandleBackground',
+//        PROP_COL_LABCANFG = '_colorLabelCandleForeground',
+//        PROP_COL_LABVOLBG = '_colorLabelVolumeBackground',
+//        PROP_COL_LABVOLFG = '_colorLabelVolumeForeground',
+//        PROP_LAB_FAM = '_labelFontFamily',
+//        PROP_LAB_SIZE = '_labelFontSize',
+        this.xhrName = props.xhrName || 'BTC_BTS';
+        this.xhrInstrumentId = props.xhrInstrumentId || 2;
+        this.xhrUserId = props.xhrUserId || undefined;
+        this.xhrPeriodFull = props.xhrPeriodFull || 1440;
+        this.xhrPeriod = props.xhrPeriod || 60;
+        this.xhrMaxInterval = props.xhrMaxInterval || 60000;
+        this.xhrMinInterval = props.xhrMinInterval || 200;
+        this.mouseDown = false;
+        this.btnCandle = props.btnCandle || true;
+        this.btnArea = props.btnArea || true;
+        this.btnVolume = props.btnVolume || false;
+        this.dataNum = props.dataNum || 120;
+        this.dateFrom = props.dateFrom || 0;
+        this.dateTo = props.dateTo || this[PROP_DATE_TO];
+        this.noRedraw = props.noRedraw || false;
+        this.curShow = props.curShow || this[PROP_CUR_SHOW];
+        this.curX = props.curX || this[PROP_CUR_X];
+        this.curY = props.curY || this[PROP_CUR_Y];
+        this.gtype = props.gtype || 'minute';
+        this.barPanel = props.barPanel || false;
+        this.gArea = props.gArea || true;
+        this.gCandle = props.gCandle || true;
+        this.propertyLow = props.propertyLow || 'low';
+        this.propertyHigh = props.propertyHigh || 'high';
+        this.propertyVolume = props.propertyVolume || 'volume';
+        this.propertyDate = props.propertyDate || 'date';
+        this.propertyClose = props.propertyClose || 'close';
+        this.propertyOpen = props.propertyOpen || 'open';
+        this.barSpacing = props.barSpacing || 0.35;
+        this.marginCandle = props.marginCandle || 15;
+        this.marginVolume = this[PROP_MAR_VOLUME] = props.marginVolume || 5;
+        this.tick = props.tick || 100;
+        this.curXColor = props.curXColor || '#444';
+        this.curYColor = props.curYColor || '#444';
+        this.colorCandleBackground = props.colorCandleBackground || '#fff';
+        this.colorCandleBodyDown = props.colorCandleBodyDown || '#db4c3c';
+        this.colorCandleStemDown = props.colorCandleStemDown || '#db4c3c';
+        this.colorCandleBodyUp = props.colorCandleBodyUp || '#04bf85';
+        this.colorCandleStemUp = props.colorCandleStemUp || '#04bf85';
+        this.colorVolumeSell = props.colorVolumeSell || '#db4c3c';
+        this.colorVolumeBuy = props.colorVolumeBuy || '#04bf85';
+        this.colorVolumeSellBorder = props.colorVolumeSellBorder || '#db4c3c';
+        this.colorVolumeBackground = props.colorVolumeBackground || '#222';
+        this.colorVolumeBuyBorder = props.colorVolumeBuyBorder || this[PROP_COL_BODYDN];
+        this.colorTick = props.colorTick || '#f00';
+        this.colorTickLow = props.colorTickLow || '#a00';
+        this.colorTickHigh = props.colorTickHigh || '#0a0';
+        this.colorTickText = props.colorTickText || '#222';
+        this.colorTickBg = props.colorTickBg || '#fff'; //Unuse,
+        this.colorLabelTimeBackground = props.colorLabelTimeBackground || '#333';
+        this.colorLabelTimeForeground = props.colorLabelTimeForeground || '#aaa';
+        this.colorLabelCandleBackground = props.colorLabelCandleBackground || '#333';
+        this.colorLabelCandleForeground = props.colorLabelCandleForeground || '#aaa';
+        this.colorLabelVolumeBackground = props.colorLabelVolumeBackground || '#444';
+        this.colorLabelVolumeForeground = props.colorLabelVolumeForeground || '#bbb';
+        this.labelFontFamily = props.labelFontFamily || 'Ubuntu';
+        this.labelFontSize = props.labelFontSize || 10;
+        
+        this.data = [];
+        this.timerTick = 0; // Ticks to red line with current value redraw
+        this.timerGraph = 0;
+        this.mouseDownX = 0;
+        this.width = props.width || 320;
+        this.height = props.height || 240;
+        this.aspectRatio = function() {
+            return height / width;
+        };
+    
+        this.elId = $(el).attr('id');
+        this.svg = el;
+        this.el = el;
+    
+        utils = window.utilities;
+        identity = function(v) {
+            return v;
+        };
+//        if (!el) throw new Error('Unable to find main canvas.');
+//        var
+//        utils = window.utilities,
+//        identity = function(v) {
+//            return v;
+//        };
+//    this.xhrInstrumentId = function (instrument) {
+//		if (arguments.length)
+//			xhrInstrumentId = instrument;
+//		else
+//			return xhrInstrumentId;
+//	};
+//    this.xhrUserId = function (user) {
+//		if (arguments.length)
+//			xhrUserId = user;
+//		else
+//			return xhrUserId;
+//	};
+//    this.dataNum = function (num) {
+//		if (arguments.length)
+//			self.dataNum = num;
+//		else
+//			return self.dataNum;
+//	};
+//    this.setXhr = function(user, instrument){
+//        if(user) this.xhrUserId = user;
+//        if(instrument) this.xhrInstrumentId = instrument;
+//        this.redraw;
+//    };
 
-    function D3CandleStickChart(el, props) {
-        this[PROP_WIDTH] = 320;
-        this[PROP_HEIGHT] = 240;
-        this[PROP_DATA] = [];
-
-        if (window.d3 === undefined) {
-            throw new Error('Unable to locate the d3 library');
-        }
-
-        props = utils.isPlainObject(props) ? props : {};
-
-        // load any data in the props
-        this.loadData(props.data);
-
-        this.width = props.width;
-        this.height = props.height;
-        this.parent = el || document.body;
-
-        this[PROP_MOUSE_DOWN] = props.mouseDown || this[PROP_MOUSE_DOWN];
-        this[PROP_DATA_NUM] = props.dataNum || 120;
-        this[PROP_DATE_FROM] = props.dateFrom || this[PROP_DATE_FROM];
-        this[PROP_DATE_TO] = props.dateTo || this[PROP_DATE_TO];
-        this[PROP_NO_REDRAW] = props.noRedraw || false;
-        this[PROP_CUR_SHOW] = props.curShow || this[PROP_CUR_SHOW];
-        this[PROP_CUR_X] = props.curX || this[PROP_CUR_X];
-        this[PROP_CUR_Y] = props.curY || this[PROP_CUR_Y];
-        this[PROP_GTYPE] = props.gtype || 'minute';
-        this[PROP_BAR_PANEL] = props.barPanel || false;
-        this[PROP_GRAPH_AREA] = props.gArea || true;
-        this[PROP_GRAPH_CANDLE] = props.gCandle || true;
-        this[PROP_DPROP_LOW] = props.propertyLow || 'low';
-        this[PROP_DPROP_HIGH] = props.propertyHigh || 'high';
-        this[PROP_DPROP_VOL] = props.propertyVolume || 'volume';
-        this[PROP_DPROP_DATE] = props.propertyDate || 'date';
-        this[PROP_DPROP_CLOSE] = props.propertyClose || 'close';
-        this[PROP_DPROP_OPEN] = props.propertyOpen || 'open';
-        this[PROP_BAR_SPACING] = props.barSpacing || 0.35;
-        this[PROP_MAR_CANDLE] = props.marginCandle || 15;
-        this[PROP_MAR_VOLUME] = props.marginVolume || 5;
-        this[PROP_TICK] = props.tick || 100; // Renewal base interval
-        this[PROP_COL_CURSOR_X] = props.curXColor || '#444';
-        this[PROP_COL_CURSOR_Y] = props.curYColor || '#444';
-        this[PROP_COL_CANDBG] = props.colorCandleBackground || '#fff';
-        this[PROP_COL_BODYDN] = props.colorCandleBodyDown || '#db4c3c';
-        this[PROP_COL_STEMDN] = props.colorCandleStemDown || '#db4c3c';
-        this[PROP_COL_BODYUP] = props.colorCandleBodyUp || '#04bf85';
-        this[PROP_COL_STEMUP] = props.colorCandleStemUp || '#04bf85';
-        this[PROP_COL_VOLBG] = props.colorVolumeSell || '#222';
-        this[PROP_COL_VOLDN] = props.colorVolumeBuy || this[PROP_COL_BODYDN];
-        this[PROP_COL_VOLUP] = props.colorVolumeSellBorder || '#04bf85';
-        this[PROP_COL_VOLUPBORD] = props.colorVolumeBackground || '#04bf85';
-        this[PROP_COL_VOLDNBORD] = props.colorVolumeBuyBorder || this[PROP_COL_BODYDN];
-        this[PROP_COL_TICK] = props.colorTick || '#f00';
-        this[PROP_COL_TICK_LOW] = props.colorTickLow || '#a00';
-        this[PROP_COL_TICK_HIGH] = props.colorTickHigh || '#0a0';
-        this[PROP_COL_TICKTEXT] = props.colorTickText || '#222';
-        this[PROP_COL_TICKBG] = props.colorTickBg || '#fff'; //Unused
-        this[PROP_COL_LABTIMEBG] = props.colorLabelTimeBackground || '#333';
-        this[PROP_COL_LABTIMEFG] = props.colorLabelTimeForeground || '#aaa';
-        this[PROP_COL_LABCANBG] = props.colorLabelCandleBackground || '#333';
-        this[PROP_COL_LABCANFG] = props.colorLabelCandleForeground || '#aaa';
-        this[PROP_COL_LABVOLBG] = props.colorLabelVolumeBackground || '#444';
-        this[PROP_COL_LABVOLFG] = props.colorLabelVolumeForeground || '#bbb';
-        this[PROP_LAB_FAM] = props.labelFontFamily || 'Ubuntu';
-        this[PROP_LAB_SIZE] = props.labelFontSize || 10;
-    }
-
-    function redrawIdent() {
+    this.redrawIdent = function () {
         return function(val) {
-            this.redraw(this.svg, this.data);
+            redraw();
             return val;
         };
-    }
-
-    function redrawGetSetter(prop, allowNull) {
+    };
+    
+    this.redrawGetSetter = function (prop, allowNull) {
         return {
             get: utils.getter(prop),
             set: utils.setter(prop, allowNull, redrawIdent()),
         };
-    }
+    };
 
-    Object.defineProperties(D3CandleStickChart.prototype, {
-        parent: { // auto-install if this gets changed.
-            get: utils.getter(PROP_EL),
-            set: utils.setter(PROP_EL, false, function(parent) {
-                if (parent) {
-                    if (this.parent) { // un-install any previous charts in parent
-                        this.uninstall(this.parent);
-                    }
-                    return this.install(parent);
-                }
-
-                return this.parent;
-            })
-        },
-        svg: {
-            get: utils.getter(PROP_SVG)
-        },
-        width: {
-            get: utils.getter(PROP_WIDTH),
-            set: utils.setterInt(PROP_WIDTH, 0)
-        },
-        height: {
-            get: utils.getter(PROP_HEIGHT),
-            set: utils.setterInt(PROP_HEIGHT, 0)
-        },
-        aspectRatio: {
-            get: function() {
-                return this.height / this.width;
-            }
-        },
-        data: {
-            get: utils.getter(PROP_DATA)
-        },
-
-//        noRedraw: redrawGetSetter(PROP_NO_REDRAW),
-        el: redrawGetSetter(PROP_EL),
-        mouseDown: redrawGetSetter(PROP_MOUSE_DOWN),
-        dataNum: redrawGetSetter(PROP_DATA_NUM),
-        dateFrom: redrawGetSetter(PROP_DATE_FROM),
-        dateTo: redrawGetSetter(PROP_DATE_TO),
-        curXColor: redrawGetSetter(PROP_COL_CURSOR_X),
-        curYColor: redrawGetSetter(PROP_COL_CURSOR_Y),
-        gtype: redrawGetSetter(PROP_GTYPE),
-        barPanel: redrawGetSetter(PROP_BAR_PANEL),
-        gArea: redrawGetSetter(PROP_GRAPH_AREA),
-        gCandle: redrawGetSetter(PROP_GRAPH_CANDLE),
-        propertyLow: redrawGetSetter(PROP_DPROP_LOW),
-        propertyHigh: redrawGetSetter(PROP_DPROP_HIGH),
-        propertyVolume: redrawGetSetter(PROP_DPROP_VOL),
-        propertyDate: redrawGetSetter(PROP_DPROP_DATE),
-        propertyClose: redrawGetSetter(PROP_DPROP_CLOSE),
-        propertyOpen: redrawGetSetter(PROP_DPROP_OPEN),
-        propertyTick: redrawGetSetter(PROP_TICK),
-        barSpacing: redrawGetSetter(PROP_BAR_SPACING),
-        marginCandle: redrawGetSetter(PROP_MAR_CANDLE),
-        marginVolume: redrawGetSetter(PROP_MAR_VOLUME),
-        colorCandleBackground: redrawGetSetter(PROP_COL_CANDBG),
-        colorCandleBodyDown: redrawGetSetter(PROP_COL_BODYDN),
-        colorCandleBodyUp: redrawGetSetter(PROP_COL_BODYUP),
-        colorCandleStemDown: redrawGetSetter(PROP_COL_STEMDN),
-        colorCandleStemUp: redrawGetSetter(PROP_COL_STEMUP),
-        colorVolumeSell: redrawGetSetter(PROP_COL_VOLDN),
-        colorVolumeBuy: redrawGetSetter(PROP_COL_VOLUP),
-        colorVolumeSellBorder: redrawGetSetter(PROP_COL_VOLDNBORD),
-        colorVolumeBuyBorder: redrawGetSetter(PROP_COL_VOLUPBORD),
-        colorVolumeBackground: redrawGetSetter(PROP_COL_VOLBG),
-        colorLabelTimeBackground: redrawGetSetter(PROP_COL_LABTIMEBG),
-        colorTick: redrawGetSetter(PROP_COL_TICK),
-        colorTickLow: redrawGetSetter(PROP_COL_TICK_LOW),
-        colorTickHigh: redrawGetSetter(PROP_COL_TICK_HIGH),
-        colorTickText: redrawGetSetter(PROP_COL_TICKTEXT),
-        colorTickBg: redrawGetSetter(PROP_COL_TICKBG),
-        colorLabelTimeForeground: redrawGetSetter(PROP_COL_LABTIMEFG),
-        colorLabelCandleBackground: redrawGetSetter(PROP_COL_LABCANBG),
-        colorLabelCandleForeground: redrawGetSetter(PROP_COL_LABCANFG),
-        colorLabelVolumeBackground: redrawGetSetter(PROP_COL_LABVOLBG),
-        colorLabelVolumeForeground: redrawGetSetter(PROP_COL_LABVOLFG),
-        labelFontFamily: redrawGetSetter(PROP_LAB_FAM),
-        labelFontSize: redrawGetSetter(PROP_LAB_SIZE)
-    });
-
-    D3CandleStickChart.low = function(prev, next) {
+    this.low = function(prev, next) {
 
         if (prev === null) return next;
 
         return (next === null) ? prev : Math.min(prev, next);
     };
 
-    D3CandleStickChart.high = function(prev, next) {
+    this.high = function(prev, next) {
         if (prev === null) return next;
         return (next === null) ? prev : Math.max(prev, next);
     };
 
-    D3CandleStickChart.dateMS = function(v) {
+    this.dateMS = function(v) {
         if (v instanceof Date) return v.getTime();
         if (typeof v === 'string') {
             var ms = Date.parse(v);
@@ -245,56 +211,68 @@
         return null;
     };
 
-    D3CandleStickChart.lowDate = function(prev, next) {
-        return D3CandleStickChart.low(prev, D3CandleStickChart.dateMS(next));
+    this.lowDate = function(prev, next) {
+        return self.low(prev, self.dateMS(next));
     };
 
-    D3CandleStickChart.highDate = function(prev, next) {
-        return D3CandleStickChart.high(prev, D3CandleStickChart.dateMS(next));
+    this.highDate = function(prev, next) {
+        return self.high(prev, self.dateMS(next));
     };
 
-    D3CandleStickChart.dateSeriesMinutes = function(ms) {
+    this.dateSeriesMinutes = function(ms) {
         return moment(ms).format('mm:ss');
     };
 
-    D3CandleStickChart.dateSeriesHours = function(ms) {
+    this.dateSeriesHours = function(ms) {
         return moment(ms).format('HH:mm');
     };
 
-    D3CandleStickChart.dateSeriesDays = function(ms) {
+    this.dateSeriesDays = function(ms) {
         return moment(ms).format('MMM, DD');
     };
 
-    D3CandleStickChart.dateSeriesMonths = function(ms) {
+    this.dateSeriesMonths = function(ms) {
         return moment(ms).format('MMM, YYYY');
     };
 
-    D3CandleStickChart.dateSeriesYears = function(ms) {
+    this.dateSeriesYears = function(ms) {
         return moment(ms).format('MMM, YYYY');
     };
 
-    D3CandleStickChart.dateSeriesFunctionFromDiff = function(start, end) {
-        var diff = Math.abs(D3CandleStickChart.dateMS(start) - D3CandleStickChart.dateMS(end));
-        return (diff >= 3.1104e+10 ? D3CandleStickChart.dateSeriesYears : (diff >= 2.592e+9 ? D3CandleStickChart.dateSeriesMonths : (diff >= 1.728e+8 ? D3CandleStickChart.dateSeriesDays : (diff >= 3.6e+6 ? D3CandleStickChart.dateSeriesHours : D3CandleStickChart.dateSeriesMinutes))));
+    this.dateSeriesFunctionFromDiff = function(start, end) {
+        var diff = Math.abs(self.dateMS(start) - self.dateMS(end));
+        return (diff >= 3.1104e+10 ? self.dateSeriesYears : (diff >= 2.592e+9 ? self.dateSeriesMonths : (diff >= 1.728e+8 ? self.dateSeriesDays : (diff >= 3.6e+6 ? self.dateSeriesHours : self.dateSeriesMinutes))));
     };
-
-    D3CandleStickChart.getScales = function(data, spec) {
+    
+    this.getScales = function(data) {
+        return self.getScales(data || self.data, {
+            propertyLow: self.propertyLow,
+            propertyHigh: self.propertyHigh,
+            propertyVolume: self.propertyVolume,
+            propertyDate: self.propertyDate,
+            tick: self.tick
+        });
+    };
+    
+    this.getScales = function(data, spec) {
         spec = spec || {};
+        
         var
+            dataNum  = dataNum,
+            dateFrom = dateFrom,
             propLow = spec.propertyLow || 'low',
             propHigh = spec.propertyHigh || 'high',
             propVol = spec.propertyVolume || 'volume',
             propDate = spec.propertyDate || 'date',
             propTick = spec.propertyTick || 'tick';
-        var dataNum = this.dataNum;
         return data.reduce(function(p, c, i) { // find all domains using a single data iteration (optimal)
-            if(i < dataNum) return p;
-            p.lowestLow = D3CandleStickChart.low(p.lowestLow, c[propLow]);
-            p.highestHigh = D3CandleStickChart.high(p.highestHigh, c[propHigh]);
-            p.volumeLow = D3CandleStickChart.low(p.volumeLow, c[propVol]);
-            p.volumeHigh = D3CandleStickChart.high(p.volumeHigh, c[propVol]);
-            p.dateLow = D3CandleStickChart.lowDate(p.dateLow, c[propDate]);
-            p.dateHigh = D3CandleStickChart.highDate(p.dateHigh, c[propDate]);
+            if((i >= dateFrom) && (i < dataNum + dateFrom)) return p;
+            p.lowestLow = self.low(p.lowestLow, c[propLow]);
+            p.highestHigh = self.high(p.highestHigh, c[propHigh]);
+            p.volumeLow = self.low(p.volumeLow, c[propVol]);
+            p.volumeHigh = self.high(p.volumeHigh, c[propVol]);
+            p.dateLow = self.lowDate(p.dateLow, c[propDate]);
+            p.dateHigh = self.highDate(p.dateHigh, c[propDate]);
             return p;
         }, { // seed the unprocessed domains
             lowestLow: null,
@@ -309,33 +287,38 @@
         });
     };
 
-    D3CandleStickChart.prototype.resize = function(width, height, svg) {
-        svg = svg || this.svg;
-        width = width || this.width;
-        height = height || this.height;
-
+    this.resize = function(w,h) {
+        svg = self.svg;
+        width = w || self.width;
+        height = h || self.height;
         svg.attr('width', width);
         svg.attr('height', height);
 
-        if (width !== this.width) {
-            this.width = width;
+        if (width !== self.width) {
+            self.width = width;
         }
-        if (height !== this.height) {
-            this.height = height;
+        if (height !== self.height) {
+            self.height = height;
         }
 
-        return this;
+        return svg;
     };
 
-    D3CandleStickChart.prototype.clearData = function() {
-        this.data.splice(0, this.data.length);
-        this.reset();
+    this.clearData = function() {
+        self.data.splice(0, self.data.length);
+        setter.call(self);
+//        this.reset();
         return true;
     };
 
-    D3CandleStickChart.prototype.loadData = function(data) {
-        if (!utils.isArray(data)) return false;
-        var dataSet = data,
+    this.loadData = function(recievedData) {
+//        if (!utils.isArray(recievedData)) {
+//            return false;
+//        }
+        if (recievedData == undefined) {
+            return false;
+        }
+        var dataSet = recievedData,
             newData = [],
             tmp = {
                 open: '',
@@ -371,7 +354,7 @@
                     else if (dataSet[(i + 1) * period - 1].open < tmp.low) tmp.open = tmp.low;
                     else if (dataSet[(i + 1) * period - 1].open > tmp.high) tmp.open = tmp.high;
                     else tmp.open = dataSet[(i + 1) * period - 1].open;
-                    if (i == dataSet.length / period - 1) console.log((i + 1) * period, tmp);
+//                    if (i == dataSet.length / period - 1) console.log((i + 1) * period, tmp);
                     tmp.date = dataSet[i * period].date;
                     newData.push({
                         open: tmp.open,
@@ -385,10 +368,9 @@
 
                 }
             };
-
-        switch (this.gtype) {
+        switch (self.gtype) {
             case '1 min':
-                newData = data;
+                newData = recievedData;
                 break;
             case '5 min':
                 rebuild(5);
@@ -418,39 +400,28 @@
 
                 break;
             default:
-                newData = data;
+                newData = recievedData;
                 break;
         };
-        Array.prototype.push.apply(this.data, newData);
-        console.log("loadData");
-        this.redraw();
+        Array.prototype.push.apply(self.data, newData);
+//        console.log("redraw");
+        self.redraw();
         return true;
     };
 
-    D3CandleStickChart.prototype.reset = function(svg) {
-        svg = svg || this.svg;
-        this.resetCandles(svg);
-        this.resetVolume(svg);
-        this.resetLabels(svg);
-        this.resetTick(svg);
-        this.resetArea(svg);
-        this.hideCursor(true);
+    this.reset = function() {
+//        svg = svg || self.svg;
+        self.resetCandles();
+        self.resetVolume();
+        self.resetLabels();
+        self.resetTick();
+        self.resetArea();
+        self.hideCursor(true);
     };
 
-    D3CandleStickChart.prototype.getScales = function(data) {
-        return D3CandleStickChart.getScales(data || this.data, {
-            propertyLow: this.propertyLow,
-            propertyHigh: this.propertyHigh,
-            propertyVolume: this.propertyVolume,
-            propertyDate: this.propertyDate,
-            tick: this.tick
-        });
-    };
-
-    D3CandleStickChart.prototype.coordCandles = function() {
+    this.coordCandles = function() {
         var
-            volcoord = this.coordVolume();
-
+            volcoord = self.coordVolume();
         return {
             x: volcoord.x,
             y: 0,
@@ -459,33 +430,36 @@
         };
     };
 
-    D3CandleStickChart.prototype.resetArea = function(svg) {
-        svg.selectAll('g.area').remove();
-        svg.selectAll('g.grid').remove();
-        return this;
+    this.resetArea = function() {
+        self.svg.selectAll('g.area').remove();
+        self.svg.selectAll('g.grid').remove();
+        return self;
     };
 
-    D3CandleStickChart.prototype.redrawArea = function(svg, scales) {
+    this.redrawArea = function() {
+//        console.log("area");
         var
-            propLow = this.propertyLow,
-            propHigh = this.propertyHigh,
-            propVol = this.propertyVolume,
-            propDate = this.propertyDate,
-            propClose = this.propertyClose,
-            propOpen = this.propertyOpen,
-            colorBG = this.colorCandleBackground,
-            colorBodyDown = this.colorCandleBodyDown,
-            colorBodyUp = this.colorCandleBodyUp,
-            colorStemDown = this.colorCandleStemDown,
-            colorStemUp = this.colorCandleStemUp,
-            margin = this.marginCandle || 0,
-            coord = this.coordCandles(),
-            coordVol = this.coordVolume(),
-            approxW = (coord.w / this.data.length),
-            barSpace = approxW * this.barSpacing,
+            propLow = self.propertyLow,
+            propHigh = self.propertyHigh,
+            propVol = self.propertyVolume,
+            propDate = self.propertyDate,
+            propClose = self.propertyClose,
+            propOpen = self.propertyOpen,
+            colorBG = self.colorCandleBackground,
+            colorBodyDown = self.colorCandleBodyDown,
+            colorBodyUp = self.colorCandleBodyUp,
+            colorStemDown = self.colorCandleStemDown,
+            colorStemUp = self.colorCandleStemUp,
+            margin = self.marginCandle || 0,
+            coord = self.coordCandles(),
+            drawData = self.getCurData(),
+            scales = self.getScales(drawData),
+            coordVol = self.coordVolume(),
+            approxW = (coord.w / drawData.length),
+            barSpace = approxW * self.barSpacing,
             barWidth = approxW - barSpace,
             stemWidth = barWidth * 0.15,
-            dataNum = this.dataNum,
+            dataNum = self.dataNum,
 
             dOpenCloseMin = function(d) {
                 return Math.min(d[propClose], d[propOpen]);
@@ -514,17 +488,16 @@
 
 
         //Make area graph
-        groupLines = svg.append("g")
+        groupLines = self.svg.append("g")
             .attr('class', 'area')
             .attr("transform", 'translate(' + [coord.x, coord.y].join(' ') + ')');
-        if (this.gArea == true) {
-
+        if (self.btnArea == true) {
             groupLines.append('rect')
                 .attr('class', 'background')
                 .attr('width', coord.w)
                 .attr('height', coord.h)
                 .attr('fill', colorBG);
-            var lastIndex = this.dataNum//this.data.length - 1;
+            var lastIndex = self.dataNum//data.length - 1;
 
             linesArea = d3.area()
                 .x(function(d, index) {
@@ -539,9 +512,9 @@
                     return calcRY(d.value);
                 })
                 .y0(coord.h);
-
+            
             groupLines.append("path")
-                .datum(this.data)
+                .datum(drawData)
                 .attr("fill", "steelblue")
                 .attr("style", "opacity: 0.2")
                 .attr("d", linesArea);
@@ -552,7 +525,7 @@
             .scale(1000)
             .ticks(5);
 
-        grid = svg.append("g")
+        grid = self.svg.append("g")
             .attr("class", "grid")
             .attr("transform", 'translate(' + [coord.x, coord.y].join(' ') + ')');
 
@@ -599,72 +572,124 @@
                 .attr('stroke', '#999');
         };
 
-        return svg;
+//        return svg;
     };
 
 
-    D3CandleStickChart.prototype.scroll = function(delta) {
-
-        this.dataNum -= delta/20;
-        if(this.dataNum < 60) this.dataNum = 60;
-        if(this.dataNum > 1440) this.dataNum = 1440;
-        console.log(this.dataNum);
-        this.redraw();
+    this.scroll = function(delta) {
+        
+        self.dataNum -= delta/20;
+        if(self.dataNum < 60) self.dataNum = 60;
+        if(self.dataNum > 1440) self.dataNum = 1440;
+        
+        if(self.dataNum > self.data.length) self.dataNum = self.data.length;
+        if((self.dataFrom + self.dataNum > self.data.length) && ((self.dataFrom - delta/20) > 0) ) self.dataFrom -= delta/20;
+//        console.log(self.dataNum, self.data.length);
+        self.redraw();
     }
-    D3CandleStickChart.prototype.mouseMove = function(event) {
-
+    this.mouseMove = function (event) {
         switch (event.type) {
+            case 'mouseup':
+                $(self.el).css({cursor:'crosshair'});
+//                console.log("mouseUp");
+                self.mouseDown = false;
+            break;
             case 'mouseleave':
-                this.hideCursor();
+                self.hideCursor();
                 return;
                 break;
             case 'mouseenter':
             case 'mousemove':
-                this.moveCursor(event.pageX, event.pageY);
+//                console.log("mouseMoved", "mousedown=", this.mouseDown);
+                if(self.mouseDown){
+                    
+                    
+                    var delta =  event.pageX - self.mouseDownX,
+                    
+                    coord = self.coordCandles(),
+                    drawData = self.getCurData(),
+                    scales = self.getScales(drawData),
+                    approxW = (coord.w / drawData.length),
+                    barSpace = approxW * self.barSpacing,
+                    barWidth = approxW - barSpace,
+                    
+                    calcC = d3.scaleLinear()
+                            .range([0, drawData.length])
+                            .domain([0, coord.w * 0.8]);
+                    if( (self.dateFrom + calcC(delta)) < 0){
+                        self.dateFrom = 0;
+                        self.mouseDownX += delta;
+                        self.redraw();
+                    }else if((self.dateFrom + calcC(delta) + self.dataNum) > self.data.length){
+                        if(self.data.length - self.dataNum > 0)
+                            self.dateFrom = self.data.length - self.dataNum;
+                        else{
+                            self.dateFrom = 0;
+                            self.dataNum = self.data.length;
+                        }
+                        self.redraw();
+                    }else{
+                        self.dateFrom += calcC(delta);
+                        self.mouseDownX += delta;
+//                        console.log("dateFrom:", dateFrom);
+                        self.redraw();
+                    }
+                }
+                self.moveCursor(event.pageX, event.pageY);
                 break;
             case 'mousedown':
 //                if(this.mouseDown) return;
+                self.mouseDownX = event.pageX;
                 $( "#main:active").css({cursor:'grabbing!important'});
-                console.log("mouseDown");
-                this.mouseDown = true;
+                $( "#main").css({cursor:'grabbing!important'});
+                $( "#main svg").css({cursor:'grabbing!important'});
+                $( "#main svg g").css({cursor:'grabbing!important'});
+                $( "#main svg g path").css({cursor:'grabbing!important'});
+                $( "#main svg g rect").css({cursor:'grabbing!important'});
+                $( "#main>svg>g>line").css({cursor:'grabbing!important'});
+//                console.log("mouseDown");
+                self.mouseDown = true;
                 break;
-            case 'mouseup':
-                $(this.el).css({cursor:'crosshair'});
-                console.log("mouseUp");
-                this.mouseDown = false;
-                break;
+            
             default:
                 break;
 
         }
 
     };
-
-    D3CandleStickChart.prototype.hideCursor = function(show) {
-        if(!this.curShow) return;
-        this.svg.selectAll('g.cursor').remove();
-        if(!show) this.curShow = false;
-        this.noRedraw = false;
-
-        console.log("cursorHide", this.curShow, this.curX, this.curY);
-
+    
+    this.hideCursor = function(show) {
+        
+        
+        if(!self.curShow) return;
+        self.svg.selectAll('g.cursor').remove();
+        if(!self.show) self.curShow = false;
+        self.noRedraw = false;
+        if(!show && self.mouseDown){ 
+            self.mouseDown = false;
+        }
+        $(self.el).css({cursor:'default'});
+        
     };
-
-    D3CandleStickChart.prototype.showCursor = function(show) {
-        coord = this.coordCandles(),
-        coordvol = this.coordVolume(),
-        data = this.data,
-        scales = this.getScales(data),
-        svg = this.svg,
-        margin = this.marginCandle || 0,
-        approxW = (coord.w / this.data.length),
-        barSpace = approxW * this.barSpacing,
+    this.getCurData = function() {
+            return self.data.filter(function(d,i){
+                    return (i >= self.dateFrom) && (i < self.dataNum + self.dateFrom);
+                });
+    };
+    this.showCursor = function(show) {
+        coord = self.coordCandles(),
+        coordvol = self.coordVolume(),
+        drawData = self.getCurData(),
+        scales = self.getScales(drawData),
+        margin = self.marginCandle || 0,
+        approxW = (coord.w / self.data.length),
+        barSpace = approxW * self.barSpacing,
         barWidth = approxW - barSpace,
         stemWidth = barWidth * 0.15;
-
+        
         //if not created - create cursorgth
-        if($(this.el).find("svg>g.cursor").length  == 0) {
-        cursor = svg.append('g')
+        if($(self.el).find("svg>g.cursor").length  == 0) {
+        cursor = self.svg.append('g')
             .attr('class', 'cursor')
             .attr('transform', 'translate(' + [coord.x, coord.y].join(' ') + ')');
         cursor.append("line")
@@ -673,175 +698,205 @@
             .attr('stroke-linecap', 'butt')
             .attr('data-animation', 'false')
             .attr('stroke-rendering', 'crispEdges')
-            .attr('stroke', this.curXColor);
-
+            .attr('stroke', self.curXColor);
+            
         cursor.append("line")
             .classed("y-line", true)
             .attr("stroke-dasharray", "5 5")
             .attr('stroke-linecap', 'butt')
             .attr('data-animation', 'false')
             .attr('stroke-rendering', 'crispEdges')
-            .attr('stroke', this.curYColor);
-
+            .attr('stroke', self.curYColor);
+            
         cursor.append("rect")
             .classed("cur-time",true)
             .attr('width', 100)
             .attr('height', 20)
-            .attr('fill', this.colorTick);
-
+            .attr('fill', self.colorTick);
+            
         cursor.append("rect")
             .classed("cur-value",true)
             .attr('height', 20)
-            .attr('fill', this.colorTick);
+            .attr('fill', self.colorTick);
         cursor.append('text')
             .attr('class', 'cur-label-x')
-            .attr('font-family', this.labelFontFamily)
-            .attr('font-size', this.labelFontSize * 1.7)
+            .attr('font-family', self.labelFontFamily)
+            .attr('font-size', self.labelFontSize * 1.7)
             .attr('text-anchor', 'middle')
             .attr('fill', "#fff");
         cursor.append('text')
             .attr('class', 'cur-label-y')
-            .attr('font-family', this.labelFontFamily)
-            .attr('font-size', this.labelFontSize * 1.7)
+            .attr('font-family', self.labelFontFamily)
+            .attr('font-size', self.labelFontSize * 1.7)
             .attr('text-anchor', 'right')
             .attr('fill', "#fff");
         }
-
-
-
+        
+        
+        
         var
         scaleX = d3.scaleLinear()
             .domain([show.minX, show.maxX])
-            .range([0, show.w]),
+            .range([0, coord.w]),
         scaleY = d3.scaleLinear()
             .domain([show.minY, show.maxY])
             .range([0, show.h]),
-
-        x = show.posX,
+            
+        
         y = show.posY,
-
+        
         calcDateX = d3.scaleLinear()
             .domain([0, coord.w - barWidth])
             .range([scales.dateLow, scales.dateHigh]),
+        
+        calcCoordX = d3.scaleLinear()
+            .domain([scales.dateLow, scales.dateHigh])
+            .range([ 0, coord.w - barWidth]),
+            
         calcVolHeight = d3.scaleLinear()
             .domain([0, coord.h])
             .range([scales.volumeHigh, scales.volumeLow]),
         candY = d3.scaleLinear()
             .domain([show.maxY, show.minY])
             .range([scales.lowestLow, scales.highestHigh]);
-        curX = svg.select("line.x-line")
-            .attr("x1", scaleX(x))
-            .attr("x2", scaleX(x))
+//        console.log(scales.dateLow, scales.dateHigh);
+        nearestCandle = function(x){
+            var nearest = 100,
+                coord = 0;
+//            console.log(data[0]);
+            for(var i = 0; i < self.data.length; i++){
+                date = calcCoordX(self.data[i].date);
+                delta = Math.abs(date - scaleX(x) + (barWidth)/2);
+                if( delta < nearest ){ 
+                    nearest = delta;
+                    coord = date;
+//                    console.log("iteration", i, nearest, scaleX(x), date, coord );
+                }
+                
+            }
+            return coord;
+        };
+        
+        x = nearestCandle(show.posX);
+        
+        curX = self.svg.select("line.x-line")
+            .attr("x1", x + barWidth/2)
+            .attr("x2", x + barWidth/2)
             .attr("y2", scaleY(show.maxY)), //show.maxY
-        curY = svg.select("line.y-line")
+        curY = self.svg.select("line.y-line")
             .attr("x2", scaleX(show.maxX))//show.maxX
             .attr("y1", scaleY(y))
             .attr("y2", scaleY(y)),
-        curTime = svg.select("rect.cur-time")
-            .attr('x', scaleX(x) - 100/2)
+        curTime = self.svg.select("rect.cur-time")
+            .attr('x', x - 100/2)
             .attr('y', scaleY(show.maxY) + coordvol.h),
-        curValue = svg.select("rect.cur-value")
-            .attr('x', scaleX(show.maxX))
+        curValue = self.svg.select("rect.cur-value")
+            .attr('x', scaleX(show.maxX) + barWidth)
             .attr('width', show.labelW)
             .attr('y', scaleY(y) - 20/2),
-        curXLabel = svg.select("text.cur-label-x")
-            .attr('y', scaleY(show.maxY) + coordvol.h + this.labelFontSize * 1.7)
-            .attr('x', scaleX(x))
-            .text(moment(calcDateX( scaleX(x) ) ).format('H:mm:ss')),
-        curYLabel = svg.select("text.cur-label-y")
+        curXLabel = self.svg.select("text.cur-label-x")
+            .attr('y', scaleY(show.maxY) + coordvol.h + self.labelFontSize * 1.7)
+            .attr('x', x + barWidth)
+            .text(moment(calcDateX( x  ) ).format('H:mm:ss')),
+        curYLabel = self.svg.select("text.cur-label-y")
             .attr('x', scaleX(show.maxX) + 5)
-            .attr('y', scaleY(y) + this.labelFontSize * 0.6)
+            .attr('y', scaleY(y) + self.labelFontSize * 0.6)
             .text(Math.floor(candY(scaleY(show.posY))*100)/100 );
-
-        console.log("showCursor", this.curShow, show.posX, show.posY);
-
-        this.curShow = true;
-
-        //this.noRedraw = false;
+            
+        self.curShow = true;
+        
     };
 
 
-    D3CandleStickChart.prototype.moveCursor = function(posX, posY) {
+    this.moveCursor = function(posX, posY) {
+//        console.log("move", self.elId, self.svg);
         var
-        coordl = this.coordLabels(),
-        coord = this.coordCandles(),
-        coordVol = this.coordVolume(),
-        coordLabel = this.coordLabels(),
-        el = this.el,
+        coordl = self.coordLabels(),
+        coord = self.coordCandles(),
+        coordVol = self.coordVolume(),
+        coordLabel = self.coordLabels(),
         cSX = coordl.seriesX.w,
-        margin = this.marginCandle || 0,
-        approxW = (coord.w / this.data.length),
-        barSpace = approxW * this.barSpacing,
+        margin = self.marginCandle || 0,
+        approxW = (coord.w / self.data.length),
+        barSpace = approxW * self.barSpacing,
         barWidth = approxW - barSpace,
         maxY = coord.h + margin;
-        if($(el).find("svg>g.grid").length > 0){
+        if($(self.el).find("svg>g.grid").length > 0){
             var
-            minRange = $(el).find("svg>g.grid").offset(),
-            maxRangeX = $(el).find("svg>g.label-y").offset(),
-            maxRangeY = $(el).find("svg>g.label-x").offset(),
+            minRange = $(self.el).find("svg>g.grid").offset(),
+            maxRangeX = $(self.el).find("svg>g.label-y").offset(),
+            maxRangeY = $(self.el).find("svg>g.label-x").offset(),
             minX = minRange.left,
             minY = minRange.top,
             maxX = maxRangeX.left,
-            maxY = maxRangeY.top;
-            if($(el).find("svg>g.volume").length > 0){
+            maxY = maxRangeY.top;  
+            if($(self.el).find("svg>g.volume").length > 0){
                 var
-                volY = $(el).find("svg>g.volume").offset();
+                volY = $(self.el).find("svg>g.volume").offset(),
                 maxY = volY.top;
             }
         }else return;
         show = {
             posX: event.pageX,
             posY: event.pageY,
-            minX: minX,
-            maxX: maxX,
-            minY: minY,
+            minX: minX, 
+            maxX: maxX, 
+            minY: minY, 
             maxY: maxY,
             w: coord.w,
             h: coord.h,
             labelW: cSX
         }
-
+            
         if ((posX > maxX || posY > maxY) || (posX < minX || posY < minY)) {
-            this.hideCursor();
+            self.hideCursor();
             return;
         }
-        this.curX = posX;
-        this.curY = posY;
-        this.showCursor(show);
+        $(self.el).css({cursor:'crosshair'});
+        self.curX = posX;
+        self.curY = posY;
+        self.showCursor(show);
     };
 
-    D3CandleStickChart.prototype.resetCandles = function(svg) {
-        svg.selectAll('g.candles').remove();
-        return this;
+    this.resetCandles = function() {
+        self.svg.selectAll('g.candles').remove();
     };
 
-    D3CandleStickChart.prototype.redrawCandles = function(svg, scales, data) {
+    this.redrawCandles = function() {
         var
-            dataItems = data,
-            propLow = this.propertyLow,
-            propHigh = this.propertyHigh,
-            propVol = this.propertyVolume,
-            propDate = this.propertyDate,
-            propClose = this.propertyClose,
-            propOpen = this.propertyOpen,
-            colorBG = this.colorCandleBackground,
-            colorBodyDown = this.colorCandleBodyDown,
-            colorBodyUp = this.colorCandleBodyUp,
-            colorStemDown = this.colorCandleStemDown,
-            colorStemUp = this.colorCandleStemUp,
-            margin = this.marginCandle || 0,
-            coord = this.coordCandles(),
-            coordvol = this.coordVolume(),
-            approxW = (coord.w / this.dataNum), //this.data.length
-            barSpace = approxW * this.barSpacing,
+//            dataNum = self.dataNum,
+//            dateFrom = self.dateFrom,
+//            dataItems = data.filter(function(d,i){
+//                        return (i >= dateFrom) && (i < dataNum + dateFrom);
+//
+//                }),
+            propLow = self.propertyLow,
+            propHigh = self.propertyHigh,
+            propVol = self.propertyVolume,
+            propDate = self.propertyDate,
+            propClose = self.propertyClose,
+            propOpen = self.propertyOpen,
+            colorBG = self.colorCandleBackground,
+            colorBodyDown = self.colorCandleBodyDown,
+            colorBodyUp = self.colorCandleBodyUp,
+            colorStemDown = self.colorCandleStemDown,
+            colorStemUp = self.colorCandleStemUp,
+            margin = self.marginCandle || 0,
+            coord = self.coordCandles(),
+            coordvol = self.coordVolume(),
+            drawData = self.getCurData(),
+            scales = self.getScales(drawData),
+            approxW = (coord.w / drawData.length), //data.length
+            barSpace = approxW * self.barSpacing,
             barWidth = approxW - barSpace,
             stemWidth = barWidth * 0.15,
-            dataNum = this.dataNum,
+            svg = self.svg,
+            
             //Make candles
-            group = svg.append('g')
+            group = self.svg.append('g')
             .attr('class', 'candles')
             .attr('transform', 'translate(' + [coord.x, coord.y].join(' ') + ')'),
-
+            
             calcDateX = d3.scaleLinear()
             .domain([scales.dateLow, scales.dateHigh])
             .range([0, coord.w - barWidth]);
@@ -873,14 +928,10 @@
             dBodyColor = function(d) {
                 return dIsDown(d) ? colorBodyDown : colorBodyUp;
             };
-
-        if (this.gCandle) {
+        if (self.btnCandle) {
             if (stemWidth > 0) {
                 group.selectAll('rect.candle-stem')
-                    .data(this.data.filter(function(d,i){
-                        return i < dataNum;
-
-                }))
+                    .data(drawData)
                     .enter().append('rect')
                     .attr('class', 'candle-stem')
                     .attr('width', stemWidth)
@@ -897,10 +948,7 @@
             }
 
             group.selectAll('rect.candle-body')
-                .data(this.data.filter(function(d,i){
-                        return i < dataNum;
-
-                }))
+                .data(drawData)
                 .enter().append('rect')
                 .attr('class', 'candle-body')
                 .attr('width', barWidth)
@@ -922,7 +970,7 @@
                 .attr('stroke', dStemColor)
                 .attr('fill', dBodyColor);
             var test = group.selectAll('rect.candle-body').on('mouseover', function(d, i) {
-                var tooltipText = 'high:' + dataItems[i].high + '     ' + 'low:' + dataItems[i].low + '     ' + 'open:' + dataItems[i].open + '     ' + 'close:' + dataItems[i].close + '     ' + 'volume:' + dataItems[i].volume + '     ' + dataItems[i].date;
+                var tooltipText = 'high:' + drawData[i].high + '     ' + 'low:' + drawData[i].low + '     ' + 'open:' + drawData[i].open + '     ' + 'close:' + drawData[i].close + '     ' + 'volume:' + drawData[i].volume + '     ' + drawData[i].date;
                 $(this).tooltip({
                     title: tooltipText,
                     placement: 'bottom',
@@ -934,19 +982,17 @@
 
             });
         }
-        return svg;
     };
 
-    D3CandleStickChart.prototype.coordVolume = function() {
+    this.coordVolume = function() {
         var
             volheight = 100,
-            coordlabels = this.coordLabels(),
+            coordlabels = self.coordLabels(),
             coordSX = coordlabels.seriesX;
-
-        if (volheight / this.height > 0.25) {
+        if (volheight / self.height > 0.25) {
             volheight = 50;
         }
-        if (!this.barPanel) volheight = 0;
+        if (!self.barPanel) volheight = 0;
         return {
             x: coordSX.x,
             y: coordSX.y - volheight,
@@ -955,36 +1001,39 @@
         };
     };
 
-    D3CandleStickChart.prototype.resetVolume = function(svg) {
-        svg.selectAll('g.volume').remove();
-        return this;
+    this.resetVolume = function() {
+        self.svg.selectAll('g.volume').remove();
     };
 
-    D3CandleStickChart.prototype.redrawVolume = function(svg, scales) {
-        if (!this.barPanel) return;
+    this.redrawVolume = function() {
+
+        if (!self.barPanel) return;
         var
-            coord = this.coordVolume(),
-            propVol = this.propertyVolume,
-            propDate = this.propertyDate,
-            propClose = this.propertyClose,
-            propOpen = this.propertyOpen,
-            colorVolSell = this.colorVolumeSell,
-            colorVolBuy = this.colorVolumeBuy,
-            colorVolSellBorder = this.colorVolumeSellBorder,
-            colorVolBuyBorder = this.colorVolumeBuyBorder,
-            colorBG = this.colorVolumeBackground,
-            approxW = (coord.w / this.data.length),
-            barSpace = approxW * this.barSpacing,
+            coord = self.coordVolume(),
+            propVol = self.propertyVolume,
+            propDate = self.propertyDate,
+            propClose = self.propertyClose,
+            propOpen = self.propertyOpen,
+            colorVolSell = self.colorVolumeSell,
+            colorVolBuy = self.colorVolumeBuy,
+            colorVolSellBorder = self.colorVolumeSellBorder,
+            colorVolBuyBorder = self.colorVolumeBuyBorder,
+            colorBG = self.colorVolumeBackground,
+            drawData = self.getCurData(),
+            scales = self.getScales(drawData),
+            approxW = (coord.w / drawData.length),
+            barSpace = approxW * self.barSpacing,
             barWidth = approxW - barSpace,
-            dataNum = this.dataNum,
-            margin = this.marginVolume || 0;
+            
+            
+            margin = self.marginVolume || 0;
 
         if (barWidth < 1) {
             barWidth = 1;
         }
 
         var
-            group = svg.append('g')
+            group = self.svg.append('g')
             .attr('class', 'volume')
             .attr('transform', 'translate(' + [coord.x, coord.y].join(' ') + ')'),
             calcDateX = d3.scaleLinear()
@@ -1010,10 +1059,7 @@
             .attr('fill', colorBG);
 
         group.selectAll('rect.volume-bar')
-            .data(this.data.filter(function(d,i){
-                        return i < dataNum;
-
-                }))
+            .data(drawData)
             .enter().append('rect')
             .attr('class', 'volume-bar')
             .attr('fill', dColorBars)
@@ -1031,93 +1077,96 @@
             .attr('y', function(d) {
                 return (coord.h - this.getAttribute('height'));
             });
-
-        return svg;
     };
 
-    D3CandleStickChart.prototype.coordLabels = function() {
+    this.coordLabels = function() {
         var
             xheight = 20,
             ywidth = 75;
-
+        
         return {
             seriesX: {
                 x: 0,
-                y: this.height - xheight,
-                w: this.width - ywidth,
+                y: self.height - xheight,
+                w: self.width - ywidth,
                 h: xheight
             },
             seriesY: {
-                x: this.width - ywidth,
+                x: self.width - ywidth,
                 y: 0,
                 w: ywidth,
-                h: this.height
+                h: self.height
             }
         };
     };
 
-    D3CandleStickChart.prototype.resetTick = function(svg) {
-        svg.selectAll('g.tick').remove();
-        return this;
+    this.resetTick = function() {
+        self.svg.selectAll('g.tick').remove();
     };
 
-    D3CandleStickChart.prototype.genTick = function(tick, scales, min, max) {
+    this.genTick = function(newTick, scales, min, max) {
         if (min == max) delta = Math.random() * min * .0000005;
         else delta = (Math.random() * (max - min) + min) * .00005;
         var sign = 1;
 
 
         if (Math.random() * 10 < 5) sign = -1;
-        if (((this.data.tick + sign * delta) < max) && ((this.data.tick + sign * delta) > min)) this.data.tick += sign * delta;
-        else this.data.tick += -1 * sign * delta;
+        if (((self.tick + sign * delta) < max) && ((self.tick + sign * delta) > min)) self.tick += sign * delta;
+        else self.tick += -1 * sign * delta;
 
-        return Math.floor(this.data.tick * 100) / 100;
+        return Math.floor(self.tick * 10000) / 10000;
     };
 
-    D3CandleStickChart.prototype.redrawTick = function(svg, scales, data) {
-//        return;
-        if ((this.data[0] == undefined) || !('open' in this.data[0])) {
-
+    this.redrawTick = function() {
+//        var 
+//        svg = svg || self.svg,
+//        data = data || self.data;
+//        console.log("tick", self.data, self.elId, self.xhrMinInterval);
+        if ((self.data == undefined)) {
             return;
-        }
-        svg = svg || this.svg;
-        data = data || this.data;//.filter(function(d,i){return i < this.dataNum});
-        dataNum = this.dataNum;
-        scales = this.getScales(data.filter(function(d,i){return i < dataNum}));
-        this.resetTick(svg);
+        } else if(!self.data.length) return;
+//        svg = svg || self.svg;
+//        data = data || self.data;//.filter(function(d,i){return i < dataNum});
+//        dataNum = self.dataNum,
+//        dateFrom = self.dateFrom,
+        self.resetTick(self.svg);
+        self.tick = self.data[0].close;
         var
-            coord = this.coordLabels(),
-            coordvol = this.coordVolume(),
-            coordcand = this.coordCandles(),
-            propVol = this.propertyVolume,
-            fontFamily = this.labelFontFamily,
-            fontSize = this.labelFontSize,
-            colorTimeBG = this.colorLabelTimeBackground,
-            colorTimeFG = this.colorLabelTimeForeground,
-            colorCandleBG = this.colorLabelCandleBackground,
-            colorCandleFG = this.colorLabelCandleForeground,
-            colorVolumeBG = this.colorLabelVolumeBackground,
-            colorVolumeFG = this.colorLabelVolumeForeground,
+            coord = self.coordLabels(),
+            drawData = self.getCurData(self.data),
+            scales = self.getScales(drawData),
+        
+            coordvol = self.coordVolume(),
+            coordcand = self.coordCandles(),
+            propVol = self.propertyVolume,
+            fontFamily = self.labelFontFamily,
+            fontSize = self.labelFontSize,
+            colorTimeBG = self.colorLabelTimeBackground,
+            colorTimeFG = self.colorLabelTimeForeground,
+            colorCandleBG = self.colorLabelCandleBackground,
+            colorCandleFG = self.colorLabelCandleForeground,
+            colorVolumeBG = self.colorLabelVolumeBackground,
+            colorVolumeFG = self.colorLabelVolumeForeground,
 
-            colorTick = this.colorTick,
-            colorTickLow = this.colorTickLow,
-            colorTickHigh = this.colorTickHigh,
-            colorTickText = this.colorTickText,
-            colorTickBg = this.colorTickBg,
-            marginCandle = this.marginCandle || 0,
-            marginVolume = this.marginVolume || 0,
-            margin = this.marginCandle || 0,
+//            colorTick = colorTick,
+//            colorTickLow = colorTickLow,
+//            colorTickHigh = colorTickHigh,
+//            colorTickText = colorTickText,
+//            colorTickBg = colorTickBg,
+            marginCandle = self.marginCandle || 0,
+            marginVolume = self.marginVolume || 0,
+            margin = self.marginCandle || 0,
 
-            tick = this.data[0].close,
-            tickVol = this.genTick(tick, scales, this.data[0].low, this.data[0].high),
+            
+            tickVol = self.genTick(self.tick, scales, self.data[0].low, self.data[0].high),
             cSX = coord.seriesX,
             cSY = coord.seriesY,
-            groupY = svg.append('g')
+            groupY = self.svg.append('g')
             .attr('class', 'tick line')
             .attr('transform', 'translate(' + [0, cSY.y].join(' ') + ')');
-
-        if (tickVol > tick) colorTick = colorTickHigh;
-        else colorTick = colorTickLow;
+//        console.log(groupY);
+        if (tickVol > self.tick) self.colorTick = self.colorTickHigh;
+        else self.colorTick = self.colorTickLow;
 //        if (!this.barPanel) coordcand.h += coordvol.h;
         var
         // candle data & functions:
@@ -1125,15 +1174,14 @@
         candY = d3.scaleLinear()
         .domain([scales.lowestLow, scales.highestHigh])
         .range([coordcand.y + coordcand.h - marginCandle, coordcand.y + marginCandle]); //,
-
+            
 
         coordcand.y = candY(tickVol);
-
         groupY.append('rect') // placeholder for X labels (end-cap)
             .attr('y', coordcand.y - 2)
             .attr('width', coordcand.w)
             .attr('height', 2)
-            .attr('fill', colorTick);
+            .attr('fill', self.colorTick);
 
 
         // Candle labels
@@ -1142,7 +1190,7 @@
             .attr('x', coordcand.w)
             .attr('width', 65)
             .attr('height', 20)
-            .attr('fill', colorTick);
+            .attr('fill', self.colorTick);
 
         groupY.selectAll('tick') // ticks
             .data(candY.ticks(candticks))
@@ -1157,66 +1205,72 @@
             .attr('text-anchor', 'middle')
             .attr('fill', '#fff')
             .text(tickVol);
-        var lastY = candY(this.data[0].close),
-            coordY = coordcand.y - 12,
-            dStemColor = '#db4c3c',
-            dBodyColor = '#db4c3c';
-        if (this.data[0].close < tickVol) {
-            dBodyColor = '#04bf85';
-            dStemColor = '#04bf85';
-        }
-        if (coordY + 10 > lastY) {
-            heightB = Math.abs(coordY - lastY + 10);
-            $('rect.candle-body').eq(0).attr('height', heightB).attr('y', coordY + 10 - heightB);
-        } else {
-            heightB = Math.abs(lastY - coordY - 10);
-            $('rect.candle-body').eq(0).attr('height', heightB).attr('y', coordY + 10);
-        }
-        $('rect.candle-stem').eq(0)
-            .attr('class', 'candle-stem')
-            .attr('stroke-width', 0.5)
-            .attr('stroke-linecap', 'butt')
-            .attr('stroke-rendering', 'crispEdges')
-            .attr('stroke', dStemColor)
-            .attr('fill', dBodyColor);
+        
+        if(self.dateFrom == 0){
+//            console.log("dateFrom:", dateFrom);
+            var lastY = candY(self.data[0].close),
+                coordY = coordcand.y - 12,
+                dStemColor = '#db4c3c',
+                dBodyColor = '#db4c3c';
+            if (self.data[0].close < tickVol) {
+                dBodyColor = '#04bf85';
+                dStemColor = '#04bf85';
+            }
+            if (coordY + 10 > lastY) {
+                heightB = Math.abs(coordY - lastY + 10);
+                $(self.el).find('rect.candle-body').eq(0).attr('height', heightB).attr('y', coordY + 10 - heightB);
+            } else {
+                heightB = Math.abs(lastY - coordY - 10);
+                $(self.el).find('rect.candle-body').eq(0).attr('height', heightB).attr('y', coordY + 10);
+            }
+        
+            $('rect.candle-stem').eq(0)
+                .attr('class', 'candle-stem')
+                .attr('stroke-width', 0.5)
+                .attr('stroke-linecap', 'butt')
+                .attr('stroke-rendering', 'crispEdges')
+                .attr('stroke', dStemColor)
+                .attr('fill', dBodyColor);
 
-        $('rect.candle-body').eq(0)
-            .attr('class', 'candle-body')
-            .attr('stroke-width', 0.5)
-            .attr('stroke-linecap', 'butt')
-            .attr('stroke-rendering', 'crispEdges')
-            .attr('stroke', dStemColor)
-            .attr('fill', dBodyColor);
-
-        return svg;
+            $('rect.candle-body').eq(0)
+                .attr('class', 'candle-body')
+                .attr('stroke-width', 0.5)
+                .attr('stroke-linecap', 'butt')
+                .attr('stroke-rendering', 'crispEdges')
+                .attr('stroke', dStemColor)
+                .attr('fill', dBodyColor);
+        }else{
+            
+        }
     };
 
-    D3CandleStickChart.prototype.resetLabels = function(svg) {
-        svg.selectAll('g.labels').remove();
-        return this;
+    this.resetLabels = function() {
+        self.svg.selectAll('g.labels').remove();
     };
 
-    D3CandleStickChart.prototype.redrawLabels = function(svg, scales) {
+    this.redrawLabels = function() {
         var
-            coord = this.coordLabels(),
-            coordvol = this.coordVolume(),
-            coordcand = this.coordCandles(),
-            fontFamily = this.labelFontFamily,
-            fontSize = this.labelFontSize,
-            colorTimeBG = this.colorLabelTimeBackground,
-            colorTimeFG = this.colorLabelTimeForeground,
-            colorCandleBG = this.colorLabelCandleBackground,
-            colorCandleFG = this.colorLabelCandleForeground,
-            colorVolumeBG = this.colorLabelVolumeBackground,
-            colorVolumeFG = this.colorLabelVolumeForeground,
-            marginCandle = this.marginCandle || 0,
-            marginVolume = this.marginVolume || 0,
+            coord = self.coordLabels(),
+            coordvol = self.coordVolume(),
+            coordcand = self.coordCandles(),
+            fontFamily = self.labelFontFamily,
+            fontSize = self.labelFontSize,
+            colorTimeBG = self.colorLabelTimeBackground,
+            colorTimeFG = self.colorLabelTimeForeground,
+            colorCandleBG = self.colorLabelCandleBackground,
+            colorCandleFG = self.colorLabelCandleForeground,
+            colorVolumeBG = self.colorLabelVolumeBackground,
+            colorVolumeFG = self.colorLabelVolumeForeground,
+            marginCandle = self.marginCandle || 0,
+            marginVolume = self.marginVolume || 0,
+            drawData = self.getCurData(),
+            scales = self.getScales(drawData),
             cSX = coord.seriesX,
             cSY = coord.seriesY,
-            groupY = svg.append('g')
+            groupY = self.svg.append('g')
             .attr('class', 'labels label-y')
             .attr('transform', 'translate(' + [cSY.x, cSY.y].join(' ') + ')'),
-            groupX = svg.append('g')
+            groupX = self.svg.append('g')
             .attr('class', 'labels label-x')
             .attr('transform', 'translate(' + [cSX.x, cSX.y].join(' ') + ')');
 
@@ -1240,7 +1294,7 @@
             volY = d3.scaleLinear()
             .domain([scales.volumeLow, scales.volumeHigh])
             .range([coordvol.y + coordvol.h, coordvol.y + fontSize + marginVolume]);
-        if (this.barPanel) {
+        if (self.barPanel) {
             // volume labels:
             groupY.append('rect') // background
                 .attr('y', coordvol.y)
@@ -1285,7 +1339,7 @@
             .attr('font-size', fontSize)
             .attr('text-anchor', 'middle')
             .attr('fill', colorTimeFG)
-            .text(D3CandleStickChart.dateSeriesFunctionFromDiff(scales.dateLow, scales.dateHigh));
+            .text(self.dateSeriesFunctionFromDiff(scales.dateLow, scales.dateHigh));
 
         // candle labels
         groupY.append('rect') // background
@@ -1309,28 +1363,24 @@
             .text(function(d) {
                 return utils.isNumber(d) ? (d < 1 ? d.toFixed(4) : d) : d;
             });
-
-
-
-        return svg;
     };
 
-    D3CandleStickChart.prototype.redraw = function(svg, data) {
-//        if(this.noRedraw) return;
-        svg = svg || this.svg;
-        data = data || this.data;
+    this.redraw = function() {
+//        var 
+//        svg = svg || self.svg,
+//        data = data || self.data;
+//        console.log("redraw data:", self.data);
+        // clear existing selfed data
+        self.reset();
 
-        // clear existing charted data
-        this.reset(svg);
-
-        if (!data.length) { // bail out if no data
+        if (self.data == undefined || !self.data.length) { // bail out if no data
             return svg;
         }
         //    this.height+=200;
         // resize SVG to outer limits
-        svg.attr('width', this.width);
-        svg.attr('height', this.height - 80);
-        svg.attr('viewBox', '0 0 ' + this.width + ' ' + this.height);
+        self.svg.attr('width', self.width);
+        self.svg.attr('height', self.height - 80);
+        self.svg.attr('viewBox', '0 0 ' + self.width + ' ' + self.height);
 
         var
         /***** scales:
@@ -1341,40 +1391,151 @@
          * dateLow
          * dateHigh
          *****/
-        dataNum = this.dataNum;
-        scales = this.getScales(data.filter(function(d,i){return i < dataNum}));
-
-        console.log("redraw");
-        this.redrawArea(svg, scales);
-        this.redrawCandles(svg, scales, data);
-        this.redrawVolume(svg, scales);
-        this.redrawLabels(svg, scales);
-        this.redrawTick(svg, scales);
-        console.log(this.curShow, this.curX, this.curY);
-        if(this.curShow) this.moveCursor(this.curX, this.curY);
+//        dataNum = self.dataNum,
+//        dateFrom = self.dateFrom,
+        scales = self.getScales(self.data.filter(function(d,i){return (i >= self.dateFrom) && (i < self.dataNum + self.dateFrom)}));
+        
+        self.redrawArea();
+        self.redrawCandles();
+        self.redrawVolume();
+        self.redrawLabels();
+        self.redrawTick();
+        if(self.curShow) self.moveCursor(curX, curY);
     };
 
-    D3CandleStickChart.prototype.initView = function(svg) {
-        console.log("intiView");
-        this.el
-        this.resize(this.width, this.height, svg);
-        this.redraw(svg, this.data);
+    this.initView = function(svg) {
+        self.resize(window.innerWidth, window.innerHeight, svg);
+//        this.redraw();
         return svg;
     };
 
-    D3CandleStickChart.prototype.install = function(parent) {
-        parent = parent || this.parent;
-        if (!parent) {
-            return false;
-        }
-
-        // set the parent's svg context
-        this[PROP_SVG] = this.initView(d3.select(parent).append('svg:svg'));
-
-        return parent;
+    this.resetPeriod = function() {
+        if(self.dataNum > self.data.length) self.dataNum = self.data.length;
+        
     };
 
-    D3CandleStickChart.prototype.uninstall = function(parent) {
+
+    this.init = function() {
+        self.dateFrom = 0;
+        self.timerTick = 0; // Ticks to red line with current value redraw
+        self.timerGraph = 0; //Ticks to main redraw
+        
+    };
+
+    this.reloadData = function(force = false) {
+//        console.log("r", force);
+        
+        var
+//            tick = ticker.call(),
+//            mainFun = this,
+            request = 'http://xcryptex.com/data/amcharts/hystominute?limit=' + self.xhrPeriodFull + '&instrument_id=' + self.xhrInstrumentId;
+        if( self.xhrUserId != undefined) request += '&UserId=' + self.xhrUserId;
+            
+//            epocEnd = Math.round(Date.now() / 1000),
+//            epocStart = Math.round(epocEnd - (1000 * xhrPeriod));
+        
+        if ((self.timerGraph == 0) || (force == true)) {
+//            console.log("Request Data");
+            $.ajax({ // fetch some self data
+                url: request,
+                json: true,
+                success: function(t) {
+                    cleaner.call();
+                    loader.call(self,t.map(function(record) {
+                        if (record.low > record.high) {
+                            var tmp = record.low;
+                            record.low = record.high;
+                            record.high = tmp;
+                        }
+                        record.date = new Date(record.date);
+                        return record;
+                    }));
+//                    console.log("Income Data");
+                    self.tick = t[0].close;
+                    self.redraw();
+                }
+                
+            });
+            
+            self.timerGraph = self.xhrMaxInterval / self.xhrMinInterval; // 600 * renew base interval = interval
+        }
+        // Redraw ticker
+        if (self.timerTick == 0) {
+            ticker.call();
+            self.timerTick = 1; // 1 * renew base interval = interval
+        }
+        self.timerTick--;
+        self.timerGraph--;
+        
+        
+         //Renew base interval
+    };
+    this.setHandlers = function (elem) {
+//        var self = this;
+        // Handlers
+        var mouseChange = $(elem).on('mousemove mouseleave mousedown mouseup', function(e) {
+            self.mouseMove(e);
+        });
+
+        if (elem.addEventListener) {
+            if ('onwheel' in document) {
+                // IE9+, FF17+, Ch31+
+                elem.addEventListener("wheel", onWheel);
+            } else if ('onmousewheel' in document) {
+                // устаревший вариант события
+                elem.addEventListener("mousewheel", onWheel);
+            } else {
+                // Firefox < 17
+                elem.addEventListener("MozMousePixelScroll", onWheel);
+            }
+        } else { // IE8-
+            elem.attachEvent("onmousewheel", onWheel);
+        }
+
+        function onWheel(e) {
+            e = e || window.event;
+
+            // wheelDelta не дает возможность узнать количество пикселей
+            var delta = e.deltaY || e.detail || e.wheelDelta;
+
+            self.scroll(delta);
+
+            e.preventDefault ? e.preventDefault() : (e.returnValue = false);
+        }
+        var candleType = $(elem).parent().find(".candle-type>button").on('click', function() {
+            self.gtype = $(this).attr('period');
+//            console.log(self.gtype);
+            self.reloadData(true);
+        });
+        var panelShowHide = $(elem).parent().find("button.panel-show-hide").on('click', function() {
+            self.barPanel = !self.barPanel;
+            self.redraw();
+        });
+        var areaShowHide = $(elem).parent().find("button.area-show-hide").on('click', function() {
+            self.btnArea = !self.btnArea;
+            self.redraw();
+        });
+        var candleShowHide = $(elem).parent().find("button.candle-show-hide").on('click', function() {
+            self.btnCandle = !self.btnCandle;
+            self.redraw();
+        });
+        
+        (window.onresize = function() {
+            self.resize(window.innerWidth, window.innerHeight);
+            self.redraw();
+        })();
+    };
+
+    this.install = function(parent) {
+//        parent = parent || this.parent;
+        
+        // set the parent's svg context
+        this.svg = this.initView(d3.select(parent).append('svg:svg' ).attr('name', self.elId));
+//        console.log("installed:svg", svg);
+        return svg;
+    };
+    
+    this.uninstall = function(parent) {
         d3.select(parent || this.parent)
             .select('svg')
             .remove();
@@ -1382,269 +1543,37 @@
         return parent;
     };
 
-    this.D3CandleStickChart = D3CandleStickChart;
+//        svg = this.install(el);
+        this.svg = d3.select(el).append('svg:svg' ).attr('name', self.elId);
+    
+        this.resize(window.innerWidth, window.innerHeight, this.svg);
+//        this.initView();
+//        if (window.d3 === undefined) {
+//            throw new Error('Unable to locate the d3 library');
+//        }
 
-}).call(this);
+        
+        // load any data in the props
+        this.loadData(props.data);
+        
+        // initialize data get priodically
+        this.init();
+        var ticker = this.redrawTick.bind(),
+            reloader = self.reloadData.bind(this);
+        var
+            cleaner = this.clearData.bind(this),
+            loader = this.loadData.bind(),
+            setter = this.reset.bind();
+            
+            
+//        console.log(this.xhrMinInterval);
+        
+        this.start = setInterval(reloader, this.xhrMinInterval);
+        // Set handlers
+        this.setHandlers(this.el);
+        return this;
+        
 
-(function(el) {
-    if (!el) throw new Error('Unable to find main canvas.');
+};
 
-    var chart = new window.D3CandleStickChart(el, {}),
-
-
-        // data loading stuff
-        msPerSec = 1000,
-        pair = 'BTC_BTS',
-        period = 1000,
-        num = 60,
-        // numFull = 1440,
-        numFull = 14400,
-        mainInterval = 200; // Main interval to renew ticks
-    graphInterval = 60000; // Iterval in ms to renew all graphs
-    epocEnd = Math.round(Date.now() / msPerSec),
-        epocStart = Math.round(epocEnd - (period * num));
-
-    chart.data.timerGraph = 0; //Ticks to main redraw
-    chart.data.timerTick = 0; // Ticks to red line with current value redraw
-    function reloadData(force = false) {
-        // Redraw full graph
-        if ((chart.data.timerGraph == 0) || (force == true)) {
-            $.ajax({ // fetch some chart data
-                url: 'http://xcryptex.com/data/amcharts/hystominute?limit=' + numFull + '&instrument_id=2',
-                json: true,
-                success: function(data) {
-                    chart.clearData();
-
-                    chart.loadData(data.map(function(record) {
-                        if (record.low > record.high) {
-                            var tmp = record.low;
-                            record.low = record.high;
-                            record.high = record.tmp;
-                        }
-                        record.date = new Date(record.date);
-                        return record;
-                    }));
-                    chart.data.tick = data[0].close;
-                }
-            });
-
-            chart.data.timerGraph = graphInterval / mainInterval; // 600 * renew base interval = interval
-        }
-        // Redraw ticker
-        if (chart.data.timerTick == 0) {
-
-            chart.redrawTick();
-            chart.data.timerTick = 1; // 1 * renew base interval = interval
-        }
-        chart.data.timerTick--;
-        chart.data.timerGraph--;
-    }
-
-    reloadData();
-    setInterval(reloadData, mainInterval); //Renew base interval
-
-    // Handlers
-    var mouseChange = $("#main").on('mousemove mouseenter mouseleave mousedown mouseup', function(e) {
-        chart.mouseMove(e)
-    });
-
-    if (el.addEventListener) {
-        if ('onwheel' in document) {
-            // IE9+, FF17+, Ch31+
-            el.addEventListener("wheel", onWheel);
-        } else if ('onmousewheel' in document) {
-            // устаревший вариант события
-            el.addEventListener("mousewheel", onWheel);
-        } else {
-            // Firefox < 17
-            el.addEventListener("MozMousePixelScroll", onWheel);
-        }
-    } else { // IE8-
-        el.attachEvent("onmousewheel", onWheel);
-    }
-
-    function onWheel(e) {
-        e = e || window.event;
-
-        // wheelDelta не дает возможность узнать количество пикселей
-        var delta = e.deltaY || e.detail || e.wheelDelta;
-
-        chart.scroll(delta);
-
-        e.preventDefault ? e.preventDefault() : (e.returnValue = false);
-    }
-
-    var candleType = $("#candle-type>button").on('click', function() {
-        chart.gtype = $(this).html();
-        console.log(chart.gtype);
-        reloadData(true);
-    });
-    var panelShowHide = $("button#panel-show-hide").on('click', function() {
-        if ($(this).html() == 'remove panel') {
-            chart.barPanel = false;
-            $(this).html('add panel');
-        } else {
-            chart.barPanel = true;
-            $(this).html('remove panel');
-        }
-        reloadData(true);
-    });
-    var areaShowHide = $("button#area-show-hide").on('click', function() {
-        if ($(this).html() == 'remove area') {
-            chart.gArea = false;
-            $(this).html('add area');
-        } else {
-            chart.gArea = true;
-            $(this).html('remove area');
-        }
-        reloadData(true);
-    });
-    var candleShowHide = $("button#candle-show-hide").on('click', function() {
-        if ($(this).html() == 'remove candle') {
-            chart.gCandle = false;
-            $(this).html('add candle');
-        } else {
-            chart.gCandle = true;
-            $(this).html('remove candle');
-        }
-        reloadData(true);
-    });
-    (window.onresize = function() {
-        chart.resize(window.innerWidth, window.innerHeight);
-        console.log("resize");
-        chart.redraw();
-
-    })();
-
-})(document.getElementById('main'));
-(function(el) {
-    if (!el) throw new Error('Unable to find main canvas.');
-
-    var chart = new window.D3CandleStickChart(el, {}),
-
-
-        // data loading stuff
-        msPerSec = 1000,
-        pair = 'BTC_BTS',
-        period = 1000,
-        num = 60,
-        // numFull = 1440,
-        numFull = 14400,
-        mainInterval = 200; // Main interval to renew ticks
-    graphInterval = 60000; // Iterval in ms to renew all graphs
-    epocEnd = Math.round(Date.now() / msPerSec),
-        epocStart = Math.round(epocEnd - (period * num));
-
-    chart.data.timerGraph = 0; //Ticks to main redraw
-    chart.data.timerTick = 0; // Ticks to red line with current value redraw
-    function reloadData(force = false) {
-        // Redraw full graph
-        if ((chart.data.timerGraph == 0) || (force == true)) {
-            $.ajax({ // fetch some chart data
-                url: 'http://xcryptex.com/data/amcharts/hystominute?limit=' + numFull + '&instrument_id=1',
-                json: true,
-                success: function(data) {
-                    chart.clearData();
-
-                    chart.loadData(data.map(function(record) {
-                        if (record.low > record.high) {
-                            var tmp = record.low;
-                            record.low = record.high;
-                            record.high = record.tmp;
-                        }
-                        record.date = new Date(record.date);
-                        return record;
-                    }));
-                    chart.data.tick = data[0].close;
-                }
-            });
-
-            chart.data.timerGraph = graphInterval / mainInterval; // 600 * renew base interval = interval
-        }
-        // Redraw ticker
-        if (chart.data.timerTick == 0) {
-
-            chart.redrawTick();
-            chart.data.timerTick = 1; // 1 * renew base interval = interval
-        }
-        chart.data.timerTick--;
-        chart.data.timerGraph--;
-    }
-
-    reloadData();
-    setInterval(reloadData, mainInterval); //Renew base interval
-
-    // Handlers
-    var mouseChange = $("#main_2").on('mousemove mouseenter mouseleave mousedown mouseup', function(e) {
-        chart.mouseMove(e)
-    });
-
-    if (el.addEventListener) {
-        if ('onwheel' in document) {
-            // IE9+, FF17+, Ch31+
-            el.addEventListener("wheel", onWheel);
-        } else if ('onmousewheel' in document) {
-            // устаревший вариант события
-            el.addEventListener("mousewheel", onWheel);
-        } else {
-            // Firefox < 17
-            el.addEventListener("MozMousePixelScroll", onWheel);
-        }
-    } else { // IE8-
-        el.attachEvent("onmousewheel", onWheel);
-    }
-
-    function onWheel(e) {
-        e = e || window.event;
-
-        // wheelDelta не дает возможность узнать количество пикселей
-        var delta = e.deltaY || e.detail || e.wheelDelta;
-
-        chart.scroll(delta);
-
-        e.preventDefault ? e.preventDefault() : (e.returnValue = false);
-    }
-
-    var candleType = $("#candle-type>button_2").on('click', function() {
-        chart.gtype = $(this).html();
-        console.log(chart.gtype);
-        reloadData(true);
-    });
-    var panelShowHide = $("button#panel-show-hide_2").on('click', function() {
-        if ($(this).html() == 'remove panel') {
-            chart.barPanel = false;
-            $(this).html('add panel');
-        } else {
-            chart.barPanel = true;
-            $(this).html('remove panel');
-        }
-        reloadData(true);
-    });
-    var areaShowHide = $("button#area-show-hide_2").on('click', function() {
-        if ($(this).html() == 'remove area') {
-            chart.gArea = false;
-            $(this).html('add area');
-        } else {
-            chart.gArea = true;
-            $(this).html('remove area');
-        }
-        reloadData(true);
-    });
-    var candleShowHide = $("button#candle-show-hide_2").on('click', function() {
-        if ($(this).html() == 'remove candle') {
-            chart.gCandle = false;
-            $(this).html('add candle');
-        } else {
-            chart.gCandle = true;
-            $(this).html('remove candle');
-        }
-        reloadData(true);
-    });
-    (window.onresize = function() {
-        chart.resize(window.innerWidth, window.innerHeight);
-        console.log("resize");
-        chart.redraw();
-
-    })();
-
-})(document.getElementById('main_2'));
+    

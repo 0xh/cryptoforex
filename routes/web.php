@@ -12,7 +12,12 @@
 */
 
 Route::get('/', 'HomeController@index')->name('home');
+Route::get('/locale/{lang}', function($lang){
+    App::setlocale($lang);
+    return Redirect::back();
+})->name('locale');
 Route::get('/page/{page}', 'HomeController@page')->name('pages');
+Route::get('/page_home/{page}', 'HomeController@page2')->name('pages2');
 Route::get('/data/test/{type}', 'DataController@test')->name('test');
 // Route::get('/data/amcharts/{type}', 'DataController@amcharts')->name('amcharts');
 Route::get('/data/amcharts/{type}', 'HistoController@index')->name('amcharts');
@@ -43,20 +48,21 @@ Route::get('/crm','CrmController@index')->name('crm');
 
 Route::get('/account','UserController@useraccount')->name('useraccount');
 /*Task JSON data */
-Route::get('/j/task','TaskController@index')->name('json_task_list');
-Route::get('/j/task/add','TaskController@add')->name('json_task_add');
-Route::get('/j/task/{id}/edit','TaskController@edit')->name('json_task_edit');
-Route::get('/j/task/{id}/delete','TaskController@delete')->name('json_task_delete');
-Route::get('/j/task/status','TaskController@statuses')->name('json_task_status');
-Route::get('/j/task/type','TaskController@types')->name('json_task_type');
+Route::get('/{format}/task','TaskController@index')->name('task.list')->where('format','json|html');
+Route::get('/{format}/task/add','TaskController@add')->name('task.add')->where('format','json|html');
+Route::get('/{format}/task/{id}/edit','TaskController@edit')->name('task.edit')->where('format','json|html')->where('id','[0-9]+');
+Route::get('/{format}/task/{id}/delete','TaskController@delete')->name('task.delete')->where('format','json|html')->where('id','[0-9]+');
+Route::get('/{format}/task/status','TaskController@statuses')->name('task.status')->where('format','json|html');
+Route::get('/{format}/task/type','TaskController@types')->name('task.type')->where('format','json|html');
 /* USer JSON data*/
-Route::get('/{format}/user/','UserController@index')->name('user.list')->where('format','json');
-Route::get('/{format}/user/{id}','UserController@index')->name('user.info')->where('format','json')->where('id','[0-9]+');
+Route::get('/{format}/user/','UserController@index')->name('user.list')->where('format','json|html');
+Route::get('/{format}/user/{id}','UserController@index')->name('user.info')->where('format','json|html')->where('id','[0-9]+');
 Route::get('/{format}/user/{id}/update','UserController@update')->name('user.update')->where('format','json')->where('id','[0-9]+');
 Route::get('/{format}/user/{id}/delete','UserController@destroy')->name('user.update')->where('format','json')->where('id','[0-9]+');
 Route::get('/{format}/user/add','Auth\RegisterController@create')->name('user.register')->where('format','json');
 Route::get('/{format}/user/status','UserController@status')->name('user.status')->where('format','json');
 Route::get('/{format}/user/rights','UserController@rights')->name('user.rights')->where('format','json');
+Route::get('/{format}/user/countries','UserController@countries')->name('user.countries')->where('format','json');
 Route::get('/{format}/user/meta','UserController@metaData')->name('user.meta')->where('format','json');
 /* Deal controller JSON */
 Route::get('/{format}/deal/{id?}','DealController@index')->name('deal.list')->where('format','json')->where('id','[0-9]+');
@@ -67,3 +73,9 @@ Route::get('/{format}/deal/delete','DealController@destroy')->name('deal.delete'
 Route::get('/{format}/instrument/{id?}','InstrumentController@index')->name('instrument.list')->where('format','json')->where('id','[0-9]+');
 Route::get('/{format}/instrument/{id}/update','InstrumentController@update')->name('instrument.update')->where('format','json')->where('id','[0-9]+');
 Route::get('/{format}/instrument/{id}/history','InstrumentController@history')->name('instrument.history')->where('format','json')->where('id','[0-9]+');
+/* Fanance */
+Route::get('/{format}/merchant','TransactionController@merchants')->name('merchant.list')->where('format','json')->where('id','[0-9]+');
+Route::get('/{format}/finance/{id?}','TransactionController@index')->name('finance.list')->where('format','json')->where('id','[0-9]+');
+Route::get('/{format}/finance/deposit','TransactionController@deposit')->name('finance.deposit')->where('format','json');
+Route::get('/{format}/finance/balance','TransactionController@balance')->name('finance.balance')->where('format','json');
+Route::get('/{format}/finance/withdrawal/{id?}','TransactionController@withdrawal')->name('finance.withdrawal')->where('format','json')->where('id','[0-9]+');

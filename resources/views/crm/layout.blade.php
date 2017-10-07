@@ -12,7 +12,15 @@
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
     <!-- CSS -->
     <link rel="stylesheet" href="/crmd2/style/main.css">
+
     <link rel="stylesheet" href="/crmd2/style/i2.css">
+
+    <link rel="stylesheet" href="/crmd2/style/dhtmlxscheduler.css">
+    <script src="/crmd2/js/dhtmlxscheduler.js"></script>
+    <script>
+        scheduler.config.xml_date="%Y-%m-%d %H:%i";
+        scheduler.templates.week_date_class=function(date,today){return (date.getDay()==0 || date.getDay()==6)?"weekday":"";};
+    </script>
     <script>
         window.Laravel = {!! json_encode([
             'csrfToken' => csrf_token(),
@@ -40,8 +48,10 @@
                 };
             @endforeach
         @endif
+
     </script>
 </head>
+<!-- <body onload="init();"> -->
 <body>
     <header class="header">
         <div class="container flex">
@@ -101,16 +111,13 @@
                     </div>
                     <div class="lang">
                         <ul>
-                            <li class="active"><a href="#"><img src="images/flag-eng.png" alt=""></a>
+                            <li class="<?php if(App::isLocale('en')) echo 'active';?>"><a href="/locale/en"><img src="images/flag-eng.png" alt=""></a>
                             </li>
-                            <li>
-                                <a href="#"><img src="images/flag-arab.png" alt=""></a>
+                            <li class="<?php if(App::isLocale('en')) echo 'active';?>">
+                                <a href="/locale/ru"><img src="images/Russia.png" alt=""></a>
                             </li>
-                            <li>
-                                <a href="#"><img src="images/flag-eng.png" alt=""></a>
-                            </li>
-                            <li>
-                                <a href="#"><img src="images/flag-arab.png" alt=""></a>
+                            <li class="<?php if(App::isLocale('en')) echo 'active';?>">
+                                <a href="/locale/ar"><img src="images/flag-arab.png" alt=""></a>
                             </li>
                         </ul>
                     </div>
@@ -140,14 +147,25 @@
   <!--  Vendor amCharts -->
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-  <script src="http://aplicant.good-point.ru/alfa-diamonds/js/jquery.shapeshift-master/core/jquery.shapeshift.min.js"></script>
+  <script src="/crmd2/js/jquery.shapeshift.min.js"></script>
+  <script>
+    $('.content').shapeshift({
+        minColumns: 3
+    });
+  </script>
+  <script src="/crmd2/js/js.js"></script>
+
+
+  <!-- <script src="http://aplicant.good-point.ru/alfa-diamonds/js/jquery.shapeshift-master/core/jquery.shapeshift.min.js"></script> -->
   <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
   <script src="https://www.amcharts.com/lib/3/serial.js"></script>
   <script src="https://www.amcharts.com/lib/3/amstock.js"></script>
   <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
   <script src="{{ asset('js/settings.js') }}"></script>
-  <script src="/crmd2/js/main.js"></script>
-  <script src="/crmd2/js/main_new.js"></script>
+  <!-- <script src="/crmd2/js/main.js"></script> -->
+
+
+  <!-- <script src="/crmd2/js/main_new.js"></script> -->
   <script src="/crmd2/js/i.js"></script>
   <!-- <script src="/crmd2/js/jquery.shapeshift.min.js"></script> -->
   <script src="{{ asset('js/loader.js') }}"></script>

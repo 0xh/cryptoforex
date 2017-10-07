@@ -39,6 +39,7 @@ var pulseData = function(chart,i){
     }
 }
 var getData = function(limit,divid){
+    return [];
     var res={},divid = (arguments.length>1)?arguments[1]:"chartdiv",instrument_id = arguments.length>2?arguments[2]:1;
     $.ajax({
         async:true,

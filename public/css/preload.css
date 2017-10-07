@@ -1,0 +1,35 @@
+#page-preloader{
+	position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: #2b2b2b;
+    z-index: 100500;
+}
+
+.diamonds-spinner{
+	margin: calc(50vh - 35px) auto 0;
+    text-align: center;
+    width: 400px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    margin: 0 auto;
+    transform: translateY(-50%);
+}
+
+.spinner-image{
+	margin: 15px;
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.spinner-image img{
+	vertical-align: middle;
+    width: auto;
+    max-width: 100%;
+}

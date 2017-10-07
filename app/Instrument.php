@@ -4,8 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Instrument extends Model
-{
+class Instrument extends Model{
     /**
      * The table associated with the model.
      *
@@ -24,6 +23,12 @@ class Instrument extends Model
      * @var array
      */
     protected $fillable = [
-        'from_currency_id','to_currency_id','comission','enabled'
+        'from_currency_id','to_currency_id','commission','enabled'
     ];
+    public function from(){
+        return $this->belongsTo('App\Instrument','from_currency_id');
+    }
+    public function to(){
+        return $this->belongsTo('App\Instrument','to_currency_id');
+    }
 }

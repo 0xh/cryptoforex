@@ -19,4 +19,6 @@ $(document).ready(function(){
         $('.popup,.bgc').fadeOut(700);
 		$('.'+tid+',.bgc').fadeIn(700);
     });
+    $(".item.notenabled").css('pointer-events','none').append('<div style="background-color:rgba(30,42,54,.8);position:absolute;top:0;left:0;width:100%;height:100%;z-index:10;"></div>');
+
 });

@@ -32,6 +32,10 @@
                 }
             }
         }
+        $(document).ready(function(){
+            $('#deal_amount').on("change keyup",function(){$('[data-name=amount],[data-name=stop_high]').val($(this).val());});
+            $('#flying').on("change keyup",function(){$('[data-name=multiplier]').val($(this).val());});
+        });
     </script>
     <div class="deal">
         <div class="tabs_popup white">
@@ -39,7 +43,7 @@
             <li class="active">Сейчас</li>
             <li>При котировке</li>
           </ul> -->
-          <div class="submiter tab_cap active" data-action="/deal/add" data-callback="pageReload">
+          <div class="submiter tab_cap active" data-action="/json/deal/add" data-callback="pageReload">
             <div class="box">
               <div class="info flex">
                 <p>BTC/USD</p>
@@ -47,7 +51,7 @@
               </div>
               <strong>@lang('messages.Sumsd')</strong>
               <div class="number">
-                <input type="text" value="100" size="5"/>
+                <input type="text" value="100" size="5" id="deal_amount"/>
                 <div class="wrap flex">
                   <span class="minus">-</span>
                   <span class="plus">+</span>
@@ -55,56 +59,15 @@
               </div>
               <strong>@lang('messages.Krpl')</strong>
               <form onsubmit="return false" oninput="level.value = flevel.valueAsNumber">
-                <output for="flying" name="level">0</output>
+                <output for="flying" name="level">10</output>
                 <input name="flevel" id="flying" type="range" min="1" max="20" value="10" step="1">
               </form>
-              <!-- <div class="item flex">
-                <div class="inner">
-                  <p>@lang('messages.Sumsd')</p>
-                </div>
-                <div class="inner">
-                  <input type="text" name="num" placeholder="1000" data-name="amount" value="1000">
-                </div>
-              </div> -->
-              <!-- <div class="item flex">
-                <div class="inner">
-                  <p>@lang('messages.Krpl')</p>
-                </div>
-                <div class="inner flex">
-                  <input type="text" name="kr" placeholder="20" value="20" data-name="multiplier" onchange="multiplier(this)" class="multiplier" data-target=".multiplier-result">
-                  <p>=</p>
-                  <p><span>$20 000</span></p>
-                </div>
-              </div> -->
-              <!-- <div class="item flex">
-                <div class="inner">
-                  <p><span>@lang('messages.Komsd')</span></p>
-                </div>
-                <div class="inner">
-                  <p><span class="kr">2.673%</span></p>
-                </div>
-              </div> -->
             </div>
-            <!-- <div class="box">
-              <div class="item flex">
-                <p>@lang('messages.Profit')</p>
-              </div>
-              <div class="item flex column">
-                <div class="inner flex">
-                  <span class="active"></span>
-                  <p>@lang('messages.Profit')</p>
-                  <p>+ 30.00%</p>
-                  <input type="text" name="pr" data-name="stop_high" placeholder="300" value=0>
-                </div>
-                <div class="inner flex">
-                  <span></span>
-                  <p>@lang('messages.Profit')</p>
-                  <p>+ 30.00%</p>
-                  <input type="text" name="yb" data-name="stop_low" placeholder="300" value=0>
-                </div>
-              </div>
-            </div> -->
             <div class="bot flex">
+                <input name="amount" value="100" type="hidden" data-name="amount"/>
+                <input name="stop_high" value="100" type="hidden" data-name="stop_high"/>
+                <input name="stop_low" value="0" type="hidden" data-name="stop_low"/>
+                <input name="multiplier" value="10" type="hidden" data-name="multiplier"/>
                 <input name="instrument_id" value="1" type="hidden" data-name="instrument_id"/>
                 <input name="direction" value="1" type="hidden" data-name="direction"/>
                 <input name="currency" value="USD" type="hidden" data-name="currency" />
