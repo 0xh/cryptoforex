@@ -47,6 +47,7 @@ Route::get('/crm','CrmController@index')->name('crm');
 // Route::get('/usermeta','UserController@metaData')->name('usermeta');
 
 Route::get('/account','UserController@useraccount')->name('useraccount');
+Route::get('/{format}/price/{inst}','HistoController@price')->name('price.list')->where('format','json|html');
 /*Task JSON data */
 Route::get('/{format}/task','TaskController@index')->name('task.list')->where('format','json|html');
 Route::get('/{format}/task/add','TaskController@add')->name('task.add')->where('format','json|html');
@@ -55,7 +56,7 @@ Route::get('/{format}/task/{id}/delete','TaskController@delete')->name('task.del
 Route::get('/{format}/task/status','TaskController@statuses')->name('task.status')->where('format','json|html');
 Route::get('/{format}/task/type','TaskController@types')->name('task.type')->where('format','json|html');
 /* USer JSON data*/
-Route::get('/{format}/user/','UserController@index')->name('user.list')->where('format','json|html');
+Route::get('/{format}/user/','UserController@ulist')->name('user.list')->where('format','json|html');
 Route::get('/{format}/user/{id}','UserController@index')->name('user.info')->where('format','json|html')->where('id','[0-9]+');
 Route::get('/{format}/user/{id}/update','UserController@update')->name('user.update')->where('format','json')->where('id','[0-9]+');
 Route::get('/{format}/user/{id}/delete','UserController@destroy')->name('user.update')->where('format','json')->where('id','[0-9]+');
@@ -65,10 +66,11 @@ Route::get('/{format}/user/rights','UserController@rights')->name('user.rights')
 Route::get('/{format}/user/countries','UserController@countries')->name('user.countries')->where('format','json');
 Route::get('/{format}/user/meta','UserController@metaData')->name('user.meta')->where('format','json');
 /* Deal controller JSON */
-Route::get('/{format}/deal/{id?}','DealController@index')->name('deal.list')->where('format','json')->where('id','[0-9]+');
-Route::get('/{format}/deal/add','DealController@store')->name('deal.add')->where('format','json');
+Route::get('/{format}/deal/{id?}','DealController@index')->name('deal.list')->where('format','json|html')->where('id','[0-9]+');
+Route::get('/{format}/deal/add','DealController@store')->name('deal.add')->where('format','json|html');
 Route::get('/{format}/deal/{id}/update','DealController@update')->name('deal.add')->where('format','json');
 Route::get('/{format}/deal/delete','DealController@destroy')->name('deal.delete')->where('format','json');
+Route::get('/{format}/deal/status','DealController@statuses')->name('deal.statuses')->where('format','json');
 /* Instruments */
 Route::get('/{format}/instrument/{id?}','InstrumentController@index')->name('instrument.list')->where('format','json')->where('id','[0-9]+');
 Route::get('/{format}/instrument/{id}/update','InstrumentController@update')->name('instrument.update')->where('format','json')->where('id','[0-9]+');

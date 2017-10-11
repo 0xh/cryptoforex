@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Log;
 use App\User;
-use App\UserHierarchy;
+
 use App\Deal;
 use App\DealStatus;
 use App\DealHistory;
@@ -30,18 +30,30 @@ class DealController extends Controller{
      */
     public function index(Request $rq,$format='json',$id=false){
         $user = $rq->user();
-        $res = Deal::with(['user','manager','history','currency','instrument','open','close','status'])
+        $res = Deal::where('id','>','9')
+            ->with(['user'=>function($query){
+                $query->with(['manager']);
+            },'history','currency','instrument'=>function($query){
+            $query->with(['from','to']);
+        },'open','close','status'])
             ->byStatus($rq->input("status","open"))
             ->byInstrument($rq->input("instrument_id",false))
             ->byUser(($user->rights_id<=1)?$user->id:$rq->input("user_id",false));
         if($id!==false) $res =$res->where('id','=',$id);
+        if($rq->input("status_id","false") !== "false") $res =$res->where('status_id','=',$rq->input("status_id"));
         if($rq->input("sort",false)!==false) {
             foreach ($rq->input("sort") as $key => $value) {
                 $res =$res->orderBy($key,$value);
             }
         }
         Log::debug($res->toSql());
-        return response()->json($res->paginate(2),200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+        return ($format=='json')
+                ?response()->json($res->orderBy('id','desc')->paginate(12),200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT)
+                :(($id==false)
+                    ?view('crm.deal.list',["deals"=>$res->paginate(12)])
+                    :view('crm.deal.dashboard',["deal"=>$res->first(),'price'=>Price::where('instrument_id','=',$res->first()->instrument_id)->orderBy('id','desc')->first()])
+                );
+        // return response()->json($res->paginate(24),200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
 
         $res = [];
         $status = $rq->input("status","open");
@@ -62,8 +74,7 @@ class DealController extends Controller{
             $row["open_price"] = Price::find($deal->open_price_id);
             $row["currency"] = Currency::find($deal->currency_id);
             $row["status"] = DealStatus::find($deal->status_id);
-            $row["user"] = User::find($deal->user_id);
-            $row["manager"] = UserHierarchy::user($row["user"])->first();
+            $row["user"] = User::with(['manager'])->find($deal->user_id);
             if(!is_null($deal->close_price_id))$row["close_price"] = Price::find($deal->close_price_id);
             $res[]=$row;
         }
@@ -93,16 +104,14 @@ class DealController extends Controller{
         $user = $rq->user();
 
         $account = Account::where('user_id',$user->id)->where('type',$rq->input('account_type','demo'))->first();
-        $this->trx->makeTransaction([
+        $trx = $this->trx->makeTransaction([
             'account'=>$account->id,
             'type'=>'credit',
             'user' => $rq->user(),
             'merchant'=>'1',
-            'amount'=>(-$amount),
+            'amount'=>-$amount,
         ]);
-
-        // $account->amount-=$amount;
-        // $account->save();
+        if($trx->code!="200")return response()->json($trx,$trx->code,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
         $currency = Currency::where('code',$rq->input('currency'))->first();
         $price = Price::where('instrument_id',$rq->input('instrument_id'))->orderBy('id','desc')->first();
         $dealData = [
@@ -115,7 +124,8 @@ class DealController extends Controller{
             'stop_low'=>$rq->input("stop_low"),
             'amount'=>$amount,
             'currency_id'=>$currency->id,
-            'multiplier'=>$rq->input('multiplier',1)
+            'multiplier'=>$rq->input('multiplier',1),
+            'account_id'=>$account->id
         ];
         $deal = Deal::create($dealData);
         DealHistory::create([
@@ -171,10 +181,9 @@ class DealController extends Controller{
     {
         $dealStatus = DealStatus::where('code',$rq->input('status','close'))->first();
         $user = $rq->user();
-        $account = Account::where('user_id',$user->id)->where('type',$rq->input('account_type','demo'))->first();
+
         $deal = Deal::find($rq->input("deal_id"));
-        $account->amount+=$deal->profit;
-        $account->save();
+        $account = Account::find($deal->account_id);
         $price = Price::where('instrument_id',$deal->instrument_id)->orderBy('id','desc')->first();
         $deal->update([
             "close_price_id"=>$price->id,
@@ -187,8 +196,18 @@ class DealController extends Controller{
             'changed_user_id'=>$user->id,
             'description'=>'Interface opened'
         ]);
-
+        $this->trx->makeTransaction([
+            'account'=>$account->id,
+            'type'=>'debit',
+            'user' => $user,
+            'merchant'=>'1',
+            'amount'=>($deal->amount + $deal->profit)
+        ]);
         return response()->json($deal,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+
+    }
+    public function statuses(Request $rq){
+        return response()->json(DealStatus::all(),200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
 
     }
 }

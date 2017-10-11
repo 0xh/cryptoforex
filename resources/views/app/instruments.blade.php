@@ -68,26 +68,59 @@
                     chooseInstrument(window.instrument.id)
                 }
                 function chooseInstrument(id){
+                    var rand=function(min, max) {
+                            return Math.random() * (max - min) + min; //The maximum is exclusive and the minimum is inclusive
+                        },setPrice=function(id,price){
+                        var price_sell = price*(1-parseFloat(window.instrument.commission)),
+                            price_buy = price*(1+parseFloat(window.instrument.commission));
+                        // $('.instrument-price-sell').html('<p>'+price_sell.toFixed(0)+'.</p><b>'+price_sell.toString().replace(/(\d+)\.(\d{0,4}.*)/,'$2')+'</b>');
+                        $('.instrument-price-sell').html(price_sell.toFixed(4).replace(/(\d+)\.(\d+)/,'<p>$1.</p><b>$2</b>'));
+                        $('.instrument-price-buy').html(price_buy.toFixed(4).replace(/(\d+)\.(\d+)/,'<p>$1.</p><b>$2</b>'));
 
+                        // $('.deal-row').each(function(){
+                        //     var $that = $(this);
+                        //     if(($that.attr("data-raw")==undefined))return;
+                        //     var raw=JSON.parse($that.attr("data-raw")),coef = (price-raw.open.price)/raw.open.price;
+                        //     if($that.attr('[data-instrument-id='+id+']')!=undefined) coef = rand(-.1,.1);
+                        //     var amount = parseFloat(raw.amount),
+                        //         recieve = amount + amount*raw.multiplier*coef,
+                        //         percents = ((recieve/amount)-1)*100;
+                        //
+                        //     // console.debug(raw.instrument,coef);
+                        //     $that.find('td:eq(4)').html(currency.value(recieve,'USD')).removeClass("profit");
+                        //     if(percents>0)$that.find('td:eq(4)').addClass("profit");
+                        //     $that.find('td:eq(5)').html(percents.toFixed(2)+"%").removeClass("geen").removeClass("red").addClass((percents>0)?"green":"red");
+                        //     $that.find('td:eq(1)').removeClass("up").removeClass("down").addClass((percents>0)?"down":"up");
+                        // });
+
+                    };
                     $('.instrument-bar').removeClass('active');
                     $('#instrument_id_'+id).addClass('active');
                     $('[name=instrument_id]').val(id);
                     window.instrument = window.instruments[id];
                     $("#charttitle").html('<p>'+window.instrument.title+'</p>&nbsp;&nbsp<p>'+window.instrument.price+'</p>');
                     if(window.MainChart != undefined){
-                        window.MainChart.xhrInstrumentId = id;
-                        window.MainChart.reloadData.call(true);
+                        window.MainChart.setParams({xhrInstrumentId: id});
+                        window.MainChart.reloadData(true);
                     }else{
                         window.MainChart = new Chart(document.getElementById('main'), {
                             xhrInstrumentId: id,     // query type currency number
-                            xhrPeriodFull: 720,    // data max period
+                            xhrPeriodFull: 1440,    // data max period
                             dataNum: 60,          // default zoom number of dataset in 1 screen
-                            xhrMaxInterval: 30000,  // renewal full data interval
-                            xhrMinInterval: 2000,    // ticks - min interval to update and redraw last close data
-                            btnVolume: false,       // bottom volume graph default state
+                            xhrMaxInterval: 45000,  // renewal full data interval
+                            xhrMinInterval: 1000,    // ticks - min interval to update and redraw last close data
+                            btnVolume: true,       // bottom volume graph default state
                             colorCandleBodyUp: "#f59" // example to change positive candle body
                         });
+                        window.MainChart.reloadData(true);
+                        window.MainChart.on("tickEvent", function(evt, tickVol, direction, element){
+                            // console.debug(tickVol);
+                            setPrice(id,tickVol.close);
+                        });
+
                     }
+                    // set pult
+                    setPrice(id,window.instrument.price);
                 }
             </script>
 

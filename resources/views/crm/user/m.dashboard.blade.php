@@ -15,13 +15,18 @@
                             <!-- <li>Password: <span class="user-password"></span></li> -->
                             <li>Phone number: <span class="user-phone">{{$user["phone"]}}</span></li>
                             <li>Country: <span class="user-country">{{$user["country"]}}</span></li>
+                            <li>KYC: <span class="user-rurs">No</span></li>
+                            <li>Status: <span class="user-status">new client</span></li>
                             <!-- <li>Rights: <span class="user-rights_id"><select name="rights_id" data-name="rights_id" placeholder="User rights" class="loader" data-action="/json/user/rights" data-autostart="true"></select></span></li> -->
                             <!-- <li>Source: <span class="user-name"></span></li>
                             <li>Source Description: <span class="user-name"></span></li> -->
                         </ul>
-                        <a href="javascript:0;" class="submit">@lang('messages.save')</a>
+                        <div class="button flex">
+                            <a href="javascript:0;" class="submit">@lang('messages.save')</a>
+                            <a href="javascript:0;" class="submit">@lang('edit.save')</a>
+                        </div>
                     </div>
-                    <div class="right">
+                    <!-- <div class="right">
                         <ul>
                             <li>BTC/LTC - REAL</li>
                             <li>BTh/LsC -  + 15%</li>

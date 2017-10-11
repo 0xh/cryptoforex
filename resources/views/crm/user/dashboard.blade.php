@@ -44,9 +44,6 @@
                 </div> -->
             </div>
             <div class="inner">
-          <!-- <script type="text/javascript" charset="utf-8">
-            function
-          </script> -->
                 <div id="user_scheduler_{{$user['id']}}" class="dhx_cal_container">
                     <div class="dhx_cal_navline">
                         <div class="dhx_cal_prev_button">&nbsp;</div>

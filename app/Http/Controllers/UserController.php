@@ -8,7 +8,6 @@ use App\User;
 use App\UserMeta;
 use App\UserRights;
 use App\UserStatus;
-use App\UserHierarchy;
 use App\Currency;
 use App\Instrument;
 use App\Deal;
@@ -36,8 +35,8 @@ class UserController extends Controller{
         if(Auth::guest())return route('home');
         $user = $rq->user();
         if($user->rights_id<=1)return route('home');
-        $users = User::where('id','>','0');
-        if(!is_null($id)) $users = User::where('id','=',$id);
+        $users = User::with(['manager'])->where('id','>','0');
+        if(!is_null($id)) $users = User::with(['manager'])->where('id','=',$id);
         if($rq->input("status_id",false)!==false && $rq->input("status_id")!= "false") $users = User::where('status_id','=',$rq->input("status_id"));
         if($rq->input("rights_id",false)!==false && $rq->input("rights_id")!= "false") $users = User::where('rights_id','=',$rq->input("rights_id"));
         if($rq->input("online",false)!==false && $rq->input("online")== "1") $users = User::whereRaw("id in (select user_id from user_meta where meta_name='last_login' and meta_value>?)",strtotime("-10 minute"));
@@ -57,8 +56,6 @@ class UserController extends Controller{
             $resor["country"] = is_null($country)?"-":$country->meta_value;
             $resor["last_login"] = is_null($ll)?'':$ll->meta_value;
             $resor["last_ip"] = is_null($lip)?'':$lip->meta_value;
-            $manager = UserHierarchy::where('user_id','=',$user->id)->first();
-            $resor["manager"] = is_null($manager)?[]:User::find($manager->parent_user_id);
             $resor["status"] = $user->status;
             $resor["rights"] = $user->rights;
             // $resor["status"] = UserStatus::find($user->status_id);
@@ -71,6 +68,16 @@ class UserController extends Controller{
                 ?response()->json($res,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT)
                 :view('crm.user.dashboard',["user"=>$res[0],"deals"=>Deal::byUser($id)->byStatus("open")->get()]);
             ;
+    }
+    public function ulist(Request $rq,$format='json'){
+        if(Auth::guest())return route('home');
+        $user = $rq->user();
+        if($user->rights_id<=1)return route('home');
+        $res = User::with(['rights','status','accounts','manager'])
+            ->paginate();
+        return ($format=='json')
+                ?response()->json($res,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT)
+                :view('crm.user.dashboard',["users"=>$res,"deals"=>Deal::byUser($id)->byStatus("open")->get()]);
     }
 
     /**
@@ -150,11 +157,11 @@ class UserController extends Controller{
             $user = User::findOrFail($id);
             $udata = $rq->all();
             if(isset($udata["password"]))$udata["password"]=bcrypt($udata["password"]);
-            if(isset($udata["manager_id"])){
-                $parent = User::findOrFail($udata["manager_id"]);
-                $uh = UserHierarchy::user($user)->first();
-                is_null($uh)?UserHierarchy::create(["user_id"=>$user->id,"parent_user_id"=>$parent->id]):$uh->update(["parent_user_id"=>$parent->id]);
-            }
+            // if(isset($udata["manager_id"])){
+            //     $parent = User::findOrFail($udata["manager_id"]);
+            //     $uh = UserHierarchy::user($user)->first();
+            //     is_null($uh)?UserHierarchy::create(["user_id"=>$user->id,"parent_user_id"=>$parent->id]):$uh->update(["parent_user_id"=>$parent->id]);
+            // }
             if(isset($udata["country"])){
                 $country = UserMeta::user($user)->meta('country')->first();
                 $country = is_null($country)?UserMeta::create(['user_id'=>$user->id,"meta_name"=>"country","meta_value"=>$udata['country']]):$country->update(['meta_value'=>$udata['country']]);

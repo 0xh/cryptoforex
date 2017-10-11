@@ -8,7 +8,6 @@ use App\Withdrawal;
 use App\Merchant;
 use App\Deal;
 use App\User;
-use App\UserHierarchy;
 use App\Account;
 use App\Currency;
 use App\Price;
@@ -67,16 +66,17 @@ class TransactionController extends Controller
                 'merchant_id'=>$merchant->id,
                 'code'=>'200'
             ]);
-            $account->amount+=$amount;
+            $account->amount=(in_array($type,['deposit','debit']))?$account->amount+$amount:$account->amount-$amount;
+            if($account->amount<0)throw new \Exception('Not enaugh balance',1);
             $account->save();
             $res = $trx;
         }
         catch(\Exception $e){
-            $res = [
+            $res = json_decode(json_encode([
                 "error"=>$e->getCode(),
                 'code'=>'500',
                 "message"=>$e->getMessage()
-            ];
+            ]));
             // $trx->update(['code'=>$code]);
         }
         return $res;
@@ -109,7 +109,7 @@ class TransactionController extends Controller
     }
     public function balance(Request $rq,$format='json'){
         $res = [];
-        $users= User::all();
+        $users= User::with(['manager'])->get();
         foreach($users as $user){
             $row = $user->toArray();
             $acc = Account::where('user_id','=',$user->id)->where('type','=','demo')->first();
@@ -117,8 +117,6 @@ class TransactionController extends Controller
             $row['deal'] = Deal::where('user_id','=',$user->id)->sum('amount');
             $row['profit'] = Deal::where('user_id','=',$user->id)->sum('profit');
             $row['balance'] = Account::where('user_id','=',$user->id)->where('type','=','demo')->sum('amount');
-            $manager = UserHierarchy::where('user_id','=',$user->id)->first();
-            $row["manager"] = is_null($manager)?[]:User::find($manager->parent_user_id);
             $res[]=$row;
         }
         $res = DataArray::sort($res,$rq->input('sort',false));

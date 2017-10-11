@@ -42,8 +42,8 @@
     var currency = {
         data:{},
         value: function(a,c){
-            var symb = (c=='' || this.data[c] == undefined)?'':this.data[c].unicode+' ';
-            return symb+parseFloat(a).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            var symb = (c=='' || this.data[c] == undefined)?'':this.data[c].unicode+' ',pres = (arguments.length>2)?arguments[2]:2;
+            return symb+parseFloat(a).toFixed(pres).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
         },
         image:function(c){
             return (c=='' || this.data[c] == undefined)?'':this.data[c].image;
@@ -87,7 +87,7 @@
           </div> -->
       </div>
   </div>
-
+        @if(!Auth::guest())
         <div class="informer-wrap">
           <div id="informer">
             <div class="flex">
@@ -219,6 +219,7 @@
               <span style="color:#FF3100">110.16</span> |
             </div>
           </div>
+          @endif
       </div>
         @include('layouts.top')
         @yield('content')

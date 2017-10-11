@@ -3,71 +3,14 @@ function Chart(el, props) {
         
     var
         self = this,
-//        props = utils.isPlainObject(props) ? props : {};
-//        PROP_XHR_NAME = '_xhrName',
-//        PROP_XHR_INSTRUMENT = '_xhrInstrumentId',
-//        PROP_XHR_PERIOD_FULL = '_xhrPeriodFull',
-//        PROP_XHR_PERIOD = '_xhrPeriod',
-//        PROP_XHR_MAX_INTERVAL = '_xhrMaxInterval',
-//        PROP_XHR_MIN_INTERVAL = '_xhrMinInterval',
-//        
-//        PROP_BTN_CANDLE = '_btnCandle',
-//        PROP_BTN_AREA = '_btnArea',
-//        PROP_BTN_VOLUME = '_btnVolume',
-//        PROP_MOUSE_DOWN = '_mouseDown',
-//        PROP_MOUSE_DOWN_X = '_mouseDownX',
-//        PROP_DATA_NUM = '_dataNum',
-//        PROP_DATE_FROM = '_dateFrom',
+        eventNode = $({}),
         PROP_DATE_TO = '_dateTo',
-//        PROP_NO_REDRAW = '_noRedraw',
         PROP_CUR_X = '_curX',
         PROP_CUR_Y = '_curY',
         PROP_CUR_SHOW = '_curShow',
-////        PROP_EL = '_el',
-//        PROP_EL_ID = '_elId',
-//        PROP_GTYPE = '_gtype',
-////        PROP_SVG = '_svg',
-//        PROP_DATA = '_data',
-//        PROP_WIDTH = '_width',
-//        PROP_HEIGHT = '_height',
-//        PROP_GRAPH_AREA = '_gArea',
-//        PROP_GRAPH_CANDLE = '_gCandle',
-//        PROP_BAR_PANEL = '_barPanel',
-//        PROP_BAR_SPACING = '_barSpacing',
-//        PROP_DPROP_LOW = '_propertyLow',
-//        PROP_DPROP_HIGH = '_propertyHigh',
-//        PROP_DPROP_VOL = '_propertyVolume',
-//        PROP_DPROP_DATE = '_propertyDate',
-//        PROP_DPROP_CLOSE = '_propertyClose',
-//        PROP_DPROP_OPEN = '_propertyOpen',
-//        PROP_MAR_CANDLE = '_marginCandle',
         PROP_MAR_VOLUME = '_marginVolume',
-//        PROP_TICK = '_tick',
-//        PROP_COL_CURSOR_X = '_curXColor',
-//        PROP_COL_CURSOR_Y = '_curYColor',
-//        PROP_COL_CANDBG = '_colorCandleBackground',
         PROP_COL_BODYDN = '_colorBodyDown';
-//        PROP_COL_BODYUP = '_colorBodyUp',
-//        PROP_COL_STEMDN = '_colorStemDown',
-//        PROP_COL_STEMUP = '_colorStemUp',
-//        PROP_COL_VOLBG = '_colorVolBackground',
-//        PROP_COL_VOLDN = '_colorVolSell',
-//        PROP_COL_VOLUP = '_colorVolBuy',
-//        PROP_COL_VOLDNBORD = '_colorVolSellBorder',
-//        PROP_COL_VOLUPBORD = '_colorVolBuyBorder',
-//        PROP_COL_TICK = '_colorTick',
-//        PROP_COL_TICK_HIGH = '_colorTickHigh',
-//        PROP_COL_TICK_LOW = '_colorTickLow',
-//        PROP_COL_TICKTEXT = '_colorTickText',
-//        PROP_COL_TICKBG = '_colorTickBg',
-//        PROP_COL_LABTIMEBG = '_colorLabelTimeBackground',
-//        PROP_COL_LABTIMEFG = '_colorLabelTimeForeground',
-//        PROP_COL_LABCANBG = '_colorLabelCandleBackground',
-//        PROP_COL_LABCANFG = '_colorLabelCandleForeground',
-//        PROP_COL_LABVOLBG = '_colorLabelVolumeBackground',
-//        PROP_COL_LABVOLFG = '_colorLabelVolumeForeground',
-//        PROP_LAB_FAM = '_labelFontFamily',
-//        PROP_LAB_SIZE = '_labelFontSize',
+        
         this.xhrName = props.xhrName || 'BTC_BTS';
         this.xhrInstrumentId = props.xhrInstrumentId || 2;
         this.xhrUserId = props.xhrUserId || undefined;
@@ -86,6 +29,7 @@ function Chart(el, props) {
         this.curShow = props.curShow || this[PROP_CUR_SHOW];
         this.curX = props.curX || this[PROP_CUR_X];
         this.curY = props.curY || this[PROP_CUR_Y];
+        this.labelYWidth = props.labelYWidth || 0;
         this.gtype = props.gtype || 'minute';
         this.barPanel = props.barPanel || false;
         this.gArea = props.gArea || true;
@@ -97,6 +41,7 @@ function Chart(el, props) {
         this.propertyClose = props.propertyClose || 'close';
         this.propertyOpen = props.propertyOpen || 'open';
         this.barSpacing = props.barSpacing || 0.35;
+        this.candleWidth = props.candleWidth || 0;
         this.marginCandle = props.marginCandle || 15;
         this.marginVolume = this[PROP_MAR_VOLUME] = props.marginVolume || 5;
         this.tick = props.tick || 100;
@@ -117,6 +62,8 @@ function Chart(el, props) {
         this.colorTickHigh = props.colorTickHigh || '#0a0';
         this.colorTickText = props.colorTickText || '#222';
         this.colorTickBg = props.colorTickBg || '#fff'; //Unuse,
+        this.tickBodyColor = props.tickBodyColor || '#04bf85';
+        this.tickStemColor = props.tickStemColor || '#04bf85';
         this.colorLabelTimeBackground = props.colorLabelTimeBackground || '#333';
         this.colorLabelTimeForeground = props.colorLabelTimeForeground || '#aaa';
         this.colorLabelCandleBackground = props.colorLabelCandleBackground || '#333';
@@ -125,7 +72,6 @@ function Chart(el, props) {
         this.colorLabelVolumeForeground = props.colorLabelVolumeForeground || '#bbb';
         this.labelFontFamily = props.labelFontFamily || 'Ubuntu';
         this.labelFontSize = props.labelFontSize || 10;
-        
         this.data = [];
         this.timerTick = 0; // Ticks to red line with current value redraw
         this.timerGraph = 0;
@@ -144,35 +90,6 @@ function Chart(el, props) {
         identity = function(v) {
             return v;
         };
-//        if (!el) throw new Error('Unable to find main canvas.');
-//        var
-//        utils = window.utilities,
-//        identity = function(v) {
-//            return v;
-//        };
-//    this.xhrInstrumentId = function (instrument) {
-//		if (arguments.length)
-//			xhrInstrumentId = instrument;
-//		else
-//			return xhrInstrumentId;
-//	};
-//    this.xhrUserId = function (user) {
-//		if (arguments.length)
-//			xhrUserId = user;
-//		else
-//			return xhrUserId;
-//	};
-//    this.dataNum = function (num) {
-//		if (arguments.length)
-//			self.dataNum = num;
-//		else
-//			return self.dataNum;
-//	};
-//    this.setXhr = function(user, instrument){
-//        if(user) this.xhrUserId = user;
-//        if(instrument) this.xhrInstrumentId = instrument;
-//        this.redraw;
-//    };
 
     this.redrawIdent = function () {
         return function(val) {
@@ -307,14 +224,11 @@ function Chart(el, props) {
     this.clearData = function() {
         self.data.splice(0, self.data.length);
         setter.call(self);
-//        this.reset();
         return true;
     };
 
     this.loadData = function(recievedData) {
-//        if (!utils.isArray(recievedData)) {
-//            return false;
-//        }
+
         if (recievedData == undefined) {
             return false;
         }
@@ -344,18 +258,36 @@ function Chart(el, props) {
                 return value;
             },
             rebuild = function(period) {
-                for (i = 0; i < dataSet.length / period; i++) {
-                    tmp.close = dataSet[i * period].close;
+                var tmpDate;
+                for(var i = 0; i < period; i++){
+//                    console.log(new Date(dataSet[i].date).getMinutes() % period, new Date(dataSet[i].date).getMinutes(), i);
+                    tmpDate = new Date(dataSet[i].date).getMinutes();
+                    if( tmpDate % period == 0){
+                        var offsetData = i;
+                        break;
+                    }else if (tmpDate == 0){
+                        var offsetData = 0;
+                        break;
+                    };
+                }
+                
+                console.log(offsetData, new Date(dataSet[offsetData].date), dataSet.length / period - offsetData, dataSet.length / period);
+                var last = period;
+//                period += firstData;
+                for (var i =  0; i < Math.floor((dataSet.length - offsetData) / period); i++) {
+                    tmp.close = dataSet[i * period + offsetData].close;
                     tmp.value = tmp.close;
                     tmp.volume = tmp.close;
-                    tmp.high = highest(i * period, period);
-                    tmp.low = lowest(i * period, period);
-                    if (i != dataSet.length / period - 1) tmp.open = dataSet[(i + 1) * period].close;
-                    else if (dataSet[(i + 1) * period - 1].open < tmp.low) tmp.open = tmp.low;
-                    else if (dataSet[(i + 1) * period - 1].open > tmp.high) tmp.open = tmp.high;
+                    tmp.high = highest(i * period + offsetData, period + offsetData);
+                    tmp.low = lowest(i * period + offsetData, period + offsetData);
+                    console.log(">>", (dataSet.length - offsetData) / period - 1);
+                    if (i < (Math.floor(((dataSet.length - offsetData) / period) - 1))) tmp.open = dataSet[(i + 1) * period + offsetData].close;
+                    else if (dataSet[(i + 1) * period - 1 + offsetData].open < tmp.low) tmp.open = tmp.low;
+                    else if (dataSet[(i + 1) * period - 1 + offsetData].open > tmp.high) tmp.open = tmp.high;
                     else tmp.open = dataSet[(i + 1) * period - 1].open;
 //                    if (i == dataSet.length / period - 1) console.log((i + 1) * period, tmp);
-                    tmp.date = dataSet[i * period].date;
+                    tmp.date = dataSet[i * period + offsetData].date;
+                    
                     newData.push({
                         open: tmp.open,
                         close: tmp.close,
@@ -403,14 +335,13 @@ function Chart(el, props) {
                 newData = recievedData;
                 break;
         };
+        console.log(newData);
         Array.prototype.push.apply(self.data, newData);
-//        console.log("redraw");
         self.redraw();
         return true;
     };
 
     this.reset = function() {
-//        svg = svg || self.svg;
         self.resetCandles();
         self.resetVolume();
         self.resetLabels();
@@ -476,8 +407,6 @@ function Chart(el, props) {
             dBodyColor = function(d) {
                 return dIsDown(d) ? colorBodyDown : colorBodyUp;
             };
-
-//        if (!this.barPanel) coord.h += coordVol.h;
 
         calcDateX = d3.scaleLinear()
             .domain([scales.dateLow, scales.dateHigh])
@@ -572,7 +501,6 @@ function Chart(el, props) {
                 .attr('stroke', '#999');
         };
 
-//        return svg;
     };
 
 
@@ -584,14 +512,12 @@ function Chart(el, props) {
         
         if(self.dataNum > self.data.length) self.dataNum = self.data.length;
         if((self.dataFrom + self.dataNum > self.data.length) && ((self.dataFrom - delta/20) > 0) ) self.dataFrom -= delta/20;
-//        console.log(self.dataNum, self.data.length);
         self.redraw();
     }
     this.mouseMove = function (event) {
         switch (event.type) {
             case 'mouseup':
                 $(self.el).css({cursor:'crosshair'});
-//                console.log("mouseUp");
                 self.mouseDown = false;
             break;
             case 'mouseleave':
@@ -600,7 +526,6 @@ function Chart(el, props) {
                 break;
             case 'mouseenter':
             case 'mousemove':
-//                console.log("mouseMoved", "mousedown=", this.mouseDown);
                 if(self.mouseDown){
                     
                     
@@ -631,14 +556,12 @@ function Chart(el, props) {
                     }else{
                         self.dateFrom += calcC(delta);
                         self.mouseDownX += delta;
-//                        console.log("dateFrom:", dateFrom);
                         self.redraw();
                     }
                 }
                 self.moveCursor(event.pageX, event.pageY);
                 break;
             case 'mousedown':
-//                if(this.mouseDown) return;
                 self.mouseDownX = event.pageX;
                 $( "#main:active").css({cursor:'grabbing!important'});
                 $( "#main").css({cursor:'grabbing!important'});
@@ -647,7 +570,6 @@ function Chart(el, props) {
                 $( "#main svg g path").css({cursor:'grabbing!important'});
                 $( "#main svg g rect").css({cursor:'grabbing!important'});
                 $( "#main>svg>g>line").css({cursor:'grabbing!important'});
-//                console.log("mouseDown");
                 self.mouseDown = true;
                 break;
             
@@ -659,7 +581,6 @@ function Chart(el, props) {
     };
     
     this.hideCursor = function(show) {
-        
         
         if(!self.curShow) return;
         self.svg.selectAll('g.cursor').remove();
@@ -682,12 +603,13 @@ function Chart(el, props) {
         drawData = self.getCurData(),
         scales = self.getScales(drawData),
         margin = self.marginCandle || 0,
-        approxW = (coord.w / self.data.length),
+        approxW = (coord.w / drawData.length),
         barSpace = approxW * self.barSpacing,
         barWidth = approxW - barSpace,
+//        barWidth = self.candleWidth,
         stemWidth = barWidth * 0.15;
         
-        //if not created - create cursorgth
+        //if not created - create cursorgraph
         if($(self.el).find("svg>g.cursor").length  == 0) {
         cursor = self.svg.append('g')
             .attr('class', 'cursor')
@@ -737,12 +659,11 @@ function Chart(el, props) {
         var
         scaleX = d3.scaleLinear()
             .domain([show.minX, show.maxX])
-            .range([0, coord.w]),
+            .range([0, coord.w - barWidth]),
         scaleY = d3.scaleLinear()
             .domain([show.minY, show.maxY])
             .range([0, show.h]),
             
-        
         y = show.posY,
         
         calcDateX = d3.scaleLinear()
@@ -751,8 +672,9 @@ function Chart(el, props) {
         
         calcCoordX = d3.scaleLinear()
             .domain([scales.dateLow, scales.dateHigh])
-            .range([ 0, coord.w - barWidth]),
-            
+            .range([ 0, coord.w - barWidth]);
+        
+        var
         calcVolHeight = d3.scaleLinear()
             .domain([0, coord.h])
             .range([scales.volumeHigh, scales.volumeLow]),
@@ -766,11 +688,10 @@ function Chart(el, props) {
 //            console.log(data[0]);
             for(var i = 0; i < self.data.length; i++){
                 date = calcCoordX(self.data[i].date);
-                delta = Math.abs(date - scaleX(x) + (barWidth)/2);
+                delta = Math.abs(date - scaleX(x));
                 if( delta < nearest ){ 
                     nearest = delta;
                     coord = date;
-//                    console.log("iteration", i, nearest, scaleX(x), date, coord );
                 }
                 
             }
@@ -778,28 +699,27 @@ function Chart(el, props) {
         };
         
         x = nearestCandle(show.posX);
-        
         curX = self.svg.select("line.x-line")
             .attr("x1", x + barWidth/2)
             .attr("x2", x + barWidth/2)
             .attr("y2", scaleY(show.maxY)), //show.maxY
         curY = self.svg.select("line.y-line")
-            .attr("x2", scaleX(show.maxX))//show.maxX
+            .attr("x2", scaleX(show.maxX) + barWidth)//show.maxX
             .attr("y1", scaleY(y))
             .attr("y2", scaleY(y)),
         curTime = self.svg.select("rect.cur-time")
-            .attr('x', x - 100/2)
+            .attr('x', x - 100/2 + barWidth/2)
             .attr('y', scaleY(show.maxY) + coordvol.h),
         curValue = self.svg.select("rect.cur-value")
             .attr('x', scaleX(show.maxX) + barWidth)
-            .attr('width', show.labelW)
+            .attr('width', self.labelYWidth)
             .attr('y', scaleY(y) - 20/2),
         curXLabel = self.svg.select("text.cur-label-x")
             .attr('y', scaleY(show.maxY) + coordvol.h + self.labelFontSize * 1.7)
-            .attr('x', x + barWidth)
+            .attr('x', x + barWidth/2)
             .text(moment(calcDateX( x  ) ).format('H:mm:ss')),
         curYLabel = self.svg.select("text.cur-label-y")
-            .attr('x', scaleX(show.maxX) + 5)
+            .attr('x', scaleX(show.maxX) + barWidth + 10)
             .attr('y', scaleY(y) + self.labelFontSize * 0.6)
             .text(Math.floor(candY(scaleY(show.posY))*100)/100 );
             
@@ -886,8 +806,10 @@ function Chart(el, props) {
             coordvol = self.coordVolume(),
             drawData = self.getCurData(),
             scales = self.getScales(drawData),
-            approxW = (coord.w / drawData.length), //data.length
+            approxW = (coord.w / drawData.length),
+            
             barSpace = approxW * self.barSpacing,
+            
             barWidth = approxW - barSpace,
             stemWidth = barWidth * 0.15,
             svg = self.svg,
@@ -900,11 +822,13 @@ function Chart(el, props) {
             calcDateX = d3.scaleLinear()
             .domain([scales.dateLow, scales.dateHigh])
             .range([0, coord.w - barWidth]);
-
+            self.candleWidth = barWidth;
         var
             calcRY = d3.scaleLinear()
             .domain([scales.lowestLow, scales.highestHigh])
             .range([coord.h - margin, margin]);
+        console.log("lowest", scales.lowestLow);
+        
         if (stemWidth < 1) {
             stemWidth = 1;
         }
@@ -946,7 +870,9 @@ function Chart(el, props) {
                     })
                     .attr('fill', dStemColor);
             }
-
+            minHeight = function(height){
+                return height == 0 ? 1 : height;
+            }
             group.selectAll('rect.candle-body')
                 .data(drawData)
                 .enter().append('rect')
@@ -961,7 +887,7 @@ function Chart(el, props) {
                     return calcRY(this.getAttribute('vmax'));
                 })
                 .attr('height', function(d) {
-                    return calcRY(this.getAttribute('vmin')) - calcRY(this.getAttribute('vmax'));
+                    return minHeight(calcRY(this.getAttribute('vmin')) - calcRY(this.getAttribute('vmax')));
                 })
                 .attr('stroke-width', 0.5)
                 .attr('stroke-linecap', 'butt')
@@ -969,6 +895,14 @@ function Chart(el, props) {
                 .attr('stroke-rendering', 'crispEdges')
                 .attr('stroke', dStemColor)
                 .attr('fill', dBodyColor);
+//            $('rect.candle-stem').eq(0)
+//                .attr('stroke', self.tickStemColor)
+//                .attr('fill', self.tickBodyColor);
+
+//            $('rect.candle-body').eq(0)
+//                .attr('stroke', self.tickStemColor)
+//                .attr('fill', self.tickBodyColor);
+            
             var test = group.selectAll('rect.candle-body').on('mouseover', function(d, i) {
                 var tooltipText = 'high:' + drawData[i].high + '     ' + 'low:' + drawData[i].low + '     ' + 'open:' + drawData[i].open + '     ' + 'close:' + drawData[i].close + '     ' + 'volume:' + drawData[i].volume + '     ' + drawData[i].date;
                 $(this).tooltip({
@@ -1165,18 +1099,37 @@ function Chart(el, props) {
             .attr('class', 'tick line')
             .attr('transform', 'translate(' + [0, cSY.y].join(' ') + ')');
 //        console.log(groupY);
-        if (tickVol > self.tick) self.colorTick = self.colorTickHigh;
-        else self.colorTick = self.colorTickLow;
+        if (tickVol > self.tick) {
+            self.colorTick = self.colorTickHigh;
+            var direction = true;
+        }
+        else {
+            var direction = false;
+            self.colorTick = self.colorTickLow;
+        }
+        var eventData = {
+            low: self.data[0].low,
+            high: self.data[0].high,
+            open: self.data[0].open,
+            close: tickVol
+        };
+        eventNode.trigger('tickEvent', [eventData, direction, self.elId]);
+        
 //        if (!this.barPanel) coordcand.h += coordvol.h;
         var
         // candle data & functions:
         candticks = 2,
         candY = d3.scaleLinear()
         .domain([scales.lowestLow, scales.highestHigh])
-        .range([coordcand.y + coordcand.h - marginCandle, coordcand.y + marginCandle]); //,
+        .range([coordcand.y + coordcand.h - marginCandle, coordcand.y + marginCandle]), //,
             
-
+        maxY = candY(scales.lowestLow),
+        minY = candY(scales.highestHigh);
+        
         coordcand.y = candY(tickVol);
+        if(coordcand.y > maxY) coordcand.y = maxY;
+        if(coordcand.y < minY) coordcand.y = minY;
+        
         groupY.append('rect') // placeholder for X labels (end-cap)
             .attr('y', coordcand.y - 2)
             .attr('width', coordcand.w)
@@ -1209,12 +1162,12 @@ function Chart(el, props) {
         if(self.dateFrom == 0){
 //            console.log("dateFrom:", dateFrom);
             var lastY = candY(self.data[0].close),
-                coordY = coordcand.y - 12,
-                dStemColor = '#db4c3c',
-                dBodyColor = '#db4c3c';
+                coordY = coordcand.y - 12;
+                self.tickStemColor = '#db4c3c',
+                self.tickBodyColor = '#db4c3c';
             if (self.data[0].close < tickVol) {
-                dBodyColor = '#04bf85';
-                dStemColor = '#04bf85';
+                self.tickBodyColor = '#04bf85';
+                self.tickStemColor = '#04bf85';
             }
             if (coordY + 10 > lastY) {
                 heightB = Math.abs(coordY - lastY + 10);
@@ -1224,21 +1177,21 @@ function Chart(el, props) {
                 $(self.el).find('rect.candle-body').eq(0).attr('height', heightB).attr('y', coordY + 10);
             }
         
-            $('rect.candle-stem').eq(0)
-                .attr('class', 'candle-stem')
-                .attr('stroke-width', 0.5)
-                .attr('stroke-linecap', 'butt')
-                .attr('stroke-rendering', 'crispEdges')
-                .attr('stroke', dStemColor)
-                .attr('fill', dBodyColor);
+//            $('rect.candle-stem').eq(0)
+//                .attr('class', 'candle-stem')
+//                .attr('stroke-width', 0.5)
+//                .attr('stroke-linecap', 'butt')
+//                .attr('stroke-rendering', 'crispEdges')
+//                .attr('stroke', self.tickStemColor)
+//                .attr('fill', self.tickBodyColor);
 
-            $('rect.candle-body').eq(0)
-                .attr('class', 'candle-body')
-                .attr('stroke-width', 0.5)
-                .attr('stroke-linecap', 'butt')
-                .attr('stroke-rendering', 'crispEdges')
-                .attr('stroke', dStemColor)
-                .attr('fill', dBodyColor);
+//            $('rect.candle-body').eq(0)
+//                .attr('class', 'candle-body')
+//                .attr('stroke-width', 0.5)
+//                .attr('stroke-linecap', 'butt')
+//                .attr('stroke-rendering', 'crispEdges')
+//                .attr('stroke', self.tickStemColor)
+//                .attr('fill', self.tickBodyColor);
         }else{
             
         }
@@ -1294,6 +1247,7 @@ function Chart(el, props) {
             volY = d3.scaleLinear()
             .domain([scales.volumeLow, scales.volumeHigh])
             .range([coordvol.y + coordvol.h, coordvol.y + fontSize + marginVolume]);
+            self.labelYWidth = cSY.w;
         if (self.barPanel) {
             // volume labels:
             groupY.append('rect') // background
@@ -1301,7 +1255,7 @@ function Chart(el, props) {
                 .attr('width', cSY.w)
                 .attr('height', coordvol.h)
                 .attr('fill', colorVolumeBG);
-
+            
             groupY.selectAll('text.vol-label') // ticks
                 .data(volY.ticks(volticks))
                 .enter().append('text')
@@ -1571,8 +1525,16 @@ function Chart(el, props) {
         this.start = setInterval(reloader, this.xhrMinInterval);
         // Set handlers
         this.setHandlers(this.el);
-        return this;
-        
+        return {
+            on: on,
+            trigger: trigger
+        };
+            function on(){
+                eventNode.on.apply(eventNode, arguments);
+        }
+            function trigger(){
+                eventNode.trigger.apply(eventNode, arguments);
+        }
 
 };
 

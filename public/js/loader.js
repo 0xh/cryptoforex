@@ -25,8 +25,28 @@ var cf={
     getDataByTitle:function(s,name){
         return cf.getDataByField(s,"title",id);
     },
+    reload:function(){
+        $(".loader:not(.assigned)").each(function(){
+            new cf.loader(this,Fresher);
+        }).addClass('assigned');
+        $(".requester:not(.assigned)").each(function(){
+            new cf.requester($(this));
+        }).addClass('assigned');
+        $(".submiter").each(function(){
+            cf.submiter(this);
+        }).addClass('assigned');
+        $(".sorter").each(function(){
+            cf.sorter($(this));
+        }).addClass('assigned');
+        $(".check-all").on("change",function(){
+            var v = $(this).is(':checked')?true:false, list = $(this).attr("data-list");
+            $('[data-name='+list+']').prop("checked",v);
+        }).addClass('assigned');
+
+    },
     _actions:[],
     _loaders:[],
+    _requests:[],
     _type:"get",
     refresher:function(){
         cf._actions=[];
@@ -46,7 +66,7 @@ var cf={
                 // console.debug("refresher #"+i,(dt-cf._actions[i].last),'>',cf._actions[i].refresh);
                 if((dt-cf._actions[i].last)>cf._actions[i].refresh){
                     var args = (cf._actions[i].arguments == undefined)?null:cf._actions[i].arguments;
-                    // console.debug("refresher executing...",cf._actions[i]);
+                    // console.debug("refresher executing...",cf._actions[i].run,args);
                     cf._actions[i].run(args);
                     cf._actions[i].last = dt;
                 }
@@ -57,6 +77,38 @@ var cf={
         // console.debug("refresher constructor called");
     },
     pagination:function(d){
+        /*
+        current_page:1
+        from:1
+        data:[]
+        last_page:1
+        next_page_url:null
+        path:"http://cryptoforex.bs2/json/deal"
+        per_page:24
+        prev_page_url:null
+        to:12
+        total:12
+        */
+        var s='',tl=(arguments.length>1)?arguments[1]:'data-list',$t = (arguments.length>2)?arguments[2]:undefined;
+		s+='<ul>';
+		s+='<li class="first"><a class="requester" data-name="page" data-value="1" href="javascript:0;" data-trigger="click" data-target="'+tl+'">First page</a></li>';
+		if(d.prev_page_url)s+='<li class="prev"><a class="requester" data-name="page" data-value="'+(d.current_page-1)+'" href="javascript:0;" data-trigger="click" data-target="'+tl+'">...</a></li>';
+        for(var i=0;i<d.last_page;++i){
+            s+='<li class="'+((d.current_page==(i+1))?"active":"")+'"><a class="requester" data-name="page" data-value="'+(i+1)+'" href="javascript:0;" data-trigger="click" data-target="'+tl+'">'+(i+1)+'</a></li>';
+        }
+        if(d.next_page_url)s+='<li class="next"><a class="requester" data-name="page" data-value="'+(d.current_page+1)+'" href="javascript:0;" data-trigger="click" data-target="'+tl+'">...</a></li>';
+		s+='<li class="last"><a class="requester" data-name="page" data-value="'+d.last_page+'" href="javascript:0;" data-trigger="click" data-target="'+tl+'">Last page</a></li>';
+		s+='</ul>';
+		s+='<div class="total_item"><span>'+d.current_page+'</span>/<span>'+d.last_page+'</span></div>';
+        if($t){
+            var $pp = $t.parent('table').next(".pagination");
+            if(!$pp.length) $pp = $('<div class="pagination"></div>').insertAfter($t.parent());
+            $pp.html(s);
+            cf.reload();
+        }
+        return s;
+    },
+    pagination2:function(d){
         var s='',first = true,perpage = 12,pages = Math.ceil(d.length/perpage);
 		s+='<ul>';
 		s+='<li class="first active"><a href="#">First page</a></li>';
@@ -95,7 +147,7 @@ var cf={
         this.opts = $.extend(this.opts,((arguments.length>1)?arguments[1]:{}));
         // console.debug(this.opts);
         this.execute = function(){
-            var opts = this.opts,rdata = {};
+            var opts = (arguments.length)?arguments[0]:this.opts,rdata = {};
             if(opts==undefined || opts.container == undefined )return;
             opts.action = opts.container.attr('data-action');
             if(opts.sort!==false){
@@ -112,12 +164,15 @@ var cf={
                 type:cf._type,
                 data:rdata,
                 success:function(d,x,s){
+                    cf._requests[opts.action]=d;
                     try{
                         if(opts.container.prop('tagName')=='SELECT'){
                             opts.container.html('');
                             opts.container.append('<option value="false">All</option>');
-                            for(var i in d){
-                                var id = (d[i].id!=undefined)?d[i].id:'',name=(d[i].title)?d[i].title:((d[i].name)?d[i].name:'');
+                            for(var i in (d.data!=undefined)?d.data:d){
+                                var row = (d.data!=undefined)?d.data[i]:d[i];
+                                var id = row.id|'',
+                                    name=(row.title)?row.title:((row.name)?row.name:'');
                                 opts.container.append('<option value="'+id+'">'+name+'</option>');
                             }
                             cf._statdata[opts.container.attr("data-name")] = d;
@@ -128,26 +183,12 @@ var cf={
                 }
             });
         };
-        // console.debug(this.opts);
-        if(this.opts.autostart)this.execute(this.opts);
-        // if(this.opts.trigger!==false){
-        //     var opts = this.opts,callback = (this.opts.callback!==false)?this.opts.callback:function(e){
-        //         var act_form = $($(this).attr("data-form")),act = act_form.attr("data-action"),
-        //             act_uid = act_form.attr("data-name"),
-        //             name = $(this).attr('data-name'), val =$(this).val(),
-        //             re = new RegExp('('+name+')=[^\&]+(\&|$)','i');
-        //         if(act.match(re)){
-        //             act = act.replace(re,'$1='+val+'$2')
-        //         }else act = act+ (act.match(/\?/)?'&':'?')+name+'='+val;
-        //         act_form.attr("data-action", act);
-        //         console.debug(act_form);
-        //         cf._loaders[act_uid].execute();
-        //     };
-        //     this.opts.container.on(this.opts.trigger,callback);
-        // }
+        if(this.opts.autostart){
+            this.execute(this.opts);
+        }
         if(parseInt(this.opts.refresh)>0){
-            var bnd = {
-                run:this.execute,
+            var execute_func =this.execute, bnd = {
+                run:execute_func,
                 refresh:parseInt(this.opts.refresh),
                 arguments:this.opts
             };
@@ -165,7 +206,7 @@ var cf={
             callfunc=function(){
                 var act_uid = $(this).attr("data-target"),
                     name = $(this).attr("data-name"),
-                    val = ($(this).attr('type')=="checkbox")?($(this).is(':checked')?1:0):$(this).val(),
+                    val = ($(this).attr('type')=="checkbox")?($(this).is(':checked')?1:0):(($(this).attr("data-value")!=undefined)?$(this).attr("data-value"):$(this).val()),
                     ld = cf._loaders[act_uid].opts.data;
                 if(val.length==0) delete ld[name]; else ld[name]=val;
                 cf._loaders[act_uid].execute();
@@ -191,7 +232,7 @@ var cf={
                 if(!checkvals(container))return;
                 // console.debug(container);
                 var action = container.attr("data-action"), args = getargs(container),callback = container.attr("data-callback");
-                console.debug(args,callback);
+                // console.debug(args,callback);
                 $.ajax({
                     url:action,
                     data:args,
@@ -200,7 +241,10 @@ var cf={
                         if(window[callback]!=undefined)window[callback](d);
                         else console.debug(d);
                     },
-                    error:function(x,s){console.error(x)}
+                    error:function(x,s){
+                        if(window[callback]!=undefined)window[callback](x.responseJSON);
+                        else console.error(x);
+                    }
                 });
             };
 
@@ -268,29 +312,20 @@ var cf={
 };
 window.Fresher = new cf.refresher();
 $(document).ready(function(){
+    // window.Fresher = new cf.refresher();
+    cf.reload();
     for(var i in window.onloads){
         window.onloads[i]();
     }
-    // window.Fresher = new cf.refresher();
-    $(".loader").each(function(){
-        new cf.loader(this,Fresher);
-    });
-    $(".requester").each(function(){
-        new cf.requester($(this));
-    });
-    $(".submiter").each(function(){
-        cf.submiter(this);
-    });
-    $(".sorter").each(function(){
-        cf.sorter($(this));
-    });
-    $(".check-all").on("change",function(){
-        var v = $(this).is(':checked')?true:false, list = $(this).attr("data-list");
-        $('[data-name='+list+']').prop("checked",v);
-    });
-    $(".order").on("click",function(){
-        graphControl.makeChart(120,"chartdiv_p");
-    });
+    // window.MainChart = new Chart(document.getElementById('main'), {
+    //     xhrInstrumentId: id,     // query type currency number
+    //     xhrPeriodFull: 1440,    // data max period
+    //     dataNum: 60,          // default zoom number of dataset in 1 screen
+    //     xhrMaxInterval: 45000,  // renewal full data interval
+    //     xhrMinInterval: 1000,    // ticks - min interval to update and redraw last close data
+    //     btnVolume: true,       // bottom volume graph default state
+    //     colorCandleBodyUp: "#f59" // example to change positive candle body
+    // });
 });
 
 // Fresher.bind({

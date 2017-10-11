@@ -2,15 +2,14 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 
 
-use App\UserMeta;
+use App\User;
 use App\UserRights;
 use App\Account;
 
-class UserHierarchy extends Authenticatable{
+class UserDocument extends Model{
     /**
      * The storage format of the model's date columns.
      *
@@ -23,14 +22,13 @@ class UserHierarchy extends Authenticatable{
      * @var string
      */
     protected $table = 'user_hierarchy';
-    const UPDATED_AT = null;
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'parent_user_id','user_id'
+        'type','user_id','file','status'
     ];
     /**
      * Scope a query to only include popular users.
@@ -41,5 +39,8 @@ class UserHierarchy extends Authenticatable{
     public function scopeUser($query,User $user)
     {
         return $query->where('user_id', '=', $user->id);
+    }
+    public function user(){
+        return $this->belongsTo('App\User');
     }
 }

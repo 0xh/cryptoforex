@@ -85,7 +85,7 @@
                         });
                     }
                 </script>
-                <div class="inner flex loader account-display" data-action="/account?type=demo&user_id={{Auth::user()->id}}" data-autostart="true" data-refresh="60000" data-function="userAccount">
+                <div class="inner flex loader account-display" data-action="/account?type=demo&user_id={{Auth::user()->id}}" data-autostart="true" data-refresh="1000" data-function="userAccount">
                   <span class="demo">@lang('messages.demo')</span>
                   <span class="money">10 000 $</span>
                 </div>

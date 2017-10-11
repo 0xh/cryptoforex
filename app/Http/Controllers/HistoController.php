@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Histo;
+use App\Price;
 use App\User;
 use cryptofx\DataTune;
 use Illuminate\Http\Request;
@@ -116,5 +117,10 @@ class HistoController extends Controller
     public function destroy(Histo $histo)
     {
         //
+    }
+
+    public function price(Request $rq,$format="json",$inst){
+        $prices = Price::where('instrument_id','=',$inst)->orderBy('id','desc');
+        return response()->json($prices->first(),200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
     }
 }

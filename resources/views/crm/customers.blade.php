@@ -37,8 +37,8 @@
                     current:null,
                     list:function (container,d,x,s){
                         container.html('');
-                        for(var i in d){
-                            var s = '<tr data-class="user" data-id="'+d[i].id+'">',row=d[i];
+                        for(var i in d.data){
+                            var row=d.data[i],s = '<tr data-class="user" data-id="'+row.id+'">';
                             s+='<td><input type="checkbox" data-name="user_selected" value="user_'+row.id+'" data-id="'+row.id+'" /></td>';
                             s+='<td>'+row.id+'</td>';
                             s+='<td>'+new Date(row.created_at*1000)+'</td>';
@@ -51,16 +51,14 @@
                             }
                             s+='<td>'+row.rights.title+'</td>';
                             s+='<td></td>';
-                            s+='<td>'+((row.manager.name)?row.manager.name:'')+'</td>';
+                            s+='<td>'+((row.manager)?row.manager.name:'')+'</td>';
                             s+='<td>'+new Date(row.last_login*1000)+'</td>';
                             s+='<td>'+row.last_ip+'</td>';
                             s+='<td><a href="#" onclick="crm.user.edit('+row.id+')" id="edit_user">Edit</a><a href="#" onclick="crm.user.info('+row.id+')" class="edit">Info</a></td>';
                             s+='</tr>'
                             container.append(s);
                         }
-                        var pp = cf.pagination(d),$pp = container.parent().next(".pagination");
-                        if(!$pp.length) $pp = $('<div class="pagination"></div>').insertAfter(container.parent());
-                        $pp.html(pp);
+                        cf.pagination(d,'user-list',container);
                     },
                     add:function(){},
                     edit:function(id){
@@ -276,7 +274,7 @@
             </div> -->
             <div class="filter_users">
                 <select class="loader" data-name="manager_id" data-action="/json/user?rights_id=7" data-autostart="true" data-trigger="change" data-target="user-list"></select>
-                <a href="javascript:0;" class="button batcher" data-list="user_selected" data-action="/json/user/{data-id}/update?manager_id={manager_id}" data-target="user-list" onclick="cf.batcher(this);">@lang('message.add_manager')</a>
+                <a href="javascript:0;" class="button batcher" data-list="user_selected" data-action="/json/user/{data-id}/update?parent_user_id={manager_id}" data-target="user-list" onclick="cf.batcher(this);">@lang('message.add_manager')</a>
             </div>
 
             <div class="filter_users">

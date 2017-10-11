@@ -26,9 +26,9 @@ class Instrument extends Model{
         'from_currency_id','to_currency_id','commission','enabled'
     ];
     public function from(){
-        return $this->belongsTo('App\Instrument','from_currency_id');
+        return $this->belongsTo('App\Currency','from_currency_id');
     }
     public function to(){
-        return $this->belongsTo('App\Instrument','to_currency_id');
+        return $this->belongsTo('App\Currency','to_currency_id');
     }
 }

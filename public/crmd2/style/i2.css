@@ -10,6 +10,22 @@
   font-weight: 600;
   margin-left: 1em;
 }
+.popup .dashblock {
+  min-width: 320px;
+  position: relative;
+}
+.popup .title {
+  font-size: 20px;
+  display: block;
+  padding-left: 20px;
+}
+.popup strong.title {
+  font-size: 22px;
+  font-weight: 600;
+}
+.popup .text {
+  padding-left: 20px;
+}
 .user-instrument .button {
   display: inline-block;
   height: 50px;

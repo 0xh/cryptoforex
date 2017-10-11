@@ -86,7 +86,7 @@
                         });
                     }
                 </script>
-                <div class="inner flex loader account-display" data-action="/account?type=demo&user_id=<?php echo e(Auth::user()->id); ?>" data-autostart="true" data-refresh="60000" data-function="userAccount">
+                <div class="inner flex loader account-display" data-action="/account?type=demo&user_id=<?php echo e(Auth::user()->id); ?>" data-autostart="true" data-refresh="1000" data-function="userAccount">
                   <span class="demo"><?php echo app('translator')->getFromJson('messages.demo'); ?></span>
                   <span class="money">10 000 $</span>
                 </div>

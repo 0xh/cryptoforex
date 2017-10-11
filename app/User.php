@@ -25,7 +25,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name','surname','rights_id', 'email', 'phone','password','status_id'
+        'name','surname','rights_id', 'email', 'phone','password','status_id','parent_user_id'
     ];
 
     /**
@@ -44,5 +44,12 @@ class User extends Authenticatable
     }
     public function accounts(){
         return $this->hasMany('App\Account');
+    }
+    public function country(){
+        return $this->belongsTo('App\UserRights');
+    }
+    public function manager(){
+        //'parent_user_id','user_id'
+        return $this->belongsTo('App\User','parent_user_id');
     }
 }
