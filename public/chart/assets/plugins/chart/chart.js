@@ -19,6 +19,7 @@ function Chart(el, props) {
         this.xhrMaxInterval = props.xhrMaxInterval || 60000;
         this.xhrMinInterval = props.xhrMinInterval || 200;
         this.mouseDown = false;
+        this.btnLine = props.btnLine || true;
         this.btnCandle = props.btnCandle || true;
         this.btnArea = props.btnArea || true;
         this.btnVolume = props.btnVolume || false;
@@ -34,6 +35,11 @@ function Chart(el, props) {
         this.barPanel = props.barPanel || false;
         this.gArea = props.gArea || true;
         this.gCandle = props.gCandle || true;
+        this.lineColor = props.lineColor || "#22f";
+        this.labelYWidth = props.labelYWidth || 75;
+        this.labelXHeight = props.labelXHeight || 20;
+        this.lineStrokeWidth = props.lineStrokeWidth || 2;
+        this.lastTooltipCandleNum = props.lastTooltipCandleNum || 0;
         this.propertyLow = props.propertyLow || 'low';
         this.propertyHigh = props.propertyHigh || 'high';
         this.propertyVolume = props.propertyVolume || 'volume';
@@ -45,6 +51,9 @@ function Chart(el, props) {
         this.marginCandle = props.marginCandle || 15;
         this.marginVolume = this[PROP_MAR_VOLUME] = props.marginVolume || 5;
         this.tick = props.tick || 100;
+        this.tickOpen = props.tickOpen || 100;
+        this.tickHigh = props.tickHigh || 100;
+        this.tickLow = props.tickLow || 100;
         this.curXColor = props.curXColor || '#444';
         this.curYColor = props.curYColor || '#444';
         this.colorCandleBackground = props.colorCandleBackground || '#fff';
@@ -70,14 +79,15 @@ function Chart(el, props) {
         this.colorLabelCandleForeground = props.colorLabelCandleForeground || '#aaa';
         this.colorLabelVolumeBackground = props.colorLabelVolumeBackground || '#444';
         this.colorLabelVolumeForeground = props.colorLabelVolumeForeground || '#bbb';
+    
         this.labelFontFamily = props.labelFontFamily || 'Ubuntu';
         this.labelFontSize = props.labelFontSize || 10;
         this.data = [];
         this.timerTick = 0; // Ticks to red line with current value redraw
         this.timerGraph = 0;
         this.mouseDownX = 0;
-        this.width = props.width || 320;
-        this.height = props.height || 240;
+        this.width = props.width || "100%";
+        this.height = props.height || "100%";
         this.aspectRatio = function() {
             return height / width;
         };
@@ -106,9 +116,9 @@ function Chart(el, props) {
     };
 
     this.low = function(prev, next) {
-
+//        console.log("prev next", prev, next);
         if (prev === null) return next;
-
+        
         return (next === null) ? prev : Math.min(prev, next);
     };
 
@@ -161,15 +171,15 @@ function Chart(el, props) {
         return (diff >= 3.1104e+10 ? self.dateSeriesYears : (diff >= 2.592e+9 ? self.dateSeriesMonths : (diff >= 1.728e+8 ? self.dateSeriesDays : (diff >= 3.6e+6 ? self.dateSeriesHours : self.dateSeriesMinutes))));
     };
     
-    this.getScales = function(data) {
-        return self.getScales(data || self.data, {
-            propertyLow: self.propertyLow,
-            propertyHigh: self.propertyHigh,
-            propertyVolume: self.propertyVolume,
-            propertyDate: self.propertyDate,
-            tick: self.tick
-        });
-    };
+//    this.getScales = function(data) {
+//        return self.getScales(data || self.data, {
+//            propertyLow: self.propertyLow,
+//            propertyHigh: self.propertyHigh,
+//            propertyVolume: self.propertyVolume,
+//            propertyDate: self.propertyDate,
+//            tick: self.tick
+//        });
+//    };
     
     this.getScales = function(data, spec) {
         spec = spec || {};
@@ -182,8 +192,9 @@ function Chart(el, props) {
             propVol = spec.propertyVolume || 'volume',
             propDate = spec.propertyDate || 'date',
             propTick = spec.propertyTick || 'tick';
+        if(data[data.length - 1].open < data[data.length - 1].low ) data[data.length - 1].low = data[data.length - 1].open;
+//        if(data[0].open > data[0].high ) data[0].high = data[0].open;
         return data.reduce(function(p, c, i) { // find all domains using a single data iteration (optimal)
-            if((i >= dateFrom) && (i < dataNum + dateFrom)) return p;
             p.lowestLow = self.low(p.lowestLow, c[propLow]);
             p.highestHigh = self.high(p.highestHigh, c[propHigh]);
             p.volumeLow = self.low(p.volumeLow, c[propVol]);
@@ -271,7 +282,7 @@ function Chart(el, props) {
                     };
                 }
                 
-                console.log(offsetData, new Date(dataSet[offsetData].date), dataSet.length / period - offsetData, dataSet.length / period);
+//                console.log(offsetData, new Date(dataSet[offsetData].date), dataSet.length / period - offsetData, dataSet.length / period);
                 var last = period;
 //                period += firstData;
                 for (var i =  0; i < Math.floor((dataSet.length - offsetData) / period); i++) {
@@ -280,7 +291,7 @@ function Chart(el, props) {
                     tmp.volume = tmp.close;
                     tmp.high = highest(i * period + offsetData, period + offsetData);
                     tmp.low = lowest(i * period + offsetData, period + offsetData);
-                    console.log(">>", (dataSet.length - offsetData) / period - 1);
+//                    console.log(">>", (dataSet.length - offsetData) / period - 1);
                     if (i < (Math.floor(((dataSet.length - offsetData) / period) - 1))) tmp.open = dataSet[(i + 1) * period + offsetData].close;
                     else if (dataSet[(i + 1) * period - 1 + offsetData].open < tmp.low) tmp.open = tmp.low;
                     else if (dataSet[(i + 1) * period - 1 + offsetData].open > tmp.high) tmp.open = tmp.high;
@@ -297,6 +308,7 @@ function Chart(el, props) {
                         volume: tmp.volume,
                         date: tmp.date,
                     });
+                    self.tick = tmp.close;
 
                 }
             };
@@ -335,7 +347,7 @@ function Chart(el, props) {
                 newData = recievedData;
                 break;
         };
-        console.log(newData);
+//        console.log(newData);
         Array.prototype.push.apply(self.data, newData);
         self.redraw();
         return true;
@@ -415,18 +427,27 @@ function Chart(el, props) {
             .domain([scales.lowestLow, scales.highestHigh])
             .range([coord.h - margin, margin]);
 
-
+        
+        
         //Make area graph
         groupLines = self.svg.append("g")
             .attr('class', 'area')
             .attr("transform", 'translate(' + [coord.x, coord.y].join(' ') + ')');
-        if (self.btnArea == true) {
+        
+        
+        
+        
             groupLines.append('rect')
                 .attr('class', 'background')
                 .attr('width', coord.w)
                 .attr('height', coord.h)
                 .attr('fill', colorBG);
             var lastIndex = self.dataNum//data.length - 1;
+        
+        if (self.btnArea == true) {
+            
+            
+            
 
             linesArea = d3.area()
                 .x(function(d, index) {
@@ -448,7 +469,33 @@ function Chart(el, props) {
                 .attr("style", "opacity: 0.2")
                 .attr("d", linesArea);
         }
+        if (self.btnLine == true) {
+            //Make line graph
+            var
+            line = self.svg.append("g")
+                .attr('class', 'line')
+                .attr("transform", 'translate(' + [coord.x, coord.y].join(' ') + ')');
 
+            lineDraw = d3.line()
+                .x(function(d, index) {
+                        var res = calcDateX(d.date) + barWidth / 2;
+                        if (index == 0) res = calcDateX(d.date) + barWidth;
+                        if (index == lastIndex) {
+                            res = calcDateX(d.date)
+                        };
+                        return res;
+                    })
+                .y(function(d) {
+                    return calcRY(d.value);
+                })
+            groupLines.append("path")
+                    .datum(drawData)
+                    .attr("fill", "none")
+                    .attr("stroke-width", self.lineStrokeWidth)
+                    .attr("stroke", self.lineColor)
+                    .attr("style", "opacity: 1")
+                    .attr("d", lineDraw);
+        }
         //Make grid
         gridFun = d3.axisBottom()
             .scale(1000)
@@ -522,6 +569,7 @@ function Chart(el, props) {
             break;
             case 'mouseleave':
                 self.hideCursor();
+                $(".tooltip-inner").remove();
                 return;
                 break;
             case 'mouseenter':
@@ -723,13 +771,45 @@ function Chart(el, props) {
             .attr('y', scaleY(y) + self.labelFontSize * 0.6)
             .text(Math.floor(candY(scaleY(show.posY))*100)/100 );
             
+        overCandle = function(x, y, cX){
+            var
+                nCandle = '.candle-body[x="' + cX + '"]',
+                cY = Number($(nCandle).attr("y")),
+                cHeight = Number($(nCandle).attr("height")),
+                cWidth = Number($(nCandle).attr("width")),
+                i = Number($(nCandle).attr("num")),
+                pX = scaleX(x),
+                pY = scaleY(y);
+            
+            if( (((pX >= cX - barWidth/2) && (pX <= cX + cWidth)) && ((pY >= cY) && (pY <= cY + cHeight))) ){
+                var tooltipText = 'high:' + drawData[i].high + '     ' + 'low:' + drawData[i].low + '     ' + 'open:' + drawData[i].open + '     ' + 'close:' + drawData[i].close + '     ' + 'volume:' + drawData[i].volume + '     ' + drawData[i].date;
+                var numCandle = '.candle-body[num="' + i + '"]';
+                console.log("show tooltip", i, numCandle, "text", tooltipText);
+                $(numCandle).tooltip({
+                    track: true,
+                    title: tooltipText,
+                    placement: 'bottom',
+                    delay: {
+                        show: 0,
+                        hide: 0
+                    },
+                    html: true,
+                    trigger: 'hover focus',
+                }).show();
+            self.lastTooltipCandleNum = i;
+            }else{
+                console.log("hide tooltip", self.lastTooltipCandleNum != i, i);
+                $('.candle-body[num="' + i + '"]').tooltip('hide');
+            }
+            
+        }
+        overCandle(show.posX, show.posY, x);
         self.curShow = true;
         
     };
 
 
     this.moveCursor = function(posX, posY) {
-//        console.log("move", self.elId, self.svg);
         var
         coordl = self.coordLabels(),
         coord = self.coordCandles(),
@@ -784,12 +864,7 @@ function Chart(el, props) {
 
     this.redrawCandles = function() {
         var
-//            dataNum = self.dataNum,
-//            dateFrom = self.dateFrom,
-//            dataItems = data.filter(function(d,i){
-//                        return (i >= dateFrom) && (i < dataNum + dateFrom);
-//
-//                }),
+
             propLow = self.propertyLow,
             propHigh = self.propertyHigh,
             propVol = self.propertyVolume,
@@ -827,7 +902,7 @@ function Chart(el, props) {
             calcRY = d3.scaleLinear()
             .domain([scales.lowestLow, scales.highestHigh])
             .range([coord.h - margin, margin]);
-        console.log("lowest", scales.lowestLow);
+//        console.log("lowest", scales.lowestLow);
         
         if (stemWidth < 1) {
             stemWidth = 1;
@@ -887,14 +962,18 @@ function Chart(el, props) {
                     return calcRY(this.getAttribute('vmax'));
                 })
                 .attr('height', function(d) {
-                    return minHeight(calcRY(this.getAttribute('vmin')) - calcRY(this.getAttribute('vmax')));
+                    return minHeight(Math.abs(calcRY(this.getAttribute('vmin')) - calcRY(this.getAttribute('vmax'))));
                 })
                 .attr('stroke-width', 0.5)
                 .attr('stroke-linecap', 'butt')
                 .attr('data-animation', 'false')
                 .attr('stroke-rendering', 'crispEdges')
                 .attr('stroke', dStemColor)
-                .attr('fill', dBodyColor);
+                .attr('fill', dBodyColor)
+                .attr('num', function(d, i) {return i;})
+                .attr('data-toggle', "tooltip")
+                .attr('data-placement', "bottom")
+                .attr('data', scales.lowestLow);
 //            $('rect.candle-stem').eq(0)
 //                .attr('stroke', self.tickStemColor)
 //                .attr('fill', self.tickBodyColor);
@@ -903,18 +982,37 @@ function Chart(el, props) {
 //                .attr('stroke', self.tickStemColor)
 //                .attr('fill', self.tickBodyColor);
             
-            var test = group.selectAll('rect.candle-body').on('mouseover', function(d, i) {
-                var tooltipText = 'high:' + drawData[i].high + '     ' + 'low:' + drawData[i].low + '     ' + 'open:' + drawData[i].open + '     ' + 'close:' + drawData[i].close + '     ' + 'volume:' + drawData[i].volume + '     ' + drawData[i].date;
-                $(this).tooltip({
-                    title: tooltipText,
-                    placement: 'bottom',
-                    delay: {
-                        show: 1,
-                        hide: 1
-                    }
-                });
-
-            });
+//            var cBody = group.selectAll('rect.candle-body').on('show', function(d, i) {
+//                console.log(i);
+//                $(".tooltip-inner").remove();
+//                var tooltipText = 'high:' + drawData[i].high + '     ' + 'low:' + drawData[i].low + '     ' + 'open:' + drawData[i].open + '     ' + 'close:' + drawData[i].close + '     ' + 'volume:' + drawData[i].volume + '     ' + drawData[i].date + '     ' + i;
+//                $(this).tooltip({
+//                    title: tooltipText,
+//                    placement: 'bottom',
+//                    delay: {
+//                        show: 1,
+//                        hide: 1
+//                    }
+//                });
+//
+//            });
+//            var cStem = group.selectAll('rect.candle-stem').on('mouseenter mouseover', function(d, i) {
+//                console.log(i);
+//                $(".tooltip-inner").remove();
+//                var tooltipText = 'high:' + drawData[i].high + '     ' + 'low:' + drawData[i].low + '     ' + 'open:' + drawData[i].open + '     ' + 'close:' + drawData[i].close + '     ' + 'volume:' + drawData[i].volume + '     ' + drawData[i].date + '     ' + i;
+//                $(this).append("div")
+//                    .attr("class", "tooltip-graph")               
+//                    .style("opacity", 0);
+////                $(this).tooltip({
+////                    title: tooltipText,
+////                    placement: 'bottom',
+////                    delay: {
+////                        show: 1,
+////                        hide: 1
+////                    }
+////                });
+//
+//            });
         }
     };
 
@@ -1015,8 +1113,8 @@ function Chart(el, props) {
 
     this.coordLabels = function() {
         var
-            xheight = 20,
-            ywidth = 75;
+            xheight = self.labelXHeight,
+            ywidth = self.labelYWidth;
         
         return {
             seriesX: {
@@ -1038,17 +1136,25 @@ function Chart(el, props) {
         self.svg.selectAll('g.tick').remove();
     };
 
-    this.genTick = function(newTick, scales, min, max) {
-        if (min == max) delta = Math.random() * min * .0000005;
-        else delta = (Math.random() * (max - min) + min) * .00005;
-        var sign = 1;
+    this.genTick = function(curTick, scales, min, max) {
+//        if((curTick < min) || (curTick > max)) self.tick = self.data[0].open;
+        var candle = max - min,
+            delta = Math.random() * candle / 10;
+        if(Math.random() >= 0.5) var sign = -1; else var sign = 1;
+        if((delta * sign + curTick > max) || (delta * sign + curTick < min)) sign = -sign;
+        console.log(delta * sign + curTick);
+        if((delta * sign + curTick > max) || (delta * sign + curTick < min)) return curTick;
+        return Math.floor((delta * sign + curTick) * 100000) / 100000;
+//        if (min == max) delta = Math.random() * min * .0000005;
+//        else delta = (Math.random() * (max - min) + min) * .00005;
+//        var sign = 1;
+//
+//
+//        if (Math.random() * 10 < 5) sign = -1;
+//        if (((self.tick + sign * delta) < max) && ((self.tick + sign * delta) > min)) self.tick += sign * delta;
+//        else self.tick += -1 * sign * delta;
 
-
-        if (Math.random() * 10 < 5) sign = -1;
-        if (((self.tick + sign * delta) < max) && ((self.tick + sign * delta) > min)) self.tick += sign * delta;
-        else self.tick += -1 * sign * delta;
-
-        return Math.floor(self.tick * 10000) / 10000;
+        
     };
 
     this.redrawTick = function() {
@@ -1064,7 +1170,7 @@ function Chart(el, props) {
 //        dataNum = self.dataNum,
 //        dateFrom = self.dateFrom,
         self.resetTick(self.svg);
-        self.tick = self.data[0].close;
+//        self.tick = self.data[0].close;
         var
             coord = self.coordLabels(),
             drawData = self.getCurData(self.data),
@@ -1092,14 +1198,16 @@ function Chart(el, props) {
             margin = self.marginCandle || 0,
 
             
-            tickVol = self.genTick(self.tick, scales, self.data[0].low, self.data[0].high),
+            tickVol = self.genTick(self.tick, scales, self.tickLow, self.tickHigh),
             cSX = coord.seriesX,
             cSY = coord.seriesY,
             groupY = self.svg.append('g')
             .attr('class', 'tick line')
             .attr('transform', 'translate(' + [0, cSY.y].join(' ') + ')');
+            self.data[0].close = tickVol;
+            console.log("-----------------------------------",self.tick, self.tickLow, self.tickHigh, );
 //        console.log(groupY);
-        if (tickVol > self.tick) {
+        if (tickVol > self.data[0].open) {
             self.colorTick = self.colorTickHigh;
             var direction = true;
         }
@@ -1107,11 +1215,13 @@ function Chart(el, props) {
             var direction = false;
             self.colorTick = self.colorTickLow;
         }
+//        console.log(tickVol, self.data[0].open, direction);
         var eventData = {
             low: self.data[0].low,
             high: self.data[0].high,
             open: self.data[0].open,
-            close: tickVol
+            close: tickVol,
+            direction: direction
         };
         eventNode.trigger('tickEvent', [eventData, direction, self.elId]);
         
@@ -1122,7 +1232,7 @@ function Chart(el, props) {
         candY = d3.scaleLinear()
         .domain([scales.lowestLow, scales.highestHigh])
         .range([coordcand.y + coordcand.h - marginCandle, coordcand.y + marginCandle]), //,
-            
+        
         maxY = candY(scales.lowestLow),
         minY = candY(scales.highestHigh);
         
@@ -1158,32 +1268,51 @@ function Chart(el, props) {
             .attr('text-anchor', 'middle')
             .attr('fill', '#fff')
             .text(tickVol);
-        
+        var open = self.data[0].open;
         if(self.dateFrom == 0){
-//            console.log("dateFrom:", dateFrom);
-            var lastY = candY(self.data[0].close),
-                coordY = coordcand.y - 12;
-                self.tickStemColor = '#db4c3c',
-                self.tickBodyColor = '#db4c3c';
-            if (self.data[0].close < tickVol) {
-                self.tickBodyColor = '#04bf85';
-                self.tickStemColor = '#04bf85';
+            var lastY = candY(open),
+                coordY = candY(tickVol) - 12;
+//                coordY = coordcand.y - 12;
+                self.tickStemColor = self.colorCandleStemDown,
+                self.tickBodyColor = self.colorCandleBodyDown;
+            if (self.data[0].open < tickVol) {
+                self.tickBodyColor = self.colorCandleBodyUp;
+                self.tickStemColor = self.colorCandleStemUp;
             }
             if (coordY + 10 > lastY) {
                 heightB = Math.abs(coordY - lastY + 10);
-                $(self.el).find('rect.candle-body').eq(0).attr('height', heightB).attr('y', coordY + 10 - heightB);
+//            console.log("dateFrom:", self.data[0].open, self.data[0].close, tickVol, heightB);
+//                $(self.el).find('rect.candle-body').eq(0).attr('height', heightB).attr('y', coordY + 10 - heightB);
+                $(self.el).find('rect.candle-body')
+                        .eq(0)
+                        .attr('height', heightB)
+                        .attr('y', candY(open))
+                        .attr('stroke', self.tickBodyColor)
+                        .attr('fill', self.tickBodyColor);
+                $(self.el).find('rect.candle-stem').eq(0)
+                        .attr('class', 'candle-stem')
+                        .attr('stroke-width', 0.5)
+                        .attr('stroke-linecap', 'butt')
+                        .attr('stroke-rendering', 'crispEdges')
+                        .attr('stroke', self.tickStemColor)
+                        .attr('fill', self.tickStemColor);
             } else {
                 heightB = Math.abs(lastY - coordY - 10);
-                $(self.el).find('rect.candle-body').eq(0).attr('height', heightB).attr('y', coordY + 10);
+                $(self.el).find('rect.candle-body').eq(0)
+                    .attr('height', heightB)
+                    .attr('y', candY(open) - heightB)
+                    .attr('stroke', self.tickBodyColor)
+                    .attr('fill', self.tickBodyColor);
+                $(self.el).find('rect.candle-stem').eq(0)
+                    .attr('class', 'candle-stem')
+                    .attr('stroke-width', 0.5)
+                    .attr('stroke-linecap', 'butt')
+                    .attr('stroke-rendering', 'crispEdges')
+                    .attr('stroke', self.tickStemColor)
+                    .attr('fill', self.tickStemColor);
             }
         
-//            $('rect.candle-stem').eq(0)
-//                .attr('class', 'candle-stem')
-//                .attr('stroke-width', 0.5)
-//                .attr('stroke-linecap', 'butt')
-//                .attr('stroke-rendering', 'crispEdges')
-//                .attr('stroke', self.tickStemColor)
-//                .attr('fill', self.tickBodyColor);
+            
 
 //            $('rect.candle-body').eq(0)
 //                .attr('class', 'candle-body')
@@ -1333,7 +1462,7 @@ function Chart(el, props) {
         //    this.height+=200;
         // resize SVG to outer limits
         self.svg.attr('width', self.width);
-        self.svg.attr('height', self.height - 80);
+        self.svg.attr('height', self.height);
         self.svg.attr('viewBox', '0 0 ' + self.width + ' ' + self.height);
 
         var
@@ -1405,7 +1534,12 @@ function Chart(el, props) {
                         return record;
                     }));
 //                    console.log("Income Data");
-                    self.tick = t[0].close;
+                    self.tick = t[0].open;
+                    self.data[0].value = self.data[0].open;
+                    self.data[0].close = self.data[0].open;
+                    self.tickOpen  = t[0].open;
+                    self.tickHigh  = t[0].high;
+                    self.tickLow  = t[0].low;
                     self.redraw();
                 }
                 
@@ -1473,9 +1607,13 @@ function Chart(el, props) {
             self.btnCandle = !self.btnCandle;
             self.redraw();
         });
+        var candleShowHide = $(elem).parent().find("button.line-show-hide").on('click', function() {
+            self.btnLine = !self.btnLine;
+            self.redraw();
+        });
         
         (window.onresize = function() {
-            self.resize(window.innerWidth, window.innerHeight);
+            self.resize(window.outerWidth, window.outerHeight);
             self.redraw();
         })();
     };
@@ -1509,14 +1647,28 @@ function Chart(el, props) {
         
         // load any data in the props
         this.loadData(props.data);
-        
+        this.setParams = function(params){
+            for(var key in params){
+                switch(key){
+                    case "xhrInstrumentId":
+                        self.xhrInstrumentId = params[key];
+                        break;
+                    case "xhrUserId":
+                        self.xhrUserId = params[key];
+                        break;
+                    default:
+                        break;
+                }
+            };
+        }
         // initialize data get priodically
         this.init();
         var ticker = this.redrawTick.bind(),
             reloader = self.reloadData.bind(this);
         var
             cleaner = this.clearData.bind(this),
-            loader = this.loadData.bind(),
+            loader = this.loadData.bind(this),
+            setParams = this.setParams.bind(this),
             setter = this.reset.bind();
             
             
@@ -1526,8 +1678,12 @@ function Chart(el, props) {
         // Set handlers
         this.setHandlers(this.el);
         return {
+            reloadData: reloader,
+            
             on: on,
-            trigger: trigger
+            trigger: trigger,
+            setParams: setParams,
+            
         };
             function on(){
                 eventNode.on.apply(eventNode, arguments);

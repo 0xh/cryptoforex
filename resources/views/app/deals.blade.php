@@ -8,14 +8,29 @@
         function dealInfo(deal){
             $('.popup,.bgc').fadeOut((window.animationTime!=undefined)?window.animationTime:256);
             $('.popup_deal_info,.bgc').fadeIn((window.animationTime!=undefined)?window.animationTime:256);
-            var rchart = null;
+            var rchart = null, time = new Date(deal.created_at*1000);
             // console.debug(deal);
-            graphControl.makeChart(120,"chartdiv_p1",null,rchart);
+            // graphControl.makeChart(120,"chartdiv_p1",null,rchart);
+
+            window.SubChart = new Chart(document.getElementById('chartdiv_p1'), {
+                xhrInstrumentId: deal.intrument_id,     // query type currency number
+                xhrPeriodFull: 1440,    // data max period
+                dataNum: 60,          // default zoom number of dataset in 1 screen
+                xhrMaxInterval: 45000,  // renewal full data interval
+                xhrMinInterval: 1000,    // ticks - min interval to update and redraw last close data
+                btnVolume: true,       // bottom volume graph default state
+            });
+
             $('.popup_deal_info .deal-profit').html('<span class="'+((deal.profit>0)?"up":"down")+'">'+deal.profit+'</span>');
-            $('.popup_deal_info .deal-time').html('<p><span class="time">'+new Date(deal.created_at*1000)+'</span></p>');
+            $('.popup_deal_info .deal-time').html('<p><span class="time">'+time.toGMTString()+'</span></p>');
             $('.popup_deal_info .deal-amount').html('<p>'+currency.value(deal.amount,deal.currency.code)+'</p>');
             $('.popup_deal_info .deal-multiplier').html('<p>'+currency.value(deal.amount*deal.multiplier,deal.currency.code)+'</p>');
             $('.popup_deal_info #deal_id').val(deal.id);
+            $('.popup_deal_info .close').on("click",function(e){
+                console.debug("close deal info modal",window.SubChart);
+                delete window.SubChart;
+                $('#chartdiv_p1').html('');
+            });
         }
         function userDeals(container,d,x,s){
             // console.debug("deals",container,d);

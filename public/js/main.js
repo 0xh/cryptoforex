@@ -89,37 +89,140 @@ jQuery(document).ready(function () {
         ion.sound.play("branch_break");
     });
 
-	jQuery('a.button').click(function(){
-		jQuery('body,.main,.main .content,.main > .container,aside.right').addClass('see');
-		jQuery(this).fadeOut();
-		jQuery('a.b_close').fadeIn();
-		jQuery('.open').addClass('see');
-		jQuery('aside.right').addClass('see');
-		return false
-	});
+    jQuery('.button').click(function(){
+    	if ( jQuery('aside.right').hasClass('see') ) {
+    		jQuery('body,.main,.main .content,.main > .container,aside.right').removeClass('see');
+    		jQuery(this).removeClass('b_close').addClass('button');
+			if ( jQuery('aside.right').hasClass('active') ) {
+    			jQuery('.open').removeClass('see');
+    			jQuery('.closee').removeClass('see');
+    		} else {
+    			jQuery('.open').removeClass('see');
+    			jQuery('.closee').removeClass('see');
+    		}
+    	} else {
+    		jQuery('body,.main,.main .content,.main > .container,aside.right').addClass('see');
+    		jQuery(this).removeClass('button').addClass('b_close');
+    		if ( jQuery('aside.right').hasClass('active') ) {
+    			jQuery('.open').removeClass('see');
+    			jQuery('.closee').addClass('see');
+    		} else {
+    			jQuery('.open').addClass('see');
+    			jQuery('.closee').removeClass('see');
+    		}
+    	}
 
-	jQuery('a.b_close').click(function(){
-		jQuery('body,.main,.main .content,.main > .container,aside.right').removeClass('see');
-		jQuery(this).fadeOut();
-		jQuery('a.button').fadeIn();
-		jQuery('.open').removeClass('see');
-		jQuery('aside.right').removeClass('see');
-		return false
-	});
+    	if ( jQuery('aside.left').hasClass('see') ) {
+    		jQuery('body,.main,.main .content,.main > .container,aside.left').removeClass('see');
+    		jQuery(this).removeClass('b_close').addClass('button');
+			if ( jQuery('aside.left').hasClass('active') ) {
+    			jQuery('.open2').removeClass('see');
+    			jQuery('.closee2').removeClass('see');
+    		} else {
+    			jQuery('.open2').removeClass('see');
+    			jQuery('.closee2').removeClass('see');
+    		}
+    	} else {
+    		jQuery('body,.main,.main .content,.main > .container,aside.left').addClass('see');
+    		jQuery(this).removeClass('button').addClass('b_close');
+    		if ( jQuery('aside.left').hasClass('active') ) {
+    			jQuery('.open2').removeClass('see');
+    			jQuery('.closee2').addClass('see');
+    		} else {
+    			jQuery('.open2').addClass('see');
+    			jQuery('.closee2').removeClass('see');
+    		}
+    	}
+    });
 
-	jQuery('.main .content a.open').click(function(){
-		jQuery('aside.right').addClass('active');
+    jQuery('.open').click(function(){
+    	jQuery('aside.right').addClass('active');
 		jQuery('.content').addClass('active');
-		jQuery( this ).fadeOut();
-		jQuery('.main .content a.closee').fadeIn();
-	});
+		jQuery('.open').removeClass('see');
+		jQuery('.closee').addClass('see');
+    });
 
-	jQuery('.main .content a.closee').click(function(){
+    jQuery('.closee').click(function(){
 		jQuery('aside.right').removeClass('active');
 		jQuery('.content').removeClass('active');
-		jQuery( this ).fadeOut();
-		jQuery('.main .content a.open').fadeIn();
+		jQuery('.closee').removeClass('see');
+		jQuery('.open').addClass('see');
 	});
+
+	jQuery('.open2').click(function(){
+    	jQuery('aside.left').addClass('active');
+		jQuery('.content').addClass('active');
+		jQuery('.open2').removeClass('see');
+		jQuery('.closee2').addClass('see');
+    });
+
+	jQuery('.closee2').click(function(){
+		jQuery('aside.left').removeClass('active');
+		jQuery('.content').removeClass('active');
+		jQuery('.closee2').removeClass('see');
+		jQuery('.open2').addClass('see');
+	});
+
+	// jQuery('a.button').click(function(){
+	// 	jQuery('body,.main,.main .content,.main > .container,aside.right').addClass('see');
+	// 	jQuery(this).fadeOut();
+	// 	jQuery('a.b_close').fadeIn();
+	// 	// jQuery('aside.right').addClass('see');
+	// 	if ( jQuery('aside.right').hasClass('see') ) {
+	// 		jQuery('.open').addClass('see');
+	// 		jQuery('.closee').fadeOut();
+	// 	} else {
+	// 		jQuery('.open').fadeOut();
+	// 		jQuery('.closee').fadeIn();
+	// 	}
+	// 	return false
+	// });
+
+	// jQuery('a.b_close').click(function(){
+	// 	jQuery('body,.main,.main .content,.main > .container,aside.right').removeClass('see');
+	// 	jQuery(this).fadeOut();
+	// 	jQuery('a.button').fadeIn();
+	// 	jQuery('.open').removeClass('see');
+	// 	jQuery('aside.right').removeClass('see');
+	// 	if ( jQuery('aside.right').hasClass('see') ) {
+	// 		jQuery('.open').addClass('see');
+	// 		jQuery('a.closee').fadeIn();
+	// 	} else {
+	// 		jQuery('.open').fadeOut();
+	// 		jQuery('a.closee').fadeOut();
+	// 	}
+	// 	return false
+	// });
+
+	// jQuery('.main .content a.open').click(function(){
+	// 	if ( jQuery('aside.right').hasClass('active') ) {
+	// 		jQuery(this).removeClass('active');
+	// 		jQuery('.content').removeClass('active');
+	// 		jQuery( this ).fadeIn();
+	// 		jQuery('.closee').fadeOut();
+	// 	} else {
+	// 		jQuery('aside.right').addClass('active');
+	// 		jQuery('.content').addClass('active');
+	// 		jQuery( this ).fadeOut();
+	// 		jQuery('.closee').fadeIn();
+	// 	}
+	// });
+
+	// jQuery('.main .content a.closee').click(function(){
+	// 	if ( jQuery('aside.right').hasClass('active') ) {
+	// 		jQuery(this).removeClass('active');
+	// 		jQuery('.content').removeClass('active');
+	// 		jQuery( this ).fadeIn();
+	// 		jQuery('.closee').fadeOut();
+	// 	} else {
+	// 		jQuery('aside.right').addClass('active');
+	// 		jQuery('.content').addClass('active');
+	// 		jQuery( this ).fadeOut();
+	// 		jQuery('.closee').fadeIn();
+	// 	}
+
+
+	// });
 
 	jQuery('.main aside.left ul li .item').slideUp(0);
 	jQuery('.main aside.left ul li').eq(0).addClass('active').find('.item').slideDown();

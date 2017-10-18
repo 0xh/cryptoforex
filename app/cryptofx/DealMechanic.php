@@ -60,7 +60,7 @@ class DealMechanic{
             $trx->makeTransaction([
                 'account'=>$account->id,
                 'type'=>'deposit',
-                'user' => $rq->user(),
+                'user' => $user,
                 'merchant'=>'1',
                 'amount'=>$deal->amount + $deal->stop_high,
             ]);
@@ -77,6 +77,9 @@ class DealMechanic{
                 'description'=>'No more amount'
             ]);
         }
+        $dealUpdate['volation'] = 0;
+        if(floatval($deal->profit)<floatval($dealUpdate['profit']))$dealUpdate['volation']=1;
+        else if(floatval($deal->profit)>floatval($dealUpdate['profit']))$dealUpdate['volation']=-1;
         $deal->update($dealUpdate);
         // print_r(array_merge($dealUpdate,[
         //     "deal_id"=>$deal->id,

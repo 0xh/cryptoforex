@@ -36,17 +36,16 @@
                         <div class="br">
                             <li><a href="#" class="cab"><i class="ic prof"></i>@lang('messages.Education')</a>
                                 <ul class="sub-menu">
-                                    <li><a href="../105">RSI</a></li>
-                                    <li><a href="./page/RSI">Stochastic</a></li>
-                                    <li><a href="./page/Stochastic">Parabolic-SAR</a></li>
-                                    <li><a href="/page/Parabolic-SAR">Parabolic-SAR</a></li>
+                                    <li><a href="./page/RSI">RSI</a></li>
+                                    <li><a href="./page/Stochastic">Stochastic</a></li>
+                                    <li><a href="./page/Parabolic-SAR">Parabolic SAR</a></li>
                                     <li><a href="./page/MACD">MACD</a></li>
                                     <li><a href="./page/SMA">SMA</a></li>
-                                    <li><a href="./page/Bollinger-Bands">Bollinger-Bands</a></li>
-                                    <li><a href="./page/Скользим-по-средним">Скользим-по-средним</a></li>
-                                    <li><a href="./page/MACD-professional">MACD-professional</a></li>
-                                    <li><a href="./page/Японский-стандарт">Японский-стандарт</a></li>
-                                    <li><a href="./page/Закон-относительной-силы">Закон-относительной-силы</a></li>
+                                    <li><a href="./page/Bollinger-Bands">@lang('messages.Bollinger-Bands')</a></li>
+                                    <li><a href="./page/Скользим-по-средним">@lang('messages.on-average')</a></li>
+                                    <li><a href="./page/MACD-professional">@lang('messages.MACD-p')</a></li>
+                                    <li><a href="./page/Японский-стандарт">@lang('messages.Japanese')</a></li>
+                                    <li><a href="./page/Закон-относительной-силы">@lang('messages.strength')</a></li>
                                 </ul>
                             </li>
                         </div>

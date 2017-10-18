@@ -21,7 +21,7 @@ class UserDocument extends Model{
      *
      * @var string
      */
-    protected $table = 'user_hierarchy';
+    protected $table = 'user_documents';
     /**
      * The attributes that are mass assignable.
      *
@@ -36,8 +36,7 @@ class UserDocument extends Model{
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeUser($query,User $user)
-    {
+    public function scopeByUser($query,User $user){
         return $query->where('user_id', '=', $user->id);
     }
     public function user(){

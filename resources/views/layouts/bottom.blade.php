@@ -25,6 +25,30 @@
               @if(Auth::guest())
               @else
               <script>
+                function historyCloseDeals(container,d,x,s){
+                    container.html('');
+                    for(var i in d.data){
+                        var row=d.data[i],jsdata = JSON.stringify(d.data[i]),s='<tr class="deal-row" data-instrument-id="'+row.instrument.id+'" data-raw=\''+jsdata+'\' data-price="'+row.open.price+'" '+
+                            ((row.status_id==10)?'onclick=\'dealInfo('+jsdata+')\'':'')
+                            +' id="deal-'+row.id+'">',
+                            inst = row.instrument.from.code+'/'+row.instrument.to.code,
+                            prct = 100*(row.profit/row.amount),
+                            openTime = new Date(row.open.created_at*1000),
+                            closeTime = (row.close!=null)?new Date(row.close.created_at*1000):new Date();
+
+                        // s+= '<td><i class="ic ic_btc"></i><i class="ic ic_lte"></i>'+inst+'</td>';
+                        s+= '<td>'+inst+'</td>';
+                        s+= '<td class="'+((row.direction==1)?"down":"up")+'">'+openTime.toGMTString()+'</td>';
+                        s+= '<td>'+row.open.price+'</td>';
+                        s+= (row.close!=null)?'<td>'+closeTime.toGMTString()+'</td>':'<td>&nbsp;</td>';
+                        s+= (row.close!=null)?'<td>'+row.close.price+'</td>':'<td>&nbsp;</td>';
+                        s+= '<td>'+currency.value(row.amount,'USD')+' <span>x'+row.multiplier+'</span></td>';
+                        s+= '<td class="'+((row.close_price==undefined)?'profit':"")+'">'+currency.value(parseFloat(row.amount)+parseFloat(row.profit),'USD',4)+'</td>';
+                        s+= '<td class="'+((row.profit>0)?"green":"red")+'">'+prct.toFixed(2)+'%</td>'
+                        s+='</tr>';
+                        container.append(s);
+                    }
+                }
                 function historyDeals(container,d,x,s){
                     container.html('');
                     for(var i in d.data){
@@ -32,17 +56,20 @@
                             ((row.status_id==10)?'onclick=\'dealInfo('+jsdata+')\'':'')
                             +' id="deal-'+row.id+'">',
                             inst = row.instrument.from.code+'/'+row.instrument.to.code,
-                            prct = 100*(row.profit/row.amount);
-
+                            prct = 100*(row.profit/row.amount),
+                            openTime = new Date(row.open.created_at*1000),
+                            profitClass = '';
+                        // console.debug(row.id+' ('+row.volation+') => '+profitClass);
+                        if(parseInt(row.volation)==1)profitClass='bg_green';
+                        else if(parseInt(row.volation)==-1)profitClass='bg_red';
                         // s+= '<td><i class="ic ic_btc"></i><i class="ic ic_lte"></i>'+inst+'</td>';
                         s+= '<td>'+inst+'</td>';
-                        s+= '<td class="'+((row.direction==1)?"down":"up")+'">'+new Date(row.open.created_at*1000)+'</td>';
+                        s+= '<td class="'+((row.direction==1)?"down":"up")+'">'+openTime.toGMTString()+'</td>';
                         s+= '<td>'+row.open.price+'</td>';
-                        s+= (row.close!=null)?'<td>'+new Date(row.close.created_at*1000)+'</td>':'<td>&nbsp;</td>';
-                        s+= (row.close!=null)?'<td>'+row.close.price+'</td>':'<td>&nbsp;</td>';
                         s+= '<td>'+currency.value(row.amount,'USD')+' <span>x'+row.multiplier+'</span></td>';
-                        s+= '<td class="'+((row.close_price==undefined)?'profit':"")+'">'+currency.value(row.profit,'USD',4)+'</td>';
-                        s+= '<td class="'+((row.profit>0)?"green":"red")+'">'+prct.toFixed(2)+'%</td>'
+
+                        s+= '<td class="'+profitClass+'">'+currency.value(parseFloat(row.amount)+parseFloat(row.profit),'USD',4)+'</td>';
+                        s+= '<td class="'+((row.profit>=0)?"green":"red")+'">'+prct.toFixed(2)+'%</td>'
                         s+='</tr>';
                         container.append(s);
                     }
@@ -52,14 +79,12 @@
                 <thead>
                   <th>@lang('messages.Assets')</th>
                   <th>@lang('messages.D/T/O')</th>
-                  <th>@lang('messages.open')</th>
-                  <th>@lang('messages.D/T/C')</th>
-                  <th>@lang('messages.close')</th>
+                  <th>@lang('messages.open_price')</th>
                   <th>@lang('messages.invested')</th>
                   <th>@lang('messages.received')</th>
                   <th>@lang('messages.Profit') %</th>
                 </thead>
-                <tbody class="loader" data-action="/deal?status=open&user_id={{Auth::user()->id}}" data-autostart="true" data-refresh="1000" data-function="historyDeals"></tbody>
+                <tbody class="loader" data-action="/deal?status=open&user_id={{Auth::user()->id}}" data-autostart="true" data-refresh="4800" data-function="historyDeals"></tbody>
                 </table>
               @endif
 
@@ -153,14 +178,14 @@
                   <thead>
                     <th>@lang('messages.Assets')</th>
                     <th>@lang('messages.D/T/O')</th>
-                    <th>@lang('messages.open')</th>
+                    <th>@lang('messages.open_price')</th>
                     <th>@lang('messages.D/T/C')</th>
                     <th>@lang('messages.close')</th>
                     <th>@lang('messages.invested')</th>
                     <th>@lang('messages.received')</th>
                     <th>@lang('messages.Profit') %</th>
                   </thead>
-                <tbody class="loader" data-action="/deal?status=close&user_id={{Auth::user()->id}}" data-autostart="true" data-refresh="8000" data-function="historyDeals"></tbody>
+                <tbody class="loader" data-action="/deal?status=close&user_id={{Auth::user()->id}}" data-autostart="true" data-refresh="8000" data-function="historyCloseDeals"></tbody>
                 </table>
               @endif
 

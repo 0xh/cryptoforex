@@ -24,6 +24,6 @@ class Price extends Model
      * @var array
      */
     protected $fillable = [
-        'price','instrument_id','source_id'
+        'price','instrument_id','source_id','volation'
     ];
 }

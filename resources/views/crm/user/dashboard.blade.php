@@ -145,30 +145,25 @@
                                     <td>ID <div class="arrow"><span></span><span></span></div></td>
                                     <td>Registred <div class="arrow"><span></span><span></span></div></td>
                                     <td>Updated <div class="arrow"><span></span><span></span></div></td>
-                                    <td>Instrument <div class="arrow"><span></span><span></span></div></td>
+                                    <td>Type <div class="arrow"><span></span><span></span></div></td>
                                     <td>Status <div class="arrow"><span></span><span></span></div></td>
-                                    <td>Amount <div class="arrow"><span></span><span></span></div></td>
-                                    <td>Multiplier <div class="arrow"><span></span><span></span></div></td>
-                                    <td>Direction <div class="arrow"><span></span><span></span></div></td>
-                                    <td>Profit <div class="arrow"><span></span><span></span></div></td>
-                                    <td>Stops <div class="arrow"><span></span><span></span></div></td>
+                                    <td>File <div class="arrow"><span></span><span></span></div></td>
                                     <td>&nbsp;</td>
                                 </tr>
                             </thead>
-                            <tbody class="loader" id="user_deals" data-name="user-deals" data-action="/json/deal?status=open" data-function="crmDealList" data-autostart="true" data-trigger="">
-                                @foreach($deals as $deal)
-                                    <tr  data-class="deal" data-id="{{$deal->id}}">
-                                        <td>{{$deal->id}}</td>
-                                        <td>{{$deal->created_at}}</td>
-                                        <td>{{$deal->updated_at}}</td>
-                                        <td>{{$deal->instrument->title}}</td>
-                                        <td>{{$deal->status->name}}</td>
-                                        <td>{{$deal->amount}}</td>
-                                        <td>{{$deal->multiplier}}</td>
-                                        <td>{{$deal->direction}}</td>
-                                        <td>{{$deal->profit}}</td>
-                                        <td>{{$deal->price_start}} - {{$deal->price_stop}}</td>
-                                        <td><a href="javascript:0;" onclick="crm.deal.info({{$deal->id}})" class="edit">@lang('messages.info')</a></td>
+                            <tbody class="loader" id="user_documents" data-name="user-documents" data-action="/json/user/{{$user['id']}}/documents" data-function="crmDocumentList" data-autostart="true" data-trigger="">
+                                @foreach($documents as $document)
+                                    <tr data-class="document" data-id="{{$document->id}}">
+                                        <td>{{$document->id}}</td>
+                                        <td>{{$document->created_at}}</td>
+                                        <td>{{$document->updated_at}}</td>
+                                        <td>{{$document->type}}</td>
+                                        <td>{{$document->status}}</td>
+                                        <td>{{$document->file}}</td>
+                                        <td>
+                                            <a href="javascript:0;" onclick="crm.user.document({{$document->id}})" class="edit">@lang('messages.decline')</a>&nbsp;
+                                            <a href="javascript:0;" onclick="crm.user.document({{$document->id}})" class="edit">@lang('messages.verify')</a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

@@ -26,23 +26,22 @@ var cf={
         return cf.getDataByField(s,"title",id);
     },
     reload:function(){
-        $(".loader:not(.assigned)").each(function(){
+        $(".loader:not(.loader-assigned)").each(function(){
             new cf.loader(this,Fresher);
-        }).addClass('assigned');
-        $(".requester:not(.assigned)").each(function(){
-            new cf.requester($(this));
-        }).addClass('assigned');
-        $(".submiter").each(function(){
+        }).addClass('loader-assigned');
+        $(".submiter:not(.submiter-assigned)").each(function(){
             cf.submiter(this);
-        }).addClass('assigned');
-        $(".sorter").each(function(){
+        }).addClass('submiter-assigned');
+        $(".sorter:not(.sorter-assigned)").each(function(){
             cf.sorter($(this));
-        }).addClass('assigned');
-        $(".check-all").on("change",function(){
+        }).addClass('sorter-assigned');
+        $(".check-all:not(.checkall-assigned)").on("change",function(){
             var v = $(this).is(':checked')?true:false, list = $(this).attr("data-list");
             $('[data-name='+list+']').prop("checked",v);
-        }).addClass('assigned');
-
+        }).addClass('checkall-assigned');
+        $(".requester:not(.requester-assigned)").each(function(){
+            new cf.requester($(this));
+        }).addClass('requester-assigned');
     },
     _actions:[],
     _loaders:[],
@@ -208,10 +207,13 @@ var cf={
                     name = $(this).attr("data-name"),
                     val = ($(this).attr('type')=="checkbox")?($(this).is(':checked')?1:0):(($(this).attr("data-value")!=undefined)?$(this).attr("data-value"):$(this).val()),
                     ld = cf._loaders[act_uid].opts.data;
+                console.debug(act_uid,name,val,ld);
                 if(val.length==0) delete ld[name]; else ld[name]=val;
                 cf._loaders[act_uid].execute();
             };
+
         $that.on(trigger,callfunc);
+        console.debug(($that instanceof jQuery)?"jquery":"object",trigger);
     },
     submiter:function(){
         var container = arguments.length?$(arguments[0]):null,
@@ -310,13 +312,14 @@ var cf={
         });
     }
 };
-window.Fresher = new cf.refresher();
+
 $(document).ready(function(){
-    // window.Fresher = new cf.refresher();
+    window.Fresher = new cf.refresher();
     cf.reload();
     for(var i in window.onloads){
         window.onloads[i]();
     }
+
     // window.MainChart = new Chart(document.getElementById('main'), {
     //     xhrInstrumentId: id,     // query type currency number
     //     xhrPeriodFull: 1440,    // data max period

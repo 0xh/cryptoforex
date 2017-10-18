@@ -60,11 +60,13 @@ Route::get('/{format}/user/','UserController@ulist')->name('user.list')->where('
 Route::get('/{format}/user/{id}','UserController@index')->name('user.info')->where('format','json|html')->where('id','[0-9]+');
 Route::get('/{format}/user/{id}/update','UserController@update')->name('user.update')->where('format','json')->where('id','[0-9]+');
 Route::get('/{format}/user/{id}/delete','UserController@destroy')->name('user.update')->where('format','json')->where('id','[0-9]+');
+Route::get('/{format}/user/{id}/documents','UserController@documents')->name('user.documents')->where('format','json')->where('id','[0-9]+');
 Route::get('/{format}/user/add','Auth\RegisterController@create')->name('user.register')->where('format','json');
 Route::get('/{format}/user/status','UserController@status')->name('user.status')->where('format','json');
 Route::get('/{format}/user/rights','UserController@rights')->name('user.rights')->where('format','json');
 Route::get('/{format}/user/countries','UserController@countries')->name('user.countries')->where('format','json');
 Route::get('/{format}/user/meta','UserController@metaData')->name('user.meta')->where('format','json');
+
 /* Deal controller JSON */
 Route::get('/{format}/deal/{id?}','DealController@index')->name('deal.list')->where('format','json|html')->where('id','[0-9]+');
 Route::get('/{format}/deal/add','DealController@store')->name('deal.add')->where('format','json|html');

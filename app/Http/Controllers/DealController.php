@@ -33,7 +33,7 @@ class DealController extends Controller{
         $res = Deal::where('id','>','9')
             ->with(['user'=>function($query){
                 $query->with(['manager']);
-            },'history','currency','instrument'=>function($query){
+            },'currency','instrument'=>function($query){
             $query->with(['from','to']);
         },'open','close','status'])
             ->byStatus($rq->input("status","open"))
@@ -53,6 +53,7 @@ class DealController extends Controller{
                     ?view('crm.deal.list',["deals"=>$res->paginate(12)])
                     :view('crm.deal.dashboard',["deal"=>$res->first(),'price'=>Price::where('instrument_id','=',$res->first()->instrument_id)->orderBy('id','desc')->first()])
                 );
+        
         // return response()->json($res->paginate(24),200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
 
         $res = [];

@@ -81,6 +81,12 @@ body.active{
 .contenta.info .item .inner:first-child{width: 30%;}
 .contenta.info .item .inner:last-child{width: 70%;}
 .contenta.info .item .inner .tabs_in_dash{display: none;}
+.contenta.info .item .inner .tabs_in_dash.verification{background: #e8e8e8;}
+.contenta.info .item .inner .tabs_in_dash.verification .item .inner{width: 100%;text-align: center;}
+.contenta.info .item .inner .tabs_in_dash.verification .item .inner p{}
+.contenta.info .item .inner .tabs_in_dash.verification .item .inner input[type="file"]{width: 585px;margin: 0 auto;padding: 5px 15px;background-color: #aab2bd;}
+.contenta.info .item .inner .tabs_in_dash.verification .item .inner input[type="submit"]{font-size: 16px;line-height: 28px;color: #fff;width: 263px;text-align: center;margin-top: 21px;background-color: #4f6d8c;-webkit-border-radius: 5px;border-radius: 5px;cursor: pointer;-webkit-box-shadow: inset 0 0 15px #fff;box-shadow: inset 0 0 15px #fff;}
+.contenta.info .item .inner .tabs_in_dash.verification .item .inner input:hover[type="submit"]{box-shadow: inset 0 0 5px #fff;}
 .contenta.info .item .inner .tabs_in_dash.active{display: block;}
 .user-chart-tuner{margin: 10px 0;}
 #user_chart{height: 300px;}

@@ -8,6 +8,7 @@ use App\User;
 use App\UserMeta;
 use App\UserRights;
 use App\UserStatus;
+use App\UserDocument;
 use App\Currency;
 use App\Instrument;
 use App\Deal;
@@ -66,7 +67,7 @@ class UserController extends Controller{
         $res = DataArray::sort($res,$rq->input('sort',false));
         return ($format=='json')
                 ?response()->json($res,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT)
-                :view('crm.user.dashboard',["user"=>$res[0],"deals"=>Deal::byUser($id)->byStatus("open")->get()]);
+                :view('crm.user.dashboard',["user"=>$res[0],"deals"=>Deal::byUser($id)->byStatus("open")->get(),"documents"=>UserDocument::byUser(User::find($res[0]["id"]))->get()]);
             ;
     }
     public function ulist(Request $rq,$format='json'){
@@ -229,5 +230,8 @@ class UserController extends Controller{
             ];
         }
         return response()->json($res,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+    }
+    public function documents(Request $rq,$format,$id){
+        return response()->json(UserDocument::user(User::find($id))->get(),200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
     }
 }

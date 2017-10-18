@@ -110,7 +110,7 @@
                             xhrMaxInterval: 45000,  // renewal full data interval
                             xhrMinInterval: 1000,    // ticks - min interval to update and redraw last close data
                             btnVolume: true,       // bottom volume graph default state
-                            colorCandleBodyUp: "#f59" // example to change positive candle body
+                            // colorCandleBodyUp: "#f59" // example to change positive candle body
                         });
                         window.MainChart.reloadData(true);
                         window.MainChart.on("tickEvent", function(evt, tickVol, direction, element){

@@ -22,9 +22,18 @@ body {
     border: solid 1px green;
     word-break: break-word;
 }
-.stock-graph, .stock-graph:hover{
+.stock-graph, .stock-graph:hover,
+.graph, .graph:hover{
     cursor: crosshair;
 }
-.stock-graph:active{
+.stock-graph:active,
+.graph:active{
     cursor: -webkit-grabbing!important;
 }
+
+.stock-graph{padding: 0px 0;background-color: #1d2a38;border-radius: 30px;}
+.graph{padding: 10px;background-color: #fff;margin-bottom: 0;}
+.stock-graph svg,
+.graph svg{border: 0px solid rgba(255,255,255,0.01);border-radius: 20px;overflow: hidden;width: 100%;height: 100%;}
+.label-y{fill: red;}
+.candle-label,.series-x{font-size: 20px;color: #fff;}

@@ -35,10 +35,14 @@
             }
         }, false);
     </script>
-    <a href="#" class="button" onclick="toggleFullScreen();"></a>
-    <a href="#" class="b_close" onclick="toggleFullScreen();"></a>
-    <a href="#" class="open hidden">@lang('messages.Open_sd')</a>
-    <a href="#" class="closee hidden">@lang('messages.Close_sd')</a>
+    <div class="ttt">        
+        <!-- <a href="#" class="b_close" onclick="toggleFullScreen();"></a> -->
+        <a href="#" class="open hidden">@lang('messages.Open_sd')</a>
+        <a href="#" class="closee hidden">@lang('messages.Close_sd')</a>
+        <a href="#" class="open2 hidden">@lang('messages.Instruments')</a>
+        <a href="#" class="closee2 hidden">@lang('messages.Close_sd')</a>
+        <a href="#" class="button" onclick="toggleFullScreen();"></a>
+    </div>
 
     <!-- <div id="charttitle" class="graf-title">
     </div>

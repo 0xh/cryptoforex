@@ -66,7 +66,8 @@ class LoadPrices extends Command
                     $price = Price::create([
                         'price'=>$rawpr->$tosymCode,
                         'instrument_id'=>$instrument->id,
-                        'source_id'=>$source->id
+                        'source_id'=>$source->id,
+                        // 'volation' => ((floatval($oldprice->price) < floatval($rawpr->$tosymCode))?1:-1)
                     ]);
                     echo $fsym->code."/".$tsym->code.": was ".(is_null($oldprice)?"-":$oldprice->price)." - now ".$rawpr->$tosymCode."\n";
                 }
