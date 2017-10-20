@@ -35,10 +35,14 @@
             }
         }, false);
     </script>
-    <a href="#" class="button" onclick="toggleFullScreen();"></a>
-    <a href="#" class="b_close" onclick="toggleFullScreen();"></a>
-    <a href="#" class="open hidden"><?php echo app('translator')->getFromJson('messages.Open_sd'); ?></a>
-    <a href="#" class="closee hidden"><?php echo app('translator')->getFromJson('messages.Close_sd'); ?></a>
+    <div class="ttt">        
+        <!-- <a href="#" class="b_close" onclick="toggleFullScreen();"></a> -->
+        <a href="#" class="open hidden"><?php echo app('translator')->getFromJson('messages.Open_sd'); ?></a>
+        <a href="#" class="closee hidden"><?php echo app('translator')->getFromJson('messages.Close_sd'); ?></a>
+        <a href="#" class="open2 hidden"><?php echo app('translator')->getFromJson('messages.Instruments'); ?></a>
+        <a href="#" class="closee2 hidden"><?php echo app('translator')->getFromJson('messages.Close_sd'); ?></a>
+        <a href="#" class="button" onclick="toggleFullScreen();"></a>
+    </div>
 
     <!-- <div id="charttitle" class="graf-title">
     </div>
@@ -58,42 +62,6 @@
     <link rel="stylesheet" type="text/css" href="/chart/assets/plugins/chart/chart.css">
 
 
-    <div class="button_top flex center">
-        <button type="button" id="panel-show-hide" class="btn btn-primary"><i class="ic ic1"></i>Candlesticks</button>
-        <button type="button" id="area-show-hide" class="btn btn-primary"><i class="ic ic2"></i>Area</button>
-        <button type="button" id="candle-show-hide" class="btn btn-primary"><i class="ic ic3"></i>Volume</button>
-        <div class="btn-group btn-group-sm" id="candle-type" role="group" aria-label="Candle type">
-            <button type="button" class="btn btn-secondary">1M</button>
-            <button type="button" class="btn btn-secondary">5M</button>
-            <button type="button" class="btn btn-secondary">15M</button>
-            <button type="button" class="btn btn-secondary">30M</button>
-            <button type="button" class="btn btn-secondary">45M</button>
-            <button type="button" class="btn btn-secondary">1H</button>
-        </div>
-        <div class="inner flex flex-top red">
-            <div class="box">
-                <span>
-                    <img src="/images/icon/btc.png" alt="">
-                    <img src="/images/icon/dgb.png" alt="">
-                </span>
-                <!-- <p class="viz"><i class="down"></i>(0.008%)</p> -->
-                <p class="hidden slice">btc/dgb</p>
-            </div>
-            <!-- <div class="box">
-                <strong>1.1967<sub>9</sub></strong>
-                <p class="viz">L.1.19524</p>
-            </div>
-            <div class="box">
-                <strong>1.1967<sub>9</sub></strong>
-                <p class="viz">H.1.20079</p>
-                <p class="hidden slice"><i class="down"></i>(0.18%)</p>
-            </div> -->
-        </div>
-        <div class="info flex" id="charttitle">
-            <p>BTC/USD</p>&nbsp;&nbsp;
-            <p>3,967.28</p>
-          </div>
-    </div>
     <!-- <div class="row">
         <div class="col-md-3 text-left">
            <button type="button" id="panel-show-hide" class="btn btn-primary">add panel</button>
@@ -110,6 +78,51 @@
         </div>
     </div> -->
     <div id="main" class="stock-graph">
+        <div class="button_top flex center">
+            <button type="button" id="panel-show-hide" class="btn btn-primary panel-show-hide"><i class="ic ic1"></i>Volume</button>
+            <button type="button" id="line-show-hide" class="btn btn-primary line-show-hide"><i class="ic ic2"></i>Line</button>
+            <button type="button" id="candle-show-hide" class="btn btn-primary candle-show-hide"><i class="ic ic3"></i>Candlesticks</button>
+            <button type="button" id="area-show-hide" class="btn btn-primary area-show-hide"><i class="ic ic4"></i>Area</button>
+            <!-- <div class="btn-group btn-group-sm" id="candle-type" role="group" aria-label="Candle type">
+                <button type="button" class="btn btn-secondary">1M</button>
+                <button type="button" class="btn btn-secondary">5M</button>
+                <button type="button" class="btn btn-secondary">15M</button>
+                <button type="button" class="btn btn-secondary">30M</button>
+                <button type="button" class="btn btn-secondary">45M</button>
+                <button type="button" class="btn btn-secondary">1H</button>
+            </div> -->
+            <div class="inner flex flex-top red">
+                <div class="box">
+                    <span>
+                        <img src="/images/icon/btc.png" alt="">
+                        <img src="/images/icon/dgb.png" alt="">
+                    </span>
+                    <!-- <p class="viz"><i class="down"></i>(0.008%)</p> -->
+                    <p class="hidden slice">btc/dgb</p>
+                </div>
+                <!-- <div class="box">
+                    <strong>1.1967<sub>9</sub></strong>
+                    <p class="viz">L.1.19524</p>
+                </div>
+                <div class="box">
+                    <strong>1.1967<sub>9</sub></strong>
+                    <p class="viz">H.1.20079</p>
+                    <p class="hidden slice"><i class="down"></i>(0.18%)</p>
+                </div> -->
+            </div>
+            <div class="info flex" id="charttitle">
+                <p>BTC/USD</p>&nbsp;&nbsp;
+                <p>3,967.28</p>
+              </div>
+        </div>
+    </div>
+    <div class="btn-group btn-group-sm" id="candle-type" role="group" aria-label="Candle type">
+        <button type="button" class="btn btn-secondary">1M</button>
+        <button type="button" class="btn btn-secondary">5M</button>
+        <button type="button" class="btn btn-secondary">15M</button>
+        <button type="button" class="btn btn-secondary">30M</button>
+        <button type="button" class="btn btn-secondary">45M</button>
+        <button type="button" class="btn btn-secondary">1H</button>
     </div>
     <!-- <div class="row">
         <div class="col-md-12 text-right">

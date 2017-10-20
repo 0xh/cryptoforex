@@ -6,6 +6,7 @@ use App\Instrument;
 use App\InstrumentHistory;
 use App\Currency;
 use App\Price;
+use App\Histo;
 use Illuminate\Http\Request;
 
 class InstrumentController extends Controller
@@ -25,7 +26,9 @@ class InstrumentController extends Controller
             $fsym = Currency::find($row->from_currency_id);
             $title = $fsym->code."/".$tsym->code;
             $prices =Price::where('instrument_id',$row->id)->orderBy('id', 'desc')->limit(2)->get();
-            $diff =(!is_null($prices) && !empty($price))?(100*floatval($prices[0]->price)/floatval( $prices[1]->price) - 100):0;
+            $histo = Histo::where('instrument_id',$row->id)->orderBy('id', 'desc')->first();
+            // $diff =(!is_null($prices) && !empty($price))?(100*floatval($prices[0]->price)/floatval( $prices[1]->price) - 100):0;
+            $diff =(!is_null($histo) && !empty($histo))?(100*floatval($histo->close)/floatval( $histo->open) - 100):0;
             $direction = ($diff<0)?-1:1;
             $res[] = [
                 "id" => $row->id,
@@ -33,6 +36,7 @@ class InstrumentController extends Controller
                 "diff" => $diff,
                 "direction" => $direction,
                 "price" =>  $prices[0]->price,
+                "histo" =>  $histo,
                 "from_currency" => $fsym,
                 "to_currency" => $tsym,
                 "commission" => $row->commission,

@@ -25,6 +25,16 @@
               @if(Auth::guest())
               @else
               <script>
+                function dateTime(d){
+                    if(d==undefined || d==null)return '';
+                    var dd =  new Date(d*1000),r = '',pad=function(v){
+                        v = v.toString().replace(/\s*(\S+)\s*/,'$1');
+                        return ((v.length==1)?'0':'')+v;
+                    };
+                    r = dd.getFullYear()+"-"+pad(dd.getMonth()+1)+"-"+pad(dd.getDate());
+                    r+= "&nbsp;<sup>"+pad(dd.getHours())+':'+pad(dd.getMinutes())+"</sup>";
+                    return r;
+                }
                 function historyCloseDeals(container,d,x,s){
                     container.html('');
                     for(var i in d.data){
@@ -38,9 +48,9 @@
 
                         // s+= '<td><i class="ic ic_btc"></i><i class="ic ic_lte"></i>'+inst+'</td>';
                         s+= '<td>'+inst+'</td>';
-                        s+= '<td class="'+((row.direction==1)?"down":"up")+'">'+openTime.toGMTString()+'</td>';
+                        s+= '<td class="'+((row.direction==1)?"down":"up")+'">'+dateTime(row.open.created_at)+'</td>';
                         s+= '<td>'+row.open.price+'</td>';
-                        s+= (row.close!=null)?'<td>'+closeTime.toGMTString()+'</td>':'<td>&nbsp;</td>';
+                        s+= (row.close!=null)?'<td>'+dateTime(row.close.created_at)+'</td>':'<td>&nbsp;</td>';
                         s+= (row.close!=null)?'<td>'+row.close.price+'</td>':'<td>&nbsp;</td>';
                         s+= '<td>'+currency.value(row.amount,'USD')+' <span>x'+row.multiplier+'</span></td>';
                         s+= '<td class="'+((row.close_price==undefined)?'profit':"")+'">'+currency.value(parseFloat(row.amount)+parseFloat(row.profit),'USD',4)+'</td>';
@@ -58,14 +68,15 @@
                             inst = row.instrument.from.code+'/'+row.instrument.to.code,
                             prct = 100*(row.profit/row.amount),
                             openTime = new Date(row.open.created_at*1000),
-                            profitClass = '';
+                            profitClass = '',profitClass2 = '';
                         // console.debug(row.id+' ('+row.volation+') => '+profitClass);
                         if(parseInt(row.volation)==1)profitClass='bg_green';
                         else if(parseInt(row.volation)==-1)profitClass='bg_red';
                         // s+= '<td><i class="ic ic_btc"></i><i class="ic ic_lte"></i>'+inst+'</td>';
                         s+= '<td>'+inst+'</td>';
-                        s+= '<td class="'+((row.direction==1)?"down":"up")+'">'+openTime.toGMTString()+'</td>';
+                        s+= '<td class="'+((row.direction==1)?"down":"up")+'">'+dateTime(row.open.created_at)+'</td>';
                         s+= '<td>'+row.open.price+'</td>';
+                        s+= '<td class="'+profitClass2+'">'+((row.close!=undefined)?row.close.price:'&nbsp;')+'</td>';
                         s+= '<td>'+currency.value(row.amount,'USD')+' <span>x'+row.multiplier+'</span></td>';
 
                         s+= '<td class="'+profitClass+'">'+currency.value(parseFloat(row.amount)+parseFloat(row.profit),'USD',4)+'</td>';
@@ -80,6 +91,7 @@
                   <th>@lang('messages.Assets')</th>
                   <th>@lang('messages.D/T/O')</th>
                   <th>@lang('messages.open_price')</th>
+                  <th>@lang('messages.current_price')</th>
                   <th>@lang('messages.invested')</th>
                   <th>@lang('messages.received')</th>
                   <th>@lang('messages.Profit') %</th>

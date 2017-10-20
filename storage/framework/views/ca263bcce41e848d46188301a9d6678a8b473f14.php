@@ -62,7 +62,7 @@
     </script>
 </head>
 <body class="home">
-  <div id="page-preloader">
+  <!-- <div id="page-preloader">
       <div class="diamonds-spinner">
           <div class="spinner-image">
               <img src="images/icon/btc.png" alt="." style="display: none">
@@ -79,148 +79,147 @@
           <div class="spinner-image">
               <img src="images/icon/msc.png" alt="." style="display: none">
           </div>
-          <!-- <div class="spinner-image">
-              <img src="images/icon/ppc.png" alt="." style="display: none">
-          </div>
-          <div class="spinner-image">
-              <img src="images/icon/rdd.png" alt="." style="display: none">
-          </div> -->
       </div>
-  </div>
+  </div> -->
         <?php if(!Auth::guest()): ?>
-        <div class="informer-wrap">
-          <div id="informer">
-            <div class="flex">
-              <img src="/images/trade-down.png" alt="down">
-              <span class="img">
-                <img src="/images/icon/btc.png" alt="">
-                <img src="/images/icon/dgb.png" alt="">
-              </span>
-              <span style="color:#FF3100">1.1965</span> |
+
+        <!-- <div id="scroller_container">
+          <div id="scroller"> -->
+            <div class="informer-wrap">
+              <div id="informer">
+                <div class="flex">
+                  <img src="/images/trade-down.png" alt="down">
+                  <span class="img">
+                    <img src="/images/icon/btc.png" alt="">
+                    <img src="/images/icon/dgb.png" alt="">
+                  </span>
+                  <span style="color:#FF3100">1.1965</span> |
+                </div>
+                <div class="flex">
+                  <img src="/images/trade-down.png" alt="down">
+                  <span class="img">
+                      <img src="/images/icon/doge.png" alt="">
+                      <img src="/images/icon/eth.png" alt="">
+                  </span>
+                  <span style="color:#FF3100">110.16</span> |
+                </div>
+                <div class="flex">
+                  <img src="/images/trade-down.png" alt="down">
+                  <span class="img">
+                      <img src="/images/icon/msc.png" alt="">
+                      <img src="/images/icon/nvc.png" alt="">
+                  </span>
+                  <span style="color:#FF3100">110.16</span> |
+                </div>
+                <div class="flex">
+                  <img src="/images/trade-down.png" alt="down">
+                  <span class="img">
+                      <img src="/images/icon/ppc.png" alt="">
+                      <img src="/images/icon/rdd.png" alt="">
+                  </span>
+                  <span style="color:#FF3100">110.16</span> |
+                </div>
+                <div class="flex">
+                  <img src="/images/trade-down.png" alt="down">
+                  <span class="img">
+                      <img src="/images/icon/start.png" alt="">
+                      <img src="/images/icon/storj.png" alt="">
+                  </span>
+                  <span style="color:#FF3100">110.16</span> |
+                </div>
+                <div class="flex">
+                  <img src="/images/trade-down.png" alt="down">
+                  <span class="img">
+                      <img src="/images/icon/usdt.png" alt="">
+                      <img src="/images/icon/usnbt.png" alt="">
+                  </span>
+                  <span style="color:#FF3100">110.16</span> |
+                </div>
+                <div class="flex">
+                  <img src="/images/trade-down.png" alt="down">
+                  <span class="img">
+                      <img src="/images/icon/usdt.png" alt="">
+                      <img src="/images/icon/usnbt.png" alt="">
+                  </span>
+                  <span style="color:#FF3100">110.16</span> |
+                </div>
+                <div class="flex">
+                  <img src="/images/trade-down.png" alt="down">
+                  <span class="img">
+                      <img src="/images/icon/xcp.png" alt="">
+                      <img src="/images/icon/btc.png" alt="">
+                  </span>
+                  <span style="color:#FF3100">110.16</span> |
+                </div>
+                <div class="flex">
+                  <img src="/images/trade-down.png" alt="down">
+                  <span class="img">
+                    <img src="/images/icon/btc.png" alt="">
+                    <img src="/images/icon/dgb.png" alt="">
+                  </span>
+                  <span style="color:#FF3100">1.1965</span> |
+                </div>
+                <div class="flex">
+                  <img src="/images/trade-down.png" alt="down">
+                  <span class="img">
+                      <img src="/images/icon/doge.png" alt="">
+                      <img src="/images/icon/eth.png" alt="">
+                  </span>
+                  <span style="color:#FF3100">110.16</span> |
+                </div>
+                <div class="flex">
+                  <img src="/images/trade-down.png" alt="down">
+                  <span class="img">
+                      <img src="/images/icon/msc.png" alt="">
+                      <img src="/images/icon/nvc.png" alt="">
+                  </span>
+                  <span style="color:#FF3100">110.16</span> |
+                </div>
+                <div class="flex">
+                  <img src="/images/trade-down.png" alt="down">
+                  <span class="img">
+                      <img src="/images/icon/ppc.png" alt="">
+                      <img src="/images/icon/rdd.png" alt="">
+                  </span>
+                  <span style="color:#FF3100">110.16</span> |
+                </div>
+                <div class="flex">
+                  <img src="/images/trade-down.png" alt="down">
+                  <span class="img">
+                      <img src="/images/icon/start.png" alt="">
+                      <img src="/images/icon/storj.png" alt="">
+                  </span>
+                  <span style="color:#FF3100">110.16</span> |
+                </div>
+                <div class="flex">
+                  <img src="/images/trade-down.png" alt="down">
+                  <span class="img">
+                      <img src="/images/icon/usdt.png" alt="">
+                      <img src="/images/icon/usnbt.png" alt="">
+                  </span>
+                  <span style="color:#FF3100">110.16</span> |
+                </div>
+                <div class="flex">
+                  <img src="/images/trade-down.png" alt="down">
+                  <span class="img">
+                      <img src="/images/icon/usdt.png" alt="">
+                      <img src="/images/icon/usnbt.png" alt="">
+                  </span>
+                  <span style="color:#FF3100">110.16</span> |
+                </div>
+                <div class="flex">
+                  <img src="/images/trade-down.png" alt="down">
+                  <span class="img">
+                      <img src="/images/icon/xcp.png" alt="">
+                      <img src="/images/icon/btc.png" alt="">
+                  </span>
+                  <span style="color:#FF3100">110.16</span> |
+                </div>
+              </div>
             </div>
-            <div class="flex">
-              <img src="/images/trade-down.png" alt="down">
-              <span class="img">
-                  <img src="/images/icon/doge.png" alt="">
-                  <img src="/images/icon/eth.png" alt="">
-              </span>
-              <span style="color:#FF3100">110.16</span> |
-            </div>
-            <div class="flex">
-              <img src="/images/trade-down.png" alt="down">
-              <span class="img">
-                  <img src="/images/icon/msc.png" alt="">
-                  <img src="/images/icon/nvc.png" alt="">
-              </span>
-              <span style="color:#FF3100">110.16</span> |
-            </div>
-            <div class="flex">
-              <img src="/images/trade-down.png" alt="down">
-              <span class="img">
-                  <img src="/images/icon/ppc.png" alt="">
-                  <img src="/images/icon/rdd.png" alt="">
-              </span>
-              <span style="color:#FF3100">110.16</span> |
-            </div>
-            <div class="flex">
-              <img src="/images/trade-down.png" alt="down">
-              <span class="img">
-                  <img src="/images/icon/start.png" alt="">
-                  <img src="/images/icon/storj.png" alt="">
-              </span>
-              <span style="color:#FF3100">110.16</span> |
-            </div>
-            <div class="flex">
-              <img src="/images/trade-down.png" alt="down">
-              <span class="img">
-                  <img src="/images/icon/usdt.png" alt="">
-                  <img src="/images/icon/usnbt.png" alt="">
-              </span>
-              <span style="color:#FF3100">110.16</span> |
-            </div>
-            <div class="flex">
-              <img src="/images/trade-down.png" alt="down">
-              <span class="img">
-                  <img src="/images/icon/usdt.png" alt="">
-                  <img src="/images/icon/usnbt.png" alt="">
-              </span>
-              <span style="color:#FF3100">110.16</span> |
-            </div>
-            <div class="flex">
-              <img src="/images/trade-down.png" alt="down">
-              <span class="img">
-                  <img src="/images/icon/xcp.png" alt="">
-                  <img src="/images/icon/btc.png" alt="">
-              </span>
-              <span style="color:#FF3100">110.16</span> |
-            </div>
-            <div class="flex">
-              <img src="/images/trade-down.png" alt="down">
-              <span class="img">
-                <img src="/images/icon/btc.png" alt="">
-                <img src="/images/icon/dgb.png" alt="">
-              </span>
-              <span style="color:#FF3100">1.1965</span> |
-            </div>
-            <div class="flex">
-              <img src="/images/trade-down.png" alt="down">
-              <span class="img">
-                  <img src="/images/icon/doge.png" alt="">
-                  <img src="/images/icon/eth.png" alt="">
-              </span>
-              <span style="color:#FF3100">110.16</span> |
-            </div>
-            <div class="flex">
-              <img src="/images/trade-down.png" alt="down">
-              <span class="img">
-                  <img src="/images/icon/msc.png" alt="">
-                  <img src="/images/icon/nvc.png" alt="">
-              </span>
-              <span style="color:#FF3100">110.16</span> |
-            </div>
-            <div class="flex">
-              <img src="/images/trade-down.png" alt="down">
-              <span class="img">
-                  <img src="/images/icon/ppc.png" alt="">
-                  <img src="/images/icon/rdd.png" alt="">
-              </span>
-              <span style="color:#FF3100">110.16</span> |
-            </div>
-            <div class="flex">
-              <img src="/images/trade-down.png" alt="down">
-              <span class="img">
-                  <img src="/images/icon/start.png" alt="">
-                  <img src="/images/icon/storj.png" alt="">
-              </span>
-              <span style="color:#FF3100">110.16</span> |
-            </div>
-            <div class="flex">
-              <img src="/images/trade-down.png" alt="down">
-              <span class="img">
-                  <img src="/images/icon/usdt.png" alt="">
-                  <img src="/images/icon/usnbt.png" alt="">
-              </span>
-              <span style="color:#FF3100">110.16</span> |
-            </div>
-            <div class="flex">
-              <img src="/images/trade-down.png" alt="down">
-              <span class="img">
-                  <img src="/images/icon/usdt.png" alt="">
-                  <img src="/images/icon/usnbt.png" alt="">
-              </span>
-              <span style="color:#FF3100">110.16</span> |
-            </div>
-            <div class="flex">
-              <img src="/images/trade-down.png" alt="down">
-              <span class="img">
-                  <img src="/images/icon/xcp.png" alt="">
-                  <img src="/images/icon/btc.png" alt="">
-              </span>
-              <span style="color:#FF3100">110.16</span> |
-            </div>
-          </div>
-          <?php endif; ?>
-      </div>
+          <!-- </div>
+        </div> -->
+        <?php endif; ?>
         <?php echo $__env->make('layouts.top', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
         <?php echo $__env->yieldContent('content'); ?>
 
@@ -241,8 +240,8 @@
         <div class="bgc"></div>
 
         <div class="thanks">
-          <strong>Ваши данные приняты.</strong>
-          <p>Наш специалист свяжется с Вами в ближайшее время.</p>
+          <strong><?php echo app('translator')->getFromJson('messages.Your_details'); ?></strong>
+          <p><?php echo app('translator')->getFromJson('messages.Our_specialist'); ?></p>
         </div>
 
         <div class="mobi">
@@ -256,20 +255,20 @@
           <div class="flex flex-top">
             <div class="item">
               <div class="top flex">
-                <strong>Основной баланс</strong>
+                <strong><?php echo app('translator')->getFromJson('messages.Basic_balance'); ?></strong>
                 <p class="sum">$75 386</p>
               </div>
               <div class="con">
-                <strong>Вывод средств</strong>
+                <strong><?php echo app('translator')->getFromJson('messages.Withdrawal_of_funds'); ?></strong>
                 <form action="#">
-                  <input type="text" name="summ" placeholder="Сумма">
+                  <input type="text" name="summ" placeholder="<?php echo app('translator')->getFromJson('messages.Amount'); ?>">
                   <select name="out">
-                    <option disabled value="">Способ вывода</option>
-                    <option value="">первый</option>
-                    <option value="">второй</option>
-                    <option value="">следующий</option>
+                    <option disabled value=""><?php echo app('translator')->getFromJson('messages.Output_method'); ?></option>
+                    <option value=""><?php echo app('translator')->getFromJson('messages.first'); ?></option>
+                    <option value=""><?php echo app('translator')->getFromJson('messages.second'); ?></option>
+                    <option value=""><?php echo app('translator')->getFromJson('messages.following'); ?></option>
                   </select>
-                  <input type="submit" value="Заказать вывод">
+                  <input type="submit" value="<?php echo app('translator')->getFromJson('messages.Order_output'); ?>">
                 </form>
               </div>
             </div>
@@ -281,20 +280,20 @@
           <div class="flex flex-top">
             <div class="item">
               <div class="top flex">
-                <strong>Основной баланс</strong>
+                <strong><?php echo app('translator')->getFromJson('messages.Basic_balance'); ?></strong>
                 <p class="sum">$75 386</p>
               </div>
               <div class="con">
-                <strong>Ввод средств</strong>
+                <strong><?php echo app('translator')->getFromJson('messages.Withdrawal_of_funds'); ?></strong>
                 <form action="#">
-                  <input type="text" name="summ" placeholder="Сумма">
+                  <input type="text" name="summ" placeholder="<?php echo app('translator')->getFromJson('messages.Amount'); ?>">
                   <select name="out">
-                    <option disabled value="">Способ вывода</option>
-                    <option value="">первый</option>
-                    <option value="">второй</option>
-                    <option value="">следующий</option>
+                    <option disabled value=""><?php echo app('translator')->getFromJson('messages.Output_method'); ?></option>
+                    <option value=""><?php echo app('translator')->getFromJson('messages.first'); ?></option>
+                    <option value=""><?php echo app('translator')->getFromJson('messages.second'); ?></option>
+                    <option value=""><?php echo app('translator')->getFromJson('messages.following'); ?></option>
                   </select>
-                  <input type="submit" value="Ввод средств">
+                  <input type="submit" value="<?php echo app('translator')->getFromJson('messages.Order_output'); ?>">
                 </form>
               </div>
             </div>
@@ -411,79 +410,79 @@
           <div class="close"></div>
           <div class="top">
             <div class="container">
-              <p>Пожалуйста, заполните форму, проверьте верность введенных данных и введите пароль</p>
+              <p><?php echo app('translator')->getFromJson('messages.pliz'); ?></p>
             </div>
           </div>
           <div class="tabs">
             <div class="container">
               <ul class="tabs__cab flex width">
-                <li class="active">Личный данные</li>
-                <li>Поменять пароль</li>
-                <li>Верификация</li>
+                <li class="active"><?php echo app('translator')->getFromJson('messages.Personal-Information'); ?></li>
+                <li><?php echo app('translator')->getFromJson('messages.Change_Password'); ?></li>
+                <li><?php echo app('translator')->getFromJson('messages.Verification'); ?></li>
               </ul>
 
               <div class="tab_cab flex flex-top active">
                 <div class="item flex column">
                   <div class="inner">
-                    <label for="name">Имя</label>
-                    <input type="text" name="name" placeholder="Введите имя">
+                    <label for="name"><?php echo app('translator')->getFromJson('messages.name'); ?></label>
+                    <input type="text" name="name" placeholder="<?php echo app('translator')->getFromJson('messages.Enter_your_name'); ?>">
                   </div>
                   <div class="inner">
-                    <label for="l_name">Фамилия</label>
-                    <input type="text" name="l_name" placeholder="Введите фамилию">
+                    <label for="l_name"><?php echo app('translator')->getFromJson('messages.Surname'); ?></label>
+                    <input type="text" name="l_name" placeholder="<?php echo app('translator')->getFromJson('messages.Enter_last_name'); ?>">
                   </div>
                   <div class="inner">
-                    <label for="l_name_l">Отчество</label>
-                    <input type="text" name="l_name_l" placeholder="Введите отчество">
+                    <label for="l_name_l"><?php echo app('translator')->getFromJson('messages.middle-name'); ?></label>
+                    <input type="text" name="l_name_l" placeholder="<?php echo app('translator')->getFromJson('messages.Enter_middle_name'); ?>">
                   </div>
                   <div class="inner">
-                    <label for="country">Страна</label>
-                    <input type="text" name="country" placeholder="Введите страну проживания">
+                    <label for="country"><?php echo app('translator')->getFromJson('messages.country'); ?></label>
+                    <input type="text" name="country" placeholder="<?php echo app('translator')->getFromJson('messages.Enter-country-of-residence'); ?>">
                   </div>
                   <div class="inner">
-                    <label for="city">Город</label>
-                    <input type="text" name="city" placeholder="Введите название города">
+                    <label for="city"><?php echo app('translator')->getFromJson('messages.city'); ?></label>
+                    <input type="text" name="city" placeholder="<?php echo app('translator')->getFromJson('messages.Enter_the_name_of_the_city'); ?>">
                   </div>
                   <div class="inner">
-                    <label for="name">Индекс</label>
-                    <input type="text" name="index" placeholder="Введите индекс">
+                    <label for="name"><?php echo app('translator')->getFromJson('messages.index'); ?></label>
+                    <input type="text" name="index" placeholder="<?php echo app('translator')->getFromJson('messages.Enter_the_index'); ?>">
                   </div>
                   <div class="inner">
-                    <label for="address1">Адрес 1</label>
-                    <input type="text" name="address1" placeholder="Введите адрес 1">
+                    <label for="address1"><?php echo app('translator')->getFromJson('messages.address'); ?> 1</label>
+                    <input type="text" name="address1" placeholder="<?php echo app('translator')->getFromJson('messages.Enter_the_address'); ?> 1">
                   </div>
                   <div class="inner">
-                    <label for="address2">Адрес 2</label>
-                    <input type="text" name="address2" placeholder="Введите адрес 2">
+                    <label for="address2"><?php echo app('translator')->getFromJson('messages.address'); ?> 2</label>
+                    <input type="text" name="address2" placeholder="<?php echo app('translator')->getFromJson('messages.Enter_the_address'); ?> 2">
                   </div>
                 </div>
                 <div class="item">
                   <div class="inner">
-                    <label for="tel">Телефон</label>
-                    <input type="tel" name="tel" placeholder="Введите номер телефона">
+                    <label for="tel"><?php echo app('translator')->getFromJson('messages.phone'); ?></label>
+                    <input type="tel" name="tel" placeholder="<?php echo app('translator')->getFromJson('messages.Enter_phone_number'); ?>">
                   </div>
                   <div class="inner">
-                    <label for="date">День рождения</label>
-                    <input type="date" name="date" placeholder="дд.мм.гггг">
+                    <label for="date"><?php echo app('translator')->getFromJson('messages.Birthday'); ?></label>
+                    <input type="date" name="date" placeholder="<?php echo app('translator')->getFromJson('messages.dd_mm_yyyy'); ?>">
                   </div>
                   <div class="inner">
-                    <label for="pasport">Серия паспорта</label>
-                    <input type="text" name="pasport" placeholder="Введите серию">
+                    <label for="pasport"><?php echo app('translator')->getFromJson('messages.Passport-Series'); ?></label>
+                    <input type="text" name="pasport" placeholder="<?php echo app('translator')->getFromJson('messages.Enter_the_series'); ?>">
                   </div>
                   <div class="inner">
-                    <label for="num_pasport">Номер паспорта</label>
-                    <input type="text" name="num_pasport" placeholder="Введите номер паспорта">
+                    <label for="num_pasport"><?php echo app('translator')->getFromJson('messages.Passport-ID'); ?></label>
+                    <input type="text" name="num_pasport" placeholder="<?php echo app('translator')->getFromJson('messages.Passport-ID'); ?>">
                   </div>
                   <div class="inner">
-                    <label for="kem">Кем выдан</label>
-                    <input type="text" name="kem" placeholder="">
+                    <label for="kem"><?php echo app('translator')->getFromJson('messages.Issued-by'); ?></label>
+                    <input type="text" name="kem" placeholder="<?php echo app('translator')->getFromJson('messages.Issued-by'); ?>">
                   </div>
                   <div class="inner">
-                    <label for="until">Действителен до</label>
-                    <input type="date" name="until" placeholder="дд.мм.гггг">
+                    <label for="until"><?php echo app('translator')->getFromJson('messages.Valid-until'); ?></label>
+                    <input type="date" name="until" placeholder="<?php echo app('translator')->getFromJson('messages.dd_mm_yyyy'); ?>">
                   </div>
                   <div class="inner">
-                    <input type="submit" value="Сохранить">
+                    <input type="submit" value="<?php echo app('translator')->getFromJson('messages.Save'); ?>">
                   </div>
                 </div>
               </div>
@@ -491,35 +490,36 @@
               <div class="tab_cab tab_cab2">
                 <div class="item flex column">
                   <div class="inner">
-                    <label for="name">Действующий пароль <abbr>*</abbr></label>
-                    <input type="password" name="pass" placeholder="Действующий пароль">
+                    <label for="name"><?php echo app('translator')->getFromJson('messages.Valid_password'); ?> <abbr>*</abbr></label>
+                    <input type="password" name="pass" placeholder="<?php echo app('translator')->getFromJson('messages.Valid_password'); ?>">
                   </div>
                   <div class="inner">
-                    <label for="name">Новый пароль <abbr>*</abbr></label>
-                    <input type="password" name="new_pass" placeholder="Введите новый пароль">
+                    <label for="name"><?php echo app('translator')->getFromJson('messages.New_password'); ?> <abbr>*</abbr></label>
+                    <input type="password" name="new_pass" placeholder="<?php echo app('translator')->getFromJson('messages.Enter_a_new_password'); ?>">
                   </div>
                   <div class="inner">
-                    <label for="name">Подтвердите пароль <abbr>*</abbr></label>
-                    <input type="password" name="new_pass_to" placeholder="Подтвердите новый пароль">
+                    <label for="name"><?php echo app('translator')->getFromJson('messages.Confirm_the_password'); ?> <abbr>*</abbr></label>
+                    <input type="password" name="new_pass_to" placeholder="<?php echo app('translator')->getFromJson('messages.Confirm_the_new_password'); ?>">
                   </div>
                   <div class="inner">
-                    <input type="submit" value="Сохранить">
+                    <input type="submit" value="<?php echo app('translator')->getFromJson('messages.Save'); ?>">
                   </div>
                 </div>
               </div>
 
-              <div class="tab_cab tab_cab3">
+              <div class="tab_cab tab_cab3 column">
                 <div class="item flex column">
                   <div class="inner">
                     <p>
-                      Пожалуйста, загрузите копию или фотографию <br />документа удостоверяющую Вашу личность
+                      <?php echo app('translator')->getFromJson('messages.foto'); ?>
+                  </div>
                     </p>
                   </div>
                   <div class="inner">
                     <input type="file" name="download">
                   </div>
                   <div class="inner">
-                    <input type="submit" value="Отправить">
+                    <input type="submit" value="<?php echo app('translator')->getFromJson('messages.Send'); ?>">
                   </div>
                 </div>
               </div>
@@ -556,50 +556,55 @@
                 <div class="flex flex-top left">
                     <div class="item">
                         <div class="content flex column">
-                            <!-- <div class="item flex">
-                                <div class="pic">
-                                    <img src="images/bitcoin.png" alt="">
-                                    <img src="images/litecoin.png" alt="">
-                                </div>
-                                <div class="in">BTC/LTE</div>
-                                <div class="open tabl">
-                                    <span>Open</span>
-                                    <span>1.17805</span>
-                                </div>
-                                <div class="high tabl">
-                                    <span>High</span>
-                                    <span>1.17805</span>
-                                </div>
-                                <div class="low tabl">
-                                    <span>Low</span>
-                                    <span>1.17754</span>
-                                </div>
-                                <div class="clos tabl">
-                                    <span>Close</span>
-                                    <span>1.17763</span>
-                                </div>
-                            </div>
-                            <div class="graf">
-                                <img src="images/graf.png" alt="">
-                            </div>
-                            <div class="pagination">
-                                <ul class="flex">
-                                    <li><a href="#">1D</a></li>
-                                    <li><a href="#">7D</a></li>
-                                    <li><a href="#">1M</a></li>
-                                    <li class="active"><a href="#">3M</a></li>
-                                    <li><a href="#">6M</a></li>
-                                    <li><a href="#">YTD</a></li>
-                                    <li><a href="#">1Y</a></li>
-                                    <li><a href="#">5Y</a></li>
-                                </ul>
-                            </div> -->
+                            <script>
+
+                            // mozfullscreenerror event handler
+                            function errorHandler() {
+                                alert('mozfullscreenerror');
+                            }
+                            document.documentElement.addEventListener('mozfullscreenerror', errorHandler, false);
+
+                            // toggle full screen
+                            function toggleFullScreen() {
+                                if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement) {
+                                    if (document.documentElement.requestFullscreen) {
+                                        document.documentElement.requestFullscreen();
+                                    } else if (document.documentElement.mozRequestFullScreen) {
+                                        document.documentElement.mozRequestFullScreen();
+                                    } else if (document.documentElement.webkitRequestFullscreen) {
+                                        document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+                                    }
+                                } else {
+                                    if (document.cancelFullScreen) {
+                                        document.cancelFullScreen();
+                                    } else if (document.mozCancelFullScreen) {
+                                        document.mozCancelFullScreen();
+                                    } else if (document.webkitCancelFullScreen) {
+                                        document.webkitCancelFullScreen();
+                                    }
+                                }
+                            }
+
+                            // keydown event handler
+                            document.addEventListener('keydown', function (e) {
+                                if (e.keyCode == 13 || e.keyCode == 70) {
+                                    toggleFullScreen();
+                                }
+                            }, false);
+                        </script>
+                        <!-- <div class="ttt">
+                            <a href="#" class="open hidden"><?php echo app('translator')->getFromJson('messages.Open_sd'); ?></a>
+                            <a href="#" class="closee hidden"><?php echo app('translator')->getFromJson('messages.Close_sd'); ?></a>
+                            <a href="#" class="open2 hidden"><?php echo app('translator')->getFromJson('messages.Instruments'); ?></a>
+                            <a href="#" class="closee2 hidden"><?php echo app('translator')->getFromJson('messages.Close_sd'); ?></a>
+                            <a href="#" class="button" onclick="toggleFullScreen();"></a>
+                        </div> -->
                             <div id="chartdiv_p1" class="graph"></div>
-                            <div class="btn-group">
+                            <!-- <div class="btn-group">
                                 <button onclick="graphControl.CandleStick()">CandleStick</button>
                                 <button onclick="graphControl.Line()">Line</button>
                                 <button onclick="graphControl.OHLC()">OHLC</button>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <div class="item">
@@ -695,6 +700,7 @@
         <script src="https://www.amcharts.com/lib/3/plugins/dataloader/dataloader.min.js" type="text/javascript"></script>
         <script src="http://mcpants.github.io/jquery.shapeshift/core/jquery.shapeshift.min.js" type="text/javascript"></script>
         <!-- Scripts -->
+        <script src="<?php echo e(asset('js/jscroller-0.4.js')); ?>"></script>
         <script src="<?php echo e(asset('js/app.js')); ?>"></script>
         <script src="https://cdn.jsdelivr.net/jquery.marquee/1.4.0/jquery.marquee.min.js"></script>
         <script src="<?php echo e(asset('js/main.js')); ?>"></script>
@@ -714,5 +720,12 @@
             });
 
         </script>
+
+        <!-- <script type="text/javascript">
+          $(document).ready(function(){
+            $jScroller.add(".informer-wrap","#informer","left",10, true);
+            $jScroller.start();
+          });
+        </script> -->
 </body>
 </html>

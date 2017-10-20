@@ -5,6 +5,68 @@ function multiplier(t){
     r.text(v*amt);
 }
 </script>
+
+<div class="popup popup_open">
+  <div class="close"></div>
+  <strong>Done!</strong>
+  <p>Trade on Bitcoin is opened</p>
+  <p>Comission is $9.27 <i class="ic"></i></p>
+  <a href="#" class="order">Open new trade</a>
+</div>
+
+<div class="popup popup_close">
+  <div class="close"></div>
+  <div class="submiter tab_cap active" data-action="/deal/add" data-callback="pageReload">
+    <div class="box">
+      <div class="info flex">
+        <p>BTC/USD</p>
+        <p>3,967.28</p>
+      </div>
+      <strong><?php echo app('translator')->getFromJson('messages.Sumsd'); ?></strong>
+      <div class="number">
+        <input type="text" value="100" size="5"/>
+        <div class="wrap flex">
+          <span class="minus">-</span>
+          <span class="plus">+</span>
+        </div>
+      </div>
+      <strong><?php echo app('translator')->getFromJson('messages.Krpl'); ?></strong>
+      <form onsubmit="return false" oninput="level.value = flevel.valueAsNumber">
+        <output for="flying" name="level">0</output>
+        <input name="flevel" id="flying" type="range" min="1" max="20" value="10" step="1">
+      </form>
+    </div>
+    <div class="bot flex">
+        <input name="instrument_id" value="1" type="hidden" data-name="instrument_id"/>
+        <input name="direction" value="1" type="hidden" data-name="direction"/>
+        <input name="currency" value="USD" type="hidden" data-name="currency" />
+        <a onclick="$('[name=direction]').val(-1);" href="#" class="down flex submit">
+            <div class="flex">
+                <p>3758.</p>
+                <b>60</b>
+            </div>
+            <b><?php echo app('translator')->getFromJson('messages.SELL'); ?></b>
+        </a>
+        <a  onclick="$('[name=direction]').val(1);" href="#" class="up flex submit">
+            <div class="flex">
+                <p>3782.</p>
+                <b>50</b>
+            </div>
+            <b><?php echo app('translator')->getFromJson('messages.BUY'); ?></b>
+        </a>
+    </div>
+  </div>
+  <div class="opan_order hidden flex column">
+    <h2><?php echo app('translator')->getFromJson('messages.open'); ?></h2>
+    <div class="work_order flex">
+      <p>BTC/BCH</p>
+      <p class="down"></p>
+      <p>$ <span>180.24</span></p>
+    </div>
+    <a onclick="$('[name=direction]').val(-1);" href="#" class="down flex submit"><?php echo app('translator')->getFromJson('messages.open_new'); ?></a>
+  </div>
+</div>
+
 <div class="popup popup_order">
     <div class="close b02"></div>
     <div class="flex flex-top">
@@ -21,15 +83,15 @@ function multiplier(t){
             </div>
             <div class="item">
                 <div class="tabs_popup">
-                    <ul class="tab_item">
+                    <!-- <ul class="tab_item">
                         <li class="active">Сейчас</li>
                         <li>При котировке</li>
-                    </ul>
+                    </ul> -->
                     <div class="tab_cap active submiter" data-action="/deal/add" data-callback="pageReload">
                         <div class="box">
                             <div class="item flex">
                                 <div class="inner">
-                                    <p>Сумма сделки</p>
+                                    <p><?php echo app('translator')->getFromJson('messages.Sumsd'); ?></p>
                                 </div>
                                 <div class="inner">
                                     <input type="text" name="num" placeholder="1000" data-name="amount" value="100">
@@ -37,7 +99,7 @@ function multiplier(t){
                             </div>
                             <div class="item flex">
                                 <div class="inner">
-                                    <p>Кредитное плечо</p>
+                                    <p><?php echo app('translator')->getFromJson('messages.Krpl'); ?></p>
                                 </div>
                                 <div class="inner flex">
                                     <input type="text" name="kr" placeholder="20"  value="20" data-name="multiplier" onchange="multiplier(this)" class="multiplier" data-target=".multiplier-result">
@@ -47,7 +109,7 @@ function multiplier(t){
                             </div>
                             <div class="item flex">
                                 <div class="inner">
-                                    <p><span>Комиссия сделки</span></p>
+                                    <p><span><?php echo app('translator')->getFromJson('messages.Komsd'); ?></span></p>
                                 </div>
                                 <div class="inner">
                                     <p><span class="kr">2.673%</span></p>
@@ -56,18 +118,18 @@ function multiplier(t){
                         </div>
                         <div class="box">
                             <div class="item flex">
-                                <p>Ограничение прибыли / убытка</p>
+                                <p><?php echo app('translator')->getFromJson('messages.ogrpr'); ?></p>
                             </div>
                             <div class="item flex column">
                                 <div class="inner flex">
                                     <span class="active"></span>
-                                    <p>Прибыль</p>
+                                    <p><?php echo app('translator')->getFromJson('messages.Profit'); ?></p>
                                     <p>+ 30.00%</p>
                                     <input type="text" name="pr"  data-name="stop_high" placeholder="300" value=0>
                                 </div>
                                 <div class="inner flex">
                                     <span></span>
-                                    <p>Прибыль</p>
+                                    <p><?php echo app('translator')->getFromJson('messages.Profit'); ?></p>
                                     <p>+ 30.00%</p>
                                     <input type="text" name="yb" data-name="stop_low" placeholder="300" value=0>
                                 </div>
@@ -77,8 +139,8 @@ function multiplier(t){
                             <input name="instrument_id" value="1" type="hidden" data-name="instrument_id"/>
                             <input name="direction" value="1" type="hidden" data-name="direction"/>
                             <input name="currency" value="USD" type="hidden" data-name="currency" />
-                            <a onclick="$('[name=direction]').val(-1);" class="down submit btn">В снижение</a>
-                            <a onclick="$('[name=direction]').val(1);" class="up submit btn">В рост</a>
+                            <a onclick="$('[name=direction]').val(-1);" class="down submit btn"><?php echo app('translator')->getFromJson('messages.SELL'); ?></a>
+                            <a onclick="$('[name=direction]').val(1);" class="up submit btn"><?php echo app('translator')->getFromJson('messages.BUY'); ?></a>
                         </div>
                         <!-- <div class="box">
                           <div class="item flex">
@@ -136,7 +198,7 @@ function multiplier(t){
                           <a href="#" class="order close b02">Закрыть сделку</a>
                         </div> -->
                     </div>
-                    <div class="tab_cap">
+                    <!-- <div class="tab_cap">
                         <div class="box">
                             <div class="item flex">
                                 <div class="inner">
@@ -188,7 +250,7 @@ function multiplier(t){
                             <a href="#" class="down">В снижение</a>
                             <a href="#" class="up">В рост</a>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -196,8 +258,8 @@ function multiplier(t){
             <!-- <div class="deal loader" data-action="/deal" data-autostart="true" data-refresh="10000" data-function="userDeals"></div> -->
             <div class="bot">
                 <ul class="flex">
-                    <li class="active"><a href="#">Отчет</a></li>
-                    <li><a href="#">Закрытые</a></li>
+                    <li class="active"><a href="#"><?php echo app('translator')->getFromJson('messages.Report'); ?></a></li>
+                    <li><a href="#"><?php echo app('translator')->getFromJson('messages.Closed'); ?></a></li>
                 </ul>
             </div>
         </div>

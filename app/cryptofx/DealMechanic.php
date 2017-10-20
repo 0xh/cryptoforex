@@ -15,7 +15,9 @@ class DealMechanic{
         $fork = (is_null($option)?1:floatval($option->value));
         $price_start = Price::find($deal->open_price_id);
         $price = Price::where('instrument_id',$deal->instrument_id)->orderBy('id','desc')->first();
-        $dealUpdate = [];
+        $dealUpdate = [
+            "close_price_id" => $price->id
+        ];
         $profit = $deal->amount
                     *$deal->multiplier
                     *(
@@ -35,7 +37,7 @@ class DealMechanic{
         $dealCloseStatus = DealStatus::where('code','close')->first();
         if($deal->stop_low>0 && ($deal->amount+$profit)<=$deal->stop_low){
             $dealUpdate["profit"] = $deal->stop_low - $deal->amount;
-            $dealUpdate["close_price_id"] = $price->id;
+
             $dealUpdate["status_id"] = $dealCloseStatus->id;
             DealHistory::create([
                 'deal_id'=>$deal->id,
@@ -47,7 +49,6 @@ class DealMechanic{
         }
         if($deal->stop_high>0 && $profit>=$deal->stop_high){
             $dealUpdate["profit"] = $deal->amount- $deal->stop_high;
-            $dealUpdate["close_price_id"] = $price->id;
             $dealUpdate["status_id"] = $dealCloseStatus->id;
             DealHistory::create([
                 'deal_id'=>$deal->id,
@@ -67,7 +68,6 @@ class DealMechanic{
         }
         if(($deal->amount+$profit)<=0){
             $dealUpdate["profit"]=0;
-            $dealUpdate["close_price_id"] = $price->id;
             $dealUpdate["status_id"] = $dealCloseStatus->id;
             DealHistory::create([
                 'deal_id'=>$deal->id,

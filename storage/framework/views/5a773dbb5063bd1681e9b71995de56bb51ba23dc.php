@@ -24,11 +24,12 @@
                 window.instrument = null;
                 function userInstruments(container,d,x,s){
                     // console.debug("userInstruments",container,d);
+                    container.html('');
                     var firstInstrument = true, informer = '',count=9;
                     for(var i in d){
                         var row=d[i],inst = row.title,elementId = 'instrument_chart_id_'+row.id;
                         if(--count==0)break;
-                        if(firstInstrument){
+                        if(firstInstrument && window.instrument == null){
                             firstInstrument = false;
                             window.instrument = row;
                         }
@@ -43,12 +44,12 @@
                                 +'<p class="viz"><i class="'+((row.direction>0)?"up":"down")+'"></i>('+currency.value(row.diff,'')+'%)</p><p class="hidden slice">'+inst+'</p>'
                             +'</div>';
                         s+='<div class="box">'
-                                +'<strong>'+currency.value(row.price,'')+'<sub>9</sub></strong>'
-                                +'<p class="viz">L.'+currency.value(row.price,'')+'</p>'
+                                +'<strong>'+row.histo.open.replace(/(\d+)\.?(\d*)/,'$1.<sub>$2</sub>')+'</strong>'
+                                +'<p class="viz">L.'+currency.value(row.histo.low,'')+'</p>'
                             +'</div>';
                         s+='<div class="box">'
-                                +'<strong>'+currency.value(row.price,'')+'<sub>9</sub></strong>'
-                                +'<p class="viz">H.'+currency.value(row.price,'')+'</p>'
+                                +'<strong>'+row.histo.close.replace(/(\d+)\.?(\d*)/,'$1.<sub>$2</sub>')+'</strong>'
+                                +'<p class="viz">H.'+currency.value(row.histo.high,'')+'</p>'
                             +'</div>';
 
 
@@ -110,7 +111,7 @@
                             xhrMaxInterval: 45000,  // renewal full data interval
                             xhrMinInterval: 1000,    // ticks - min interval to update and redraw last close data
                             btnVolume: true,       // bottom volume graph default state
-                            colorCandleBodyUp: "#f59" // example to change positive candle body
+                            // colorCandleBodyUp: "#f59" // example to change positive candle body
                         });
                         window.MainChart.reloadData(true);
                         window.MainChart.on("tickEvent", function(evt, tickVol, direction, element){
@@ -128,7 +129,7 @@
 
             <!-- Новая версия -->
 
-            <div class="item item2 flex flex-top loader-instruments" data-action="/json/instrument" data-name="instruments" data-autostart="true" data-refresh="0" data-function="userInstruments"></div>
+            <div class="item item2 flex flex-top loader-instruments" data-action="/json/instrument" data-name="instruments" data-autostart="true" data-refresh="3000" data-function="userInstruments"></div>
             <!-- <div class="item item2 flex flex-top">
                 <div class="inner width flex flex-top red">
                     <div class="box">
