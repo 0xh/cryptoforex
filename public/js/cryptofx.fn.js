@@ -379,7 +379,7 @@ var graphControl = {
 };
 $(document).ready(function(){
     $(".order").on("click",function(){
-        graphControl.makeChart(200,"chartdiv_p");
+        // graphControl.makeChart(200,"chartdiv_p");
     });
     $(".close").on("click",function(){
         graphControl.usePulse = false;

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\UserStatus;
+use App\UserRights;
+use App\UserMeta;
 use App\Account;
 use App\Currency;
 use App\Http\Controllers\Controller;
@@ -64,15 +67,13 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\User
      */
-    protected function create(array $data)
-    {
-        $user = User::create([
-            'name' => $data['name'],
-            'surname' => $data['surname'],
-            'email' => $data['email'],
-            'phone' => $data['phone'],
-            'password' => bcrypt($data['password']),
-        ]);
+    protected function create(array $data){
+        if(!isset($data['rights_id']))$data['rights_id']=UserRights::where('name','=','client')->first()->id;
+        if(!isset($data['status_id']))$data['status_id']=UserStatus::where('code','=','newclient')->first()->id;
+        $country = (isset($data['country']))?$data['country']:false;
+
+        $data['password'] = bcrypt($data['password']);
+        $user = User::create($data);
         $currency = Currency::where('code','USD')->first();
         $accountDemo = Account::create([
             'status'=>'open',
@@ -81,13 +82,20 @@ class RegisterController extends Controller
             'amount'=>'10000',
             'type'=>'demo'
         ]);
-        $accoun = Account::create([
+        $account = Account::create([
             'status'=>'open',
             'currency_id'=>$currency->id,
             'user_id'=>$user->id,
             'amount'=>'0',
             'type'=>'real'
         ]);
+        if($country!==false){
+            UserMeta::create([
+                'meta_name'=>'country',
+                'meta_value'=>$country,
+                'user_id'=>$user->id
+            ]);
+        }
         return $user;
     }
 }

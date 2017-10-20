@@ -26,8 +26,9 @@ class HomeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $rq){
-        $user = (Auth::guest())?null:$rq->user();
-        $accounts = (Auth::guest())?null:Account::where('user_id',$user->id)->get();
+        if(Auth::guest()) return view('welcome');
+        $user = $rq->user();
+        $accounts = Account::where('user_id',$user->id)->get();
         return view('home',["user"=>$user,"accounts"=>$accounts,'currencies'=>Currency::all()]);
     }
     /**
@@ -37,5 +38,8 @@ class HomeController extends Controller
      */
     public function page(Request $rq,$page){
         return view('page.'.$page);
+    }
+    public function page2(Request $rq,$page){
+        return view('page_home.'.$page);
     }
 }

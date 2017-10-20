@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('content')
-<main class="main">
+<main class="main blue">
+	
     <div class="container flex flex-top">
         @include('app.instruments')
         @include('app.graph')
@@ -12,9 +13,9 @@
 
 </main>
 
-<footer class="footer">
+<!-- <footer class="footer">
     <div class="container"></div>
-</footer>
+</footer> -->
 
 
 

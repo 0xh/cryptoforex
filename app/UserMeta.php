@@ -43,7 +43,7 @@ class UserMeta extends Model
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeByName($query,$n)
+    public function scopeMeta($query,$n)
     {
         return $query->where('meta_name', '=', $n);
     }

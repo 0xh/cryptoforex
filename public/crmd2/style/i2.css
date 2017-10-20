@@ -1,0 +1,97 @@
+.popup {
+  background-color: #fafafa;
+  box-shadow: 0 0 400px #000;
+}
+.popup .readonly-data {
+  list-style: none;
+  font-weight: 300;
+}
+.popup .readonly-data .data-detail {
+  font-weight: 600;
+  margin-left: 1em;
+}
+.popup .dashblock {
+  min-width: 320px;
+  position: relative;
+}
+.popup .title {
+  font-size: 20px;
+  display: block;
+  padding-left: 20px;
+}
+.popup strong.title {
+  font-size: 22px;
+  font-weight: 600;
+}
+.popup .text {
+  padding-left: 20px;
+}
+.user-instrument .button {
+  display: inline-block;
+  height: 50px;
+  line-height: 50px;
+  font-size: 20px;
+  padding: 0 10px;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 4px;
+  transition: all 0.2s ease-in;
+  overflow: hidden;
+  color: #fff;
+  background-color: #808080;
+  border: solid 3px #808080;
+  text-decoration: none;
+}
+.user-instrument .button:hover {
+  color: #808080;
+  background-color: #fff;
+}
+.user-instrument .instrument-fee label,
+.user-instrument .instrument-fee input {
+  font-size: 18px;
+  height: 36px;
+  line-height: 36px;
+  display: inline-block;
+}
+.user-instrument .instrument-fee input {
+  border-radius: 3px;
+  width: 36px;
+}
+.user-instrument .instrument-fee .button {
+  display: block;
+}
+.user-instrument .tunner .user_chart_tune {
+  font-size: 36px;
+  text-align: center;
+  width: 300px;
+  height: 64px;
+  line-height: 64px;
+  display: block;
+}
+.user-instrument .tunner .button {
+  background-color: #34323c;
+  border: solid 3px #34323c;
+  width: 92px;
+  color: #fff;
+}
+.user-instrument .tunner .button:hover {
+  background-color: #fff;
+  color: #34323c;
+}
+.user-accounts .item-bank {
+  display: block;
+  width: 100%;
+}
+.user-accounts .item-bank .user-account-name {
+  font-size: 20px;
+  margin-right: 10px;
+}
+.user-basic-info ul li {
+  font-weight: 800;
+}
+.user-basic-info ul li span {
+  font-weight: 400;
+}
+.show {
+  display: block;
+}

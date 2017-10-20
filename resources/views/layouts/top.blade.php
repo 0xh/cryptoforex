@@ -8,27 +8,46 @@
         </div>
         <div class="akk flex">
             @if (Auth::guest())
-                <p class="menu"><a href="{{ route('login') }}">@lang('messages.login')</a> or <a href="{{ route('register') }}">@lang('messages.register')</a></p>
+                @if(Request::is('login') or Request::is('register'))
+                @else
+                    <p class="menu"><a href="{{ route('login') }}">@lang('messages.login')</a> or <a href="{{ route('register') }}">@lang('messages.register')</a></p>
+                @endif
             @else
             <div class="item">
                 <nav class="nav">
                     <p class="menu">{{ Auth::user()->name }} </p>
                     <ul class="flex column hidden">
                         <div class="top br flex">
-                            <p class="active">Демо счет</p>
+                            <p class="active">@lang('messages.real')</p>
                             <div>
-                                <input type="checkbox" class="checkbox account-type" id="checkbox" value="demo">
+                                <input type="checkbox" class="checkbox account-type" id="checkbox" value="@lang('messages.demo')">
                                 <label for="checkbox" class=" account-type-switcher"></label>
                             </div>
-                            <p>Реальный счет</p>
+                            <p>@lang('messages.real')</p>
                         </div>
                         <div class="br">
-                            <li><a href="#" class="bal"><i class="ic in"></i>Пополнить счет</a></li>
-                            <li><a href="#" class="bal2"><i class="ic out"></i>Вывод средств</a></li>
-                            <li><a href="#" class="his"><i class="ic ic_his"></i>История платежей</a></li>
+                            <li><a href="#" class="bal"><i class="ic in"></i>@lang('messages.fund')</a></li>
+                            <li><a href="#" class="bal2"><i class="ic out"></i>@lang('messages.out_m')</a></li>
+                            <li><a href="#" class="his"><i class="ic ic_his"></i>@lang('messages.history')</a></li>
                         </div>
                         <div class="br">
-                            <li><a href="#" class="cab"><i class="ic prof"></i>Управление профилем</a></li>
+                            <li><a href="#" class="cab"><i class="ic prof"></i>@lang('messages.profil')</a></li>
+                        </div>
+                        <div class="br">
+                            <li><a href="#" class="cab"><i class="ic prof"></i>@lang('messages.Education')</a>
+                                <ul class="sub-menu">
+                                    <li><a href="./page/RSI">RSI</a></li>
+                                    <li><a href="./page/Stochastic">Stochastic</a></li>
+                                    <li><a href="./page/Parabolic-SAR">Parabolic SAR</a></li>
+                                    <li><a href="./page/MACD">MACD</a></li>
+                                    <li><a href="./page/SMA">SMA</a></li>
+                                    <li><a href="./page/Bollinger-Bands">@lang('messages.Bollinger-Bands')</a></li>
+                                    <li><a href="./page/Скользим-по-средним">@lang('messages.on-average')</a></li>
+                                    <li><a href="./page/MACD-professional">@lang('messages.MACD-p')</a></li>
+                                    <li><a href="./page/Японский-стандарт">@lang('messages.Japanese')</a></li>
+                                    <li><a href="./page/Закон-относительной-силы">@lang('messages.strength')</a></li>
+                                </ul>
+                            </li>
                         </div>
                         <!-- <li><a href="#">выход</a></li> -->
                         <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -65,8 +84,8 @@
                         });
                     }
                 </script>
-                <div class="inner flex loader account-display" data-action="/account?type=demo&user_id={{Auth::user()->id}}" data-autostart="true" data-refresh="60000" data-function="userAccount">
-                  <span class="demo">Демо счет</span>
+                <div class="inner flex loader account-display" data-action="/account?type=demo&user_id={{Auth::user()->id}}" data-autostart="true" data-refresh="1000" data-function="userAccount">
+                  <span class="demo">@lang('messages.demo')</span>
                   <span class="money">10 000 $</span>
                 </div>
             </div>
@@ -75,7 +94,7 @@
             </div>
             <div class="notifications hidden">
                     <div class="top flex">
-                        <p>Уведомления</p>
+                        <p>@lang('messages.Notifications')</p>
                         <div class="arrow">
                             <a href="#" class="left"></a>
                             <a href="#" class="right"></a>
@@ -122,43 +141,15 @@
             @endif
             <div class="lang">
                 <ul>
-                    <li><a href="#"><img src="images/flag-eng.png" alt=""></a></li>
-                    <li><a href="#"><img src="images/flag-arab.png" alt=""></a></li>
-                    <li class="active"><a href="#"><img src="images/Russia.png" alt=""></a></li>
+                    <li>
+                        <a href="#" class="flex center"><img src="images/flag-eng.png" alt=""></a>
+                        <ul class="sub">
+                            <li><a href="#"><img src="images/flag-arab.png" alt=""></a></li>
+                            <li class="active"><a href="#"><img src="images/Russia.png" alt=""></a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
-        </div>
-    </div>
-    <div class="informer-wrap">
-        <div id="informer">
-            <img src="/images/trade-down.png" alt="down"> EUR/USD <span style="color:#FF3100">1.1965</span> | 
-            <img src="/images/trade-down.png" alt="down"> USD/JPY <span style="color:#FF3100">110.16</span> | 
-            <img src="/images/trade-down.png" alt="down"> GBP/USD <span style="color:#FF3100">1.3285</span> | 
-            <img src="/images/trade-down.png" alt="down"> USD/CHF <span style="color:#FF3100">0.9602</span> | 
-            <img src="/images/trade-up.png" alt="up"> USD/CAD <span style="color:#6EAC2C">1.2179</span> | 
-            <img src="/images/trade-down.png" alt="down"> EUR/JPY <span style="color:#FF3100">131.80</span> | 
-            <img src="/images/trade-up.png" alt="up"> AUD/USD <span style="color:#6EAC2C">0.8018</span> | 
-            <img src="/images/trade-up.png" alt="up"> NZD/USD <span style="color:#6EAC2C">0.7283</span> | 
-            <img src="/images/trade-up.png" alt="up"> EUR/GBP <span style="color:#6EAC2C">0.9004</span> | 
-            <img src="/images/trade-down.png" alt="down"> EUR/CHF <span style="color:#FF3100">1.1492</span> | 
-            <img src="/images/trade-down.png" alt="down"> AUD/JPY <span style="color:#FF3100">88.33</span> | 
-            <img src="/images/trade-down.png" alt="down"> GBP/JPY <span style="color:#FF3100">146.34</span> | 
-            <img src="/images/trade-up.png" alt="up"> CHF/JPY <span style="color:#6EAC2C">114.69</span> | 
-            <img src="/images/trade-up.png" alt="up"> EUR/CAD <span style="color:#6EAC2C">1.4572</span> | 
-            <img src="/images/trade-up.png" alt="up"> AUD/CAD <span style="color:#6EAC2C">0.9766</span> | 
-            <img src="/images/trade-down.png" alt="down"> CAD/JPY <span style="color:#FF3100">90.42</span> | 
-            <img src="/images/trade-up.png" alt="up"> NZD/JPY <span style="color:#6EAC2C">80.26</span> | 
-            <img src="/images/trade-down.png" alt="down"> AUD/NZD <span style="color:#FF3100">1.1005</span> | 
-            <img src="/images/trade-down.png" alt="down"> GBP/AUD <span style="color:#FF3100">1.6566</span> | 
-            <img src="/images/trade-down.png" alt="down"> EUR/AUD <span style="color:#FF3100">1.4919</span> | 
-            <img src="/images/trade-down.png" alt="down"> GBP/CHF <span style="color:#FF3100">1.2760</span> | 
-            <img src="/images/trade-down.png" alt="down"> EUR/NZD <span style="color:#FF3100">1.6423</span> | 
-            <img src="/images/trade-down.png" alt="down"> AUD/CHF <span style="color:#FF3100">0.7701</span> | 
-            <img src="/images/trade-down.png" alt="down"> GBP/NZD <span style="color:#FF3100">1.8235</span> | 
-            <img src="/images/trade-down.png" alt="down"> USD/SGD <span style="color:#FF3100">1.3461</span> | 
-            <img src="/images/trade-down.png" alt="down"> USD/HKD <span style="color:#FF3100">7.8096</span> | 
-            <img src="/images/trade-down.png" alt="down"> USD/DKK <span style="color:#FF3100">6.2157</span> | 
-            <img src="/images/trade-down.png" alt="down"> GBP/CAD <span style="color:#FF3100">1.6184</span>
         </div>
     </div>
 </header>

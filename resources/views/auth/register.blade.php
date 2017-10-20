@@ -64,6 +64,23 @@
                                 @endif
                             </div>
                         </div>
+                        <div class="form-group{{ $errors->has('country') ? ' has-error' : '' }}">
+                            <label for="email" class="col-md-4 control-label">Phone number</label>
+
+                            <div class="col-md-6">
+                                <select name="country" id='country'>
+                                    <option>Russia</option>
+                                    <option>UK</option>
+                                    <option>Other</option>
+                                </select>
+
+                                @if ($errors->has('phone'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('phone') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
 
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                             <label for="password" class="col-md-4 control-label">Password</label>
