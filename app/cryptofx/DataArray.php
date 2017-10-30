@@ -1,6 +1,7 @@
 <?php
 namespace cryptofx;
 use Log;
+use Model;
 class DataArray{
     public static function sort($res,$sort){
         if($sort===false || count($res)==0)return $res;
@@ -14,6 +15,11 @@ class DataArray{
             });
         }
         return $res;
+    }
+    public static function lists($model,$field){
+        $ret = [];
+        foreach ($model as $row) $ret[]=$row->$field;
+        return $ret;
     }
 };
 ?>

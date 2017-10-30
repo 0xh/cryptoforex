@@ -44,3 +44,7 @@
         </ul>
     </div>
 @endsection
+
+@section('popup')
+    
+@endsection

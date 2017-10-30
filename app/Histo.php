@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Histo extends Model
 {
+    protected $orderBy = 'id';
+    protected $orderDirection = 'DESC';
     /**
      * The table associated with the model.
      *

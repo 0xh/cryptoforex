@@ -1,13 +1,26 @@
 jQuery(document).ready(function () {
 
-	jQuery('a').click(function(){
-		return false;
-	});
+	// jQuery('.main .content .item strong').click(function(){
+	// 	if ( jQuery(this).parent().hasClass('active') ) {
+	// 		jQuery('.main .content .item').removeClass('active')
+	// 	} else {
+	// 		jQuery('.main .content .item').removeClass('active')
+	// 		jQuery(this).parent().addClass('active');
+	// 	}
+	// });
 
-	jQuery('#user').click(function(){
-	    jQuery('.popup.user').fadeIn(700);
-	    jQuery('body').addClass('active');
-	});
+	jQuery("select.loader").change(function(){
+        jQuery(this).parent().next().addClass('active');
+    });
+
+	// jQuery('a').click(function(){
+	// 	return false;
+	// });
+
+	// jQuery('.m-user').click(function(){
+	//     jQuery('.popup.user').fadeIn(700);
+	//     jQuery('body').addClass('active');
+	// });
 
 	jQuery('#edit_user').click(function(){
 	    jQuery('.popup.edit_user').fadeIn(700);
@@ -19,9 +32,9 @@ jQuery(document).ready(function () {
 	    return false;
 	});
 
-	jQuery('#deals').click(function(){
-	    jQuery('.popup.deals').fadeIn(700);
-	});
+	// jQuery('#deals').click(function(){
+	//     jQuery('.popup.deals').fadeIn(700);
+	// });
 
 	jQuery('#instruments').click(function(){
 	    jQuery('.popup.instruments').fadeIn(700);

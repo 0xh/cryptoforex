@@ -34,7 +34,7 @@
                             <li><a href="#" class="cab"><i class="ic prof"></i><?php echo app('translator')->getFromJson('messages.profil'); ?></a></li>
                         </div>
                         <div class="br">
-                            <li><a href="#" class="cab"><i class="ic prof"></i><?php echo app('translator')->getFromJson('messages.Education'); ?></a>
+                            <li><a href="#"><i class="ic prof"></i><?php echo app('translator')->getFromJson('messages.Education'); ?></a>
                                 <ul class="sub-menu">
                                     <li><a href="./page/RSI">RSI</a></li>
                                     <li><a href="./page/Stochastic">Stochastic</a></li>

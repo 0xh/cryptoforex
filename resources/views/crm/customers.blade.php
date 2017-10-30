@@ -1,32 +1,60 @@
 <div class="item">
-    <strong>@lang('messages.customers') <span>22</span></strong>
-    <ul>
-        @if(isset($leads))
-        <li>
-            <p><a href="#" id="leads">Leads</a></p>
-            <p class="num">120</p>
-            <p class="last_num">16</p>
-        </li>
-        @endif
-        @if(isset($users))
-        <li>
-            <p><a href="#" id="user">@lang('messages.users')</a></p>
-            <p class="num">{{count($users)}}</p>
-            <p class="last_num">{{count($users)}}</p>
-        </li>
-        @endif
-        @if(isset($usershisto))
-        <li>
-            <p><a href="#" id="user_history">@lang('messages.usershistory')</a></p>
-            <p class="num">53</p>
-            <p class="last_num">26</p>
-        </li>
+    <strong>@lang('messages.customers') <span>{{count($users)}}</span></strong>
 
-        <li>
-            <p><a href="#" id="users">User verified</a></p>
-            <p class="num">4</p>
-            <p class="last_num">2</p>
-        </li>
+    <ul>
+        @can('superadmin')
+            <li>
+                <p><a href="javascript:window.crm.user.showList({rights_id:7});" class="m-user">@lang('messages.Admin')</a></p>
+                <p class="num">{{$counts->admin or 'nodata'}}</p>
+                <p class="last_num">{{$counts->admin_last or 'nodata'}}</p>
+            </li>
+        @endcan
+        @can('admin')
+            <li>
+                <p><a href="javascript:window.crm.user.showList({rights_id:5});" class="m-user">@lang('messages.Manager')</a></p>
+                <p class="num">{{$counts->manager or 'nodata'}}</p>
+                <p class="last_num">{{$counts->manager_last or 'nodata'}}</p>
+            </li>
+            <li>
+                <p><a href="javascript:window.crm.user.showList({rights_id:0});" class="m-user">@lang('messages.Ban')</a></p>
+                <p class="num">{{$counts->fired or 'nodata'}}</p>
+                <p class="last_num">{{$counts->fired_last or 'nodata'}}</p>
+            </li>
+        @endcan
+        @can('manager')
+            <li>
+                <p><a href="#" class="m-user">@lang('messages.KYC')</a></p>
+                <p class="num">{{$counts->admin or 'nodata'}}</p>
+                <p class="last_num">{{$counts->admin_last or 'nodata'}}</p>
+            </li>
+            <li>
+                <p><a href="javascript:window.crm.user.showList({rights_id:1});" class="m-user">@lang('messages.Client')</a></p>
+                <p class="num">{{$counts->client or 'nodata'}}</p>
+                <p class="last_num">{{$counts->client_last or 'nodata'}}</p>
+            </li>
+            <li>
+                <p><a href="javascript:window.crm.user.showList({rights_id:2});" class="m-user">@lang('messages.Affiliate')</a></p>
+                <p class="num">{{$counts->affilate or 'nodata'}}</p>
+                <p class="last_num">{{$counts->affilate_last or 'nodata'}}</p>
+            </li>
+            <li>
+                <p><a href="#" class="m-user">@lang('messages.Lead')</a></p>
+                <p class="num">{{count($leads)}}</p>
+                <p class="last_num">{{count($leads)}}</p>
+            </li>
+        @endcan
+        @if(isset($usershisto))
+            <li>
+                <p><a href="#" id="user_history">@lang('messages.usershistory')</a></p>
+                <p class="num">53</p>
+                <p class="last_num">26</p>
+            </li>
+
+            <li>
+                <p><a href="#" id="users">User verified</a></p>
+                <p class="num">4</p>
+                <p class="last_num">2</p>
+            </li>
         @endif
     </ul>
 
@@ -35,13 +63,23 @@
             window.crm = $.extend(((window.crm!=undefined)?window.crm:{}),{
                 user:{
                     current:null,
+                    showList:function(opts){
+                        var container = $('.popup.users');
+                        container.fadeIn((animationTime)?animationTime:256);$('body').addClass('active');
+                        // console.debug(container,animationTime);
+                        for(var i in opts){
+                            container.find('[data-name="'+i+'"]').val(opts[i]).change();
+                        }
+                        // cf._loaders['user-list'].execute();
+                    },
                     list:function (container,d,x,s){
                         container.html('');
                         for(var i in d.data){
                             var row=d.data[i],s = '<tr data-class="user" data-id="'+row.id+'">';
                             s+='<td><input type="checkbox" data-name="user_selected" value="user_'+row.id+'" data-id="'+row.id+'" /></td>';
                             s+='<td>'+row.id+'</td>';
-                            s+='<td>'+new Date(row.created_at*1000)+'</td>';
+                            // s+='<td>'+row.status.title+'</td>';
+                            s+='<td>'+dateFormat(row.created_at)+'</td>';
                             s+='<td>'+row.email+'</td>';
                             s+='<td>'+row.name+' '+row.surname+'</td>';
                             s+='<td>'+row.phone+'</td>';
@@ -50,17 +88,43 @@
                                 s+=(row.accounts[i]==undefined)?'<td>0</td>':'<td>'+currency.value(row.accounts[i].amount,"USD")+'&nbsp;<sup>'+row.accounts[i].type+'</sup></td>';
                             }
                             s+='<td>'+row.rights.title+'</td>';
-                            s+='<td></td>';
+                            s+='<td>'+row.users_count+'</td>';
                             s+='<td>'+((row.manager)?row.manager.name:'')+'</td>';
-                            s+='<td>'+new Date(row.last_login*1000)+'</td>';
+                            s+='<td>'+dateFormat(row.last_login)+'</td>';
                             s+='<td>'+row.last_ip+'</td>';
-                            s+='<td><a href="#" onclick="crm.user.edit('+row.id+')" id="edit_user">Edit</a><a href="#" onclick="crm.user.info('+row.id+')" class="edit">Info</a></td>';
+                            // s+='<td><a href="#" onclick="crm.user.edit('+row.id+')" id="edit_user">Edit</a><a href="#" onclick="crm.user.info('+row.id+')" class="edit">Info</a></td>';
+                            s+='<td><a href="#" onclick="crm.user.info('+row.id+')" class="edit">Info</a></td>';
                             s+='</tr>'
                             container.append(s);
                         }
                         cf.pagination(d,'user-list',container);
                     },
-                    add:function(){},
+                    add:function(){
+                        var s = '<div class="popup edit_user submiter" data-callback="crmUserCallback" style="display:block;">';
+                        s+= '<span></span><div class="close" onclick="{ $(this).parent().fadeOut( 256, function(){ $(this).remove(); } ); }"></div>';
+                        // s+= '<form action="#">';
+                        s+= '<div class="item">'
+                                +'<input type="text" name="name" data-name="name" placeholder="Name">'
+                                +'<input type="email" name="email" data-name="email" placeholder="Nameaddress@servername.com">'
+                                +'<input type="password" name="password" data-name="password" placeholder="password">'
+                                +'<select name="rights_id" data-name="rights_id" placeholder="User rights" class="loader" data-action="/json/user/rights" data-autostart="true"></select>'
+                                +'<select name="status_id" data-name="status_id" placeholder="User status" class="loader" data-action="/json/user/status" data-autostart="true"></select>'
+                            +'</div>';
+                        s+= '<div class="item">';
+                                +'<input type="text" name="surname" data-name="surname" placeholder="Surname">';
+                                +'<input type="tel" name="phone" data-name="phone" placeholder="Phone number">';
+                                +'<input type="text" name="country" data-name="country" placeholder="Country">';
+                            +'</div>';
+                        // s+= '</form>';
+                        s+= '<div class="button"><a href="#" class="close cancel">Close</a><a href="#" class="edit submit">@lang("messages.add")</a></div>'
+                        s+= '</div>';
+
+
+                        $('.edit_user span:first').html('@lang("messages.user_add")');
+                        $('.edit_user').attr('data-action','/json/user/add');
+                        $('.edit_user form input').val('');
+                        $('.edit_user').fadeIn((window.animationTime!=undefined)?window.animationTime:256);
+                    },
                     edit:function(id){
                         $.ajax({
                             url:"/json/user/"+id,
@@ -91,58 +155,7 @@
                                 $('body').append(d);
                                 // crm.user.calendar.init('scheduler_here');
                             }
-                        });return;
-                        $.ajax({
-                            url:"/json/user/"+id,
-                            dataType:"json",
-                            before:function(){
-                                // $('.popup,.bgc').fadeOut((window.animationTime!=undefined)?window.animationTime:256);
-                                // $('.bgc').fadeIn((window.animationTime!=undefined)?window.animationTime:256);
-                            },
-                            success:function(d,x,s){
-                                var user = d[0],$cnr = $('.user_dashboard:first'),chart,rchart;
-                                $.ajax({
-                                    url:'/json/user/meta',
-                                    dataType:"json",
-                                    data:{
-                                        meta_name:'user_chart_tune',
-                                        user_id:user.id
-                                    },
-                                    success:function(d){
-                                        var v = (d.meta_value==undefined)?0:d.meta_value;
-                                        crm.user.tune.setcurdata({tune:v});
-                                    }
-                                });
-
-                                window.crm.user.instruments($cnr,id);
-                                var udeals = cf._loaders[$cnr.find('#user_deals').attr("data-name")];
-                                udeals.opts.data["user_id"]=user.id;
-                                udeals.execute();
-                                $cnr.find('.finance').html('');
-                                for(var i in user.account){
-                                    var accname = (i=="demo")?'@lang("messages.real")':'@lang("messages.demo")';
-                                    $cnr.find('.finance').append('<div class="item-bank">\
-                                        <h5 class="user-account-name">'+accname+'</h5><a href="#">\
-                                        <span></span>'+user.account[i].amount+'</a>\
-                                        <div class"submiter user-account" id="user_account_'+user.account[i].id+'" data-autostart="true" data-id="'+user.account[i].id+'" data-action="/json/finance/deposit?account_id='+user.account[i].id+'&merchant_id=1" data-callback="crmUserInfo">\
-                                        <input name="amount" data-name="amount"/>\
-                                        <button class="deposit submit" onclick="window.crm.user.deposit(\'user_account_'+user.account[i].id+'\')">@lang("messages.deposit")</button>\
-                                    </div></div>');
-
-                                }
-                                for(var i in user){
-                                    $cnr.find('.user-'+i).html(user[i]);
-                                }
-                                $cnr.find('.edit').attr("onclick",'crm.user.edit('+user.id+')');
-
-                                // graphControl.makeChart(120,"user_chart",id,chart);
-                                // graphControl.makeChart(120,"real_chart",null,rchart);
-                                // $('.edit_user').attr('data-action','/user/'+id+'/edit');
-                                for(var i in user)$('.edit_user form [data-name="'+i+'"]').val(user[i]);
-                                $cnr.fadeIn((window.animationTime!=undefined)?window.animationTime:256);
-                            }
                         });
-
                     },
                     deposit:function(i){
                         var tut = $('#'+i);
@@ -257,64 +270,7 @@
             window.crmUserList = crm.user.list;
             window.crmUserDealList = crm.user.deals;
             window.crmUserInfo = crm.user.info;
-            window.crmUserCallback = function(d){
-                // $('.popup,.bgc').fadeOut((window.animationTime!=undefined)?window.animationTime:256);
-                // document.location.reload();
-            }
+
         });
     </script>
-</div>
-<div class="popup user">
-    <div class="search">
-        <form action="#">
-            <input type="search" placeholder="Search" class="requester" data-name="search" data-trigger="keyup" data-target="user-list"><button type="submit"></button>
-            <!-- <a href="#" class="filter">Show filter</a> -->
-            <p><input type="checkbox" name="online" data-name="online" class="requester" data-trigger="change" data-target="user-list" value="online">@lang('messages.online_users')</p>
-            <!-- <div class="batcher">
-            </div> -->
-            <div class="filter_users">
-                <select class="loader" data-name="manager_id" data-action="/json/user?rights_id=7" data-autostart="true" data-trigger="change" data-target="user-list"></select>
-                <a href="javascript:0;" class="button batcher" data-list="user_selected" data-action="/json/user/{data-id}/update?parent_user_id={manager_id}" data-target="user-list" onclick="cf.batcher(this);">@lang('message.add_manager')</a>
-            </div>
-
-            <div class="filter_users">
-                <select class="loader requester" data-name="status_id" data-action="/json/user/status" data-autostart="true" data-trigger="change" data-target="user-list"></select>
-            </div>
-            <div class="filter_users">
-                <select class="loader requester" data-name="rights_id" data-action="/json/user/rights" data-autostart="true" data-trigger="change" data-target="user-list"></select>
-            </div>
-            <div class="filter_users">
-                <select class="loader requester" data-name="country" data-action="/json/user/countries" data-autostart="true" data-trigger="change" data-target="user-list"></select>
-            </div>
-
-            <div class="filter_users">
-                <select class=" requester" data-name="source" data-action="/json/user/countries" data-autostart="true" data-trigger="change" data-target="user-list"></select>
-            </div>
-        </form>
-    </div>
-    <strong>Users</strong>
-    <div class="close"></div>
-    <table>
-        <thead>
-            <tr>
-                <td><input type="checkbox" class="check-all" data-list="user_selected" /></td>
-                <td>ID <div class="arrow sorter" data-name="country" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
-                <td>Registred <div class="arrow sorter" data-name="created_at" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
-                <!-- <td>Registred <div class="arrow sorter"><span></span><span></span></div></td> -->
-                <td>Email <div class="arrow sorter" data-name="email" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
-                <td>Name <div class="arrow sorter" data-name="name" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
-                <td>Phone <div class="arrow sorter" data-name="phone" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
-                <td>Country <div class="arrow sorter" data-name="country" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
-                <td>Balance 1 <div class="arrow sorter" data-name="country" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
-                <td>Balance 2 <div class="arrow sorter" data-name="country" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
-                <td>Rights <div class="arrow sorter" data-name="country" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
-                <td>Users <div class="arrow sorter" data-name="country" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
-                <td>Admin <div class="arrow sorter" data-name="country" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
-                <td>Last Online <div class="arrow sorter" data-name="country" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
-                <td>IP <div class="arrow sorter" data-name="country" data-trigger="click" data-target="user-list" data-value="asc"><span></span><span></span></div></td>
-                <td></td>
-            </tr>
-        </thead>
-        <tbody id="user_list" data-name="user-list" class="loader" data-action="/json/user" data-function="crmUserList" data-autostart="true" data-trigger=""></tbody>
-    </table>
 </div>

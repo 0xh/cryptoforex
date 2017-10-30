@@ -22,9 +22,7 @@
         scheduler.templates.week_date_class=function(date,today){return (date.getDay()==0 || date.getDay()==6)?"weekday":"";};
     </script>
     <script>
-        window.Laravel = {!! json_encode([
-            'csrfToken' => csrf_token(),
-        ]) !!};
+        window.Laravel = {!! json_encode(['csrfToken' => csrf_token(),]) !!};
         window.animationTime = 256;
         window.onloads = [];
         var currency = {
@@ -111,14 +109,9 @@
                     </div>
                     <div class="lang">
                         <ul>
-                            <li class="<?php if(App::isLocale('en')) echo 'active';?>"><a href="/locale/en"><img src="images/flag-eng.png" alt=""></a>
-                            </li>
-                            <li class="<?php if(App::isLocale('en')) echo 'active';?>">
-                                <a href="/locale/ru"><img src="images/Russia.png" alt=""></a>
-                            </li>
-                            <li class="<?php if(App::isLocale('en')) echo 'active';?>">
-                                <a href="/locale/ar"><img src="images/flag-arab.png" alt=""></a>
-                            </li>
+                            <li class="<?php if(App::isLocale('en')) echo 'active';?>"><a href="/locale/en"><img src="images/flag-eng.png" alt=""></a></li>
+                            <li class="<?php if(App::isLocale('ru')) echo 'active';?>"><a href="/locale/ru"><img src="images/Russia.png" alt=""></a></li>
+                            <li class="<?php if(App::isLocale('ar')) echo 'active';?>"><a href="/locale/ar"><img src="images/flag-arab.png" alt=""></a></li>
                         </ul>
                     </div>
                 </div>
@@ -142,34 +135,52 @@
             </div>
         </div>
     </footer>
-    @include('crm.popup')
-<!-- Script-->
-  <!--  Vendor amCharts -->
+    @yield('popup')
+    <!-- Script-->
+    <!--  Vendor amCharts -->
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-  <script src="/crmd2/js/jquery.shapeshift.min.js"></script>
-  <script>
-    $('.content').shapeshift({
-        minColumns: 3
-    });
+    <script>
+        function leftZeroPad(s){
+            var ret=s.toString(),
+                length = ret.length,
+                defaults={
+                    symbol:'0',
+                    maxLength:2
+                },
+                opts = $.extend(defaults,(arguments.length>1)?arguments[1]:{});
+            for(var i=0;i<(opts.maxLength-length);++i)ret=opts.symbol+ret;
+            return ret;
+        }
+        function dateFormat(d){
+            if(d==null) return '';
+            var date = new Date(d*1000),
+                withTime = (arguments.length>1)?arguments[1]:true,
+                res = date.getFullYear();
+            res+= '-'+leftZeroPad(date.getMonth()+1);
+            res+= '-'+leftZeroPad(date.getDate());
+            if(withTime){
+                res+= ' '+leftZeroPad(date.getHours());
+                res+= ':'+leftZeroPad(date.getMinutes());
+                res+= ':'+leftZeroPad(date.getSeconds());
+            }
+            return res;
+      }
   </script>
+  <script src="/crmd2/js/jquery.shapeshift.min.js"></script>
   <script src="/crmd2/js/js.js"></script>
 
 
-  <!-- <script src="http://aplicant.good-point.ru/alfa-diamonds/js/jquery.shapeshift-master/core/jquery.shapeshift.min.js"></script> -->
-  <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
-  <script src="https://www.amcharts.com/lib/3/serial.js"></script>
-  <script src="https://www.amcharts.com/lib/3/amstock.js"></script>
-  <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
-  <script src="{{ asset('js/settings.js') }}"></script>
-  <!-- <script src="/crmd2/js/main.js"></script> -->
+  <!-- <script src="{{ asset('js/settings.js') }}"></script> -->
 
-
-  <!-- <script src="/crmd2/js/main_new.js"></script> -->
-  <script src="/crmd2/js/i.js"></script>
-  <!-- <script src="/crmd2/js/jquery.shapeshift.min.js"></script> -->
   <script src="{{ asset('js/loader.js') }}"></script>
-  <script src="{{ asset('js/cryptofx.fn.js') }}"></script>
+  <!-- <script src="{{ asset('js/cryptofx.fn.js') }}"></script> -->
+  <link rel="stylesheet" type="text/css" href="/chart2/chart.v2.css" />
+
+  <script src="http://d3js.org/d3.v4.min.js"></script>
+  <script src="http://techanjs.org/techan.min.js"></script>
+
+
 
 </body>
 </html>

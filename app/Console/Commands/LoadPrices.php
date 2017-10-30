@@ -46,9 +46,52 @@ class LoadPrices extends Command
         $crapi = new CryptoCompareApi;
         $source = Source::where('name','CryptoCompare')->first();
         $ins = Instrument::get();
-        $ticks = 200;
-        echo $this->signature." loaded as ".date("Y-m-d H:i:s")."\n";
-        while($ticks!=0){
+        $time = time();
+        $pairs = [];
+        foreach ($ins as $i=>$instrument) {
+            $fsym = Currency::find($instrument->from_currency_id);
+            $tsym = Currency::find($instrument->to_currency_id);
+            $pairs[$instrument->id] = [
+                "fsym"=>$fsym->code,
+                "tsyms"=>$tsym->code,
+            ];
+        }
+        while((time()-$time)<59){
+            $crapi->prices($pairs,function($callback)use($source){
+                // print_r($callback);exit;
+                $rawpr = json_decode($callback["response"]);
+                $tosymCode = $callback["request"]["tsyms"];
+                $volation = 0;
+                $oldprice = Price::where('instrument_id',$callback["id"])->orderBy('id','desc')->first();
+                if(!isset($rawpr->$tosymCode)){
+                    // print_r($rawpr);
+                    return;
+                }
+                if(is_null($oldprice) || $oldprice === false ||  floatval($oldprice->price) != floatval($rawpr->$tosymCode) ){
+                    if(!is_null($oldprice)){
+                        if(floatval($oldprice->price) < floatval($rawpr->$tosymCode)) $volation =1;
+                        else if(floatval($oldprice->price) > floatval($rawpr->$tosymCode))  $volation=-1;
+                    }
+                    echo "!!! CHANGED\t";
+                    echo "Instrument#".$callback["id"]." ".$callback["request"]["fsym"]."/".$callback["request"]["tsyms"]." : was ".(is_null($oldprice)?'-':floatval($oldprice->price))." - now ".floatval($rawpr->$tosymCode)."\n";
+                    $price = Price::create([
+                        'price'=>floatval($rawpr->$tosymCode),
+                        'instrument_id'=>$callback["id"],
+                        'source_id'=>$source->id,
+                        'volation' => $volation
+                    ]);
+                }
+            });
+            echo "in ".(time()-$time)." {$time}:".time()."\n";
+            usleep(400);
+        }
+    }
+    public function handle_old(){
+        $crapi = new CryptoCompareApi;
+        $source = Source::where('name','CryptoCompare')->first();
+        $ins = Instrument::get();
+        $time = time();
+        while((time()-$time)<59){
             foreach ($ins as $i=>$instrument) {
                 $fsym = Currency::find($instrument->from_currency_id);
                 $tsym = Currency::find($instrument->to_currency_id);
@@ -59,23 +102,29 @@ class LoadPrices extends Command
                 $oldprice = Price::where('instrument_id',$instrument->id)->orderBy('id','desc')->first();
                 $rawpr = $crapi->price($rq);
                 $tosymCode = $tsym->code;
+                $volation = 0;
 
-
-                if(is_null($oldprice) || $oldprice === false || floatval($oldprice->price) != floatval($rawpr->$tosymCode)){
+                if(is_null($oldprice) || $oldprice === false ||  floatval($oldprice->price) != floatval($rawpr->$tosymCode) ){
+                    if(floatval($oldprice->price) < floatval($rawpr->$tosymCode)) $volation =1;
+                    else if(floatval($oldprice->price) > floatval($rawpr->$tosymCode))  $volation=-1;
                     echo "!!! CHANGED\t";
+                    echo $fsym->code."/".$tsym->code.": was ".floatval($oldprice->price)." - now ".floatval($rawpr->$tosymCode)."\n";
                     $price = Price::create([
-                        'price'=>$rawpr->$tosymCode,
+                        'price'=>floatval($rawpr->$tosymCode),
                         'instrument_id'=>$instrument->id,
                         'source_id'=>$source->id,
-                        // 'volation' => ((floatval($oldprice->price) < floatval($rawpr->$tosymCode))?1:-1)
+                        'volation' => $volation
                     ]);
-                    echo $fsym->code."/".$tsym->code.": was ".(is_null($oldprice)?"-":$oldprice->price)." - now ".$rawpr->$tosymCode."\n";
                 }
 
             }
-            echo "{$ticks}\n";
-            --$ticks;
-            usleep(400);
+            echo "in ".(time()-$time)." {$time}:".time()."\n";
+            usleep(300);
         }
     }
 }
+/*
+insert into prices_arc
+	select * from prices WHERE created_at < unix_timestamp(DATE_SUB(NOW(),INTERVAL 60 MINUTE));
+delete from prices WHERE created_at < unix_timestamp(DATE_SUB(NOW(),INTERVAL 60 MINUTE));
+*/

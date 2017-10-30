@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\User;
+
 class UserRights extends Model
 {
     /**
@@ -27,4 +29,10 @@ class UserRights extends Model
         'name','title'
     ];
     public $incrementing = false;
+    public function scopeByUser($query,$user){
+        if($user instanceof User){
+            return $query->where("id","<",$user->rights_id);
+        }
+        return $query;
+    }
 }

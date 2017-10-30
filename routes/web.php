@@ -74,7 +74,8 @@ Route::get('/{format}/deal/{id}/update','DealController@update')->name('deal.add
 Route::get('/{format}/deal/delete','DealController@destroy')->name('deal.delete')->where('format','json');
 Route::get('/{format}/deal/status','DealController@statuses')->name('deal.statuses')->where('format','json');
 /* Instruments */
-Route::get('/{format}/instrument/{id?}','InstrumentController@index')->name('instrument.list')->where('format','json')->where('id','[0-9]+');
+Route::get('/{format}/instrument/{id}','InstrumentController@index')->name('instrument.info')->where('format','json|html')->where('id','[0-9]+');
+Route::get('/{format}/instrument','InstrumentController@indexes')->name('instrument.list')->where('format','json|html');
 Route::get('/{format}/instrument/{id}/update','InstrumentController@update')->name('instrument.update')->where('format','json')->where('id','[0-9]+');
 Route::get('/{format}/instrument/{id}/history','InstrumentController@history')->name('instrument.history')->where('format','json')->where('id','[0-9]+');
 /* Fanance */
@@ -83,3 +84,8 @@ Route::get('/{format}/finance/{id?}','TransactionController@index')->name('finan
 Route::get('/{format}/finance/deposit','TransactionController@deposit')->name('finance.deposit')->where('format','json');
 Route::get('/{format}/finance/balance','TransactionController@balance')->name('finance.balance')->where('format','json');
 Route::get('/{format}/finance/withdrawal/{id?}','TransactionController@withdrawal')->name('finance.withdrawal')->where('format','json')->where('id','[0-9]+');
+
+Route::get('/price/{format}/{id?}','PriceController@index')->name('price.list')->where('format','json')->where('id','[0-9]+');
+
+Route::get('/user/hierarchy/{format}/{id?}','UserController@hierarchy')->name('user.hierarchy')->where('format','json')->where('id','[0-9]+');
+Route::get('/user/ban/{format}/{id}','UserController@ban')->name('user.ban')->where('format','json')->where('id','[0-9]+');

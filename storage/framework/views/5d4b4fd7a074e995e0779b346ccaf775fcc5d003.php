@@ -86,6 +86,52 @@
               </form>
             </div>
             <div class="bot flex">
+                <div class="advance flex column">
+                    <h2>Advance</h2>
+                    <ul class="flex jcsb">
+                        <li class="active">TP</li>
+                        <li>SL</li>
+                        <li>AtP</li>
+                    </ul>
+                    <div class="wrap">
+                        <div class="left">
+                            <div class="item">
+                                <div>
+                                    <input type="checkbox" class="checkbox account-type" id="profit_active" value="">
+                                    <label for="profit_active" class="account-type-switcher">Take Profit (TP)</label>
+                                </div>
+                                <div class="flex">
+                                    <input type="number" value="0" size="0.00001" id="take_profit"/>
+                                    <div class="wrap flex">
+                                      <span class="minus">-</span>
+                                      <span class="plus">+</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div>
+                                    <input type="checkbox" class="checkbox account-type" id="loss_active" value="">
+                                    <label for="loss_active" class="account-type-switcher">Stop Loss (SL)</label>
+                                </div>
+                                <div class="flex active">
+                                    <input type="number" value="0" size="0.00001" id="stop_loss"/>
+                                    <div class="wrap flex">
+                                      <span class="minus">-</span>
+                                      <span class="plus">+</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <strong>At the price</strong>
+                            <div>
+                                <input type="checkbox" class="checkbox account-type" id="price" value="">
+                                <label for="price" class=" account-type-switcher">Stop Loss (SL)</label>
+                            </div>
+                            <input type="number" value="xxx" size="0.00001">
+                        </div>
+                    </div>
+                </div>
                 <input name="amount" value="100" type="hidden" data-name="amount"/>
                 <input name="stop_high" value="100" type="hidden" data-name="stop_high"/>
                 <input name="stop_low" value="0" type="hidden" data-name="stop_low"/>
@@ -93,13 +139,7 @@
                 <input name="instrument_id" value="1" type="hidden" data-name="instrument_id"/>
                 <input name="direction" value="1" type="hidden" data-name="direction"/>
                 <input name="currency" value="USD" type="hidden" data-name="currency" />
-                <a onclick="$('[name=direction]').val(-1);" href="#" class="down flex submit">
-                    <div class="flex instrument-price-sell">
-                        <p class="">3758.</p>
-                        <b class="instrument-bid">60</b>
-                    </div>
-                    <b><?php echo app('translator')->getFromJson('messages.SELL'); ?></b>
-                </a>
+
                 <a  onclick="$('[name=direction]').val(1);" href="#" class="up flex submit">
                     <div class="flex instrument-price-buy">
                         <p>3782.</p>
@@ -107,6 +147,14 @@
                     </div>
                     <b><?php echo app('translator')->getFromJson('messages.BUY'); ?></b>
                 </a>
+                <a onclick="$('[name=direction]').val(-1);" href="#" class="down flex submit">
+                    <div class="flex instrument-price-sell">
+                        <p class="">3758.</p>
+                        <b class="instrument-bid">60</b>
+                    </div>
+                    <b><?php echo app('translator')->getFromJson('messages.SELL'); ?></b>
+                </a>
+                
             </div>
             <!-- <div class="work_order flex">
               <p>BTC/BCH</p>

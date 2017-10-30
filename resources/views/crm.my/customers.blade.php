@@ -37,8 +37,8 @@
                     current:null,
                     list:function (container,d,x,s){
                         container.html('');
-                        for(var i in d){
-                            var s = '<tr data-class="user" data-id="'+d[i].id+'">',row=d[i];
+                        for(var i in d.data){
+                            var row=d.data[i],s = '<tr data-class="user" data-id="'+row.id+'">';
                             s+='<td><input type="checkbox" data-name="user_selected" value="user_'+row.id+'" data-id="'+row.id+'" /></td>';
                             s+='<td>'+row.id+'</td>';
                             s+='<td>'+new Date(row.created_at*1000)+'</td>';
@@ -46,20 +46,19 @@
                             s+='<td>'+row.name+' '+row.surname+'</td>';
                             s+='<td>'+row.phone+'</td>';
                             s+='<td>'+row.country+'</td>';
-                            s+='<td>'+((row.account.demo!=undefined)?currency.value(row.account.demo.amount,"USD"):0)+'</td>';
-                            s+='<td>'+((row.account.real!=undefined)?row.account.real.amount:0)+'</td>';
+                            for(var i =0;i <2;++i){
+                                s+=(row.accounts[i]==undefined)?'<td>0</td>':'<td>'+currency.value(row.accounts[i].amount,"USD")+'&nbsp;<sup>'+row.accounts[i].type+'</sup></td>';
+                            }
                             s+='<td>'+row.rights.title+'</td>';
                             s+='<td></td>';
-                            s+='<td>'+((row.manager.name)?row.manager.name:'')+'</td>';
+                            s+='<td>'+((row.manager)?row.manager.name:'')+'</td>';
                             s+='<td>'+new Date(row.last_login*1000)+'</td>';
                             s+='<td>'+row.last_ip+'</td>';
                             s+='<td><a href="#" onclick="crm.user.edit('+row.id+')" id="edit_user">Edit</a><a href="#" onclick="crm.user.info('+row.id+')" class="edit">Info</a></td>';
                             s+='</tr>'
                             container.append(s);
                         }
-                        var pp = cf.pagination(d),$pp = container.parent().next(".pagination");
-                        if(!$pp.length) $pp = $('<div class="pagination"></div>').insertAfter(container.parent());
-                        $pp.html(pp);
+                        cf.pagination(d,'user-list',container);
                     },
                     add:function(){},
                     edit:function(id){
@@ -82,62 +81,41 @@
                         if(!arguments.length)return;
                         var id = arguments[0];
                         id=(typeof(id)=="object")?window.crm.user.current:id;
-                        console.debug(id);
                         if(id==undefined)return;
                         this.current = id;
                         $.ajax({
-                            url:"/json/user/"+id,
-                            dataType:"json",
-                            before:function(){
-                                // $('.popup,.bgc').fadeOut((window.animationTime!=undefined)?window.animationTime:256);
-                                // $('.bgc').fadeIn((window.animationTime!=undefined)?window.animationTime:256);
-                            },
+                            url:"/html/user/"+id,
+                            dataType:"html",
                             success:function(d,x,s){
-                                var user = d[0],$cnr = $('.user_dashboard:first'),chart,rchart;
-                                $.ajax({
-                                    url:'/json/user/meta',
-                                    dataType:"json",
-                                    data:{
-                                        meta_name:'user_chart_tune',
-                                        user_id:user.id
-                                    },
-                                    success:function(d){
-                                        var v = (d.meta_value==undefined)?0:d.meta_value;
-                                        crm.user.tune.setcurdata({tune:v});
-                                    }
-                                });
-
-                                window.crm.user.instruments($cnr,id);
-                                var udeals = cf._loaders[$cnr.find('.user-deals #user_deals').attr("data-name")];
-                                udeals.opts.data["user_id"]=user.id;
-                                udeals.execute();
-                                $cnr.find('.user-accounts .left').html('');
-                                for(var i in user.account){
-                                    var accname = (i=="demo")?'@lang("messages.real")':'@lang("messages.demo")';
-                                    $cnr.find('.user-accounts .left').append('<div class="item-bank">\
-                                        <h5 class="user-account-name">'+accname+'</h5><a href="#">\
-                                        <span></span>'+user.account[i].amount+'</a>\
-                                        <div class"submiter user-account" id="user_account_'+user.account[i].id+'" data-autostart="true" data-id="'+user.account[i].id+'" data-action="/json/finance/deposit?account_id='+user.account[i].id+'&merchant_id=1" data-callback="crmUserInfo">\
-                                        <input name="amount" data-name="amount"/>\
-                                        <button class="deposit submit" onclick="window.crm.user.deposit(\'user_account_'+user.account[i].id+'\')">@lang("messages.deposit")</button>\
-                                    </div></div>');
-
-                                }
-                                for(var i in user)$cnr.find('.user-'+i).text(user[i]);
-                                $cnr.find('.edit').attr("onclick",'crm.user.edit('+user.id+')');
-                                // graphControl.makeChart(120,"user_chart",id,chart);
-                                // graphControl.makeChart(120,"real_chart",null,rchart);
-                                // $('.edit_user').attr('data-action','/user/'+id+'/edit');
-                                for(var i in user)$('.edit_user form [data-name="'+i+'"]').val(user[i]);
-                                $cnr.fadeIn((window.animationTime!=undefined)?window.animationTime:256);
+                                // console.debug(d,x,s);
+                                $('body').append(d);
+                                // crm.user.calendar.init('scheduler_here');
                             }
-                        });
-
+                        });return;
                     },
                     deposit:function(i){
                         var tut = $('#'+i);
                         cf.submiter(tut);
                         //console.debug(tut);
+                    },
+                    deals:function(container,d,x,s){
+                        container.html('');
+                        for(var i in d){}
+                        var pp = cf.pagination(d),$pp = container.parent().next(".pagination");
+                        if(!$pp.length) $pp = $('<div class="pagination"></div>').insertAfter(container.parent());
+                        $pp.html(pp);
+                    },
+                    calendar:{
+                        init:function(id) {
+                            scheduler.config.xml_date="%Y-%m-%d %H:%i";
+                            scheduler.templates.week_date_class=function(date,today){
+                                if (date.getDay()==0 || date.getDay()==6)
+                                return "weekday";
+                                return "";
+                            };
+                            scheduler.init(id,new Date(2018,0,13),"week");
+                            scheduler.load("./Scheduler/data/events.xml");
+                        }
                     },
                     instruments:function($cnr,id){
                         var inst_tabs = $cnr.find('.user-instruments-tab'), inst_tab_cons=inst_tabs.parent(), first = true;
@@ -226,6 +204,7 @@
                 }
             });
             window.crmUserList = crm.user.list;
+            window.crmUserDealList = crm.user.deals;
             window.crmUserInfo = crm.user.info;
             window.crmUserCallback = function(d){
                 // $('.popup,.bgc').fadeOut((window.animationTime!=undefined)?window.animationTime:256);
@@ -238,13 +217,10 @@
     <div class="search">
         <form action="#">
             <input type="search" placeholder="Search" class="requester" data-name="search" data-trigger="keyup" data-target="user-list"><button type="submit"></button>
-            <!-- <a href="#" class="filter">Show filter</a> -->
             <p><input type="checkbox" name="online" data-name="online" class="requester" data-trigger="change" data-target="user-list" value="online">@lang('messages.online_users')</p>
-            <!-- <div class="batcher">
-            </div> -->
             <div class="filter_users">
                 <select class="loader" data-name="manager_id" data-action="/json/user?rights_id=7" data-autostart="true" data-trigger="change" data-target="user-list"></select>
-                <a href="javascript:0;" class="button batcher" data-list="user_selected" data-action="/json/user/{data-id}/update?manager_id={manager_id}" data-target="user-list" onclick="cf.batcher(this);">@lang('message.add_manager')</a>
+                <a href="javascript:0;" class="button batcher" data-list="user_selected" data-action="/json/user/{data-id}/update?parent_user_id={manager_id}" data-target="user-list" onclick="cf.batcher(this);">@lang('message.add_manager')</a>
             </div>
 
             <div class="filter_users">
@@ -287,160 +263,4 @@
         </thead>
         <tbody id="user_list" data-name="user-list" class="loader" data-action="/json/user" data-function="crmUserList" data-autostart="true" data-trigger=""></tbody>
     </table>
-</div>
-<div class="popup new_user">
-    <strong>New Users</strong>
-    <div class="close"></div>
-    <div class="search">
-      <div class="form">
-          <form action="#">
-              <select name="affiliate" id="affiliate">
-                  <option value="Select Affiliate">Select Affiliate</option>
-                  <option value="Alexander Bogdanov">Alexander Bogdanov</option>
-                  <option value="Jessica Alba">Jessica Alba</option>
-                  <option value="Christopher Lambert">Christopher Lambert</option>
-                  <option value="Jonny Dep">Jonny Dep</option>
-              </select>
-              <select name="source" id="source">
-                  <option value="Select Source">Select Source</option>
-                  <option value="Diamonds-marketing.com">Diamonds-marketing.com</option>
-              </select>
-              <select name="country" id="country">
-                  <option value="Select Country">Select Country</option>
-                  <option value="Albania">Albania</option>
-                  <option value="Algeria">Algeria</option>
-                  <option value="Argentina">Argentina</option>
-                  <option value="Armenia">Armenia</option>
-              </select>
-              <select name="admin" id="admin">
-                  <option value="Select Admin">Select Admin</option>
-                  <option value="Collins Fred">Collins Fred</option>
-                  <option value="James Bond">James Bond</option>
-                  <option value="Ashley Cooper">Ashley Cooper</option>
-                  <option value="New guy">New guy</option>
-              </select>
-              <input type="submit" value="Change admin">
-          </form>
-        </div>
-    </div>
-    <div class="table">
-      <span>Total: 4</span>
-      <table>
-          <thead>
-              <tr>
-                  <td></td>
-                  <td>ID</td>
-                  <td>Registration</td>
-                  <td>Mail</td>
-                  <td>Name</td>
-                  <td>Phone</td>
-                  <td>Country</td>
-                  <td>Balance</td>
-                  <td>IP</td>
-                  <td>Source</td>
-                  <td>Affiliate</td>
-              </tr>
-          </thead>
-          <tbody>
-              <tr>
-                  <td></td>
-                  <td>161</td>
-                  <td>2017-05-11 17:58:55</td>
-                  <td>focinabup@alienware13.com</td>
-                  <td>My Diamonds</td>
-                  <td>+0000000000</td>
-                  <td>Argentina</td>
-                  <td>$37 512.27</td>
-                  <td>37.142.168.151</td>
-                  <td>diamonds-marketing.com</td>
-                  <td>
-                      <a href="#" id="edit_user">Edit</a>
-                      <a href="#" class="edit" onclick="crm.user.info(1)">Info</a>
-                  </td>
-              </tr>
-              <tr>
-                  <td></td>
-                  <td>161</td>
-                  <td>2017-05-11 17:58:55</td>
-                  <td>focinabup@alienware13.com</td>
-                  <td>My Diamonds</td>
-                  <td>+0000000000</td>
-                  <td>Argentina</td>
-                  <td>$37 512.27</td>
-                  <td>37.142.168.151</td>
-                  <td>diamonds-marketing.com</td>
-                  <td>
-                      <a href="#" id="edit_user">Edit</a>
-                      <a href="#" class="edit" onclick="crm.user.info(1)">Info</a>
-                  </td>
-              </tr>
-              <tr>
-                  <td></td>
-                  <td>161</td>
-                  <td>2017-05-11 17:58:55</td>
-                  <td>focinabup@alienware13.com</td>
-                  <td>My Diamonds</td>
-                  <td>+0000000000</td>
-                  <td>Argentina</td>
-                  <td>$37 512.27</td>
-                  <td>37.142.168.151</td>
-                  <td>diamonds-marketing.com</td>
-                  <td>
-                      <a href="#" id="edit_user">Edit</a>
-                      <a href="#" class="edit" onclick="crm.user.info(1)">Info</a>
-                  </td>
-              </tr>
-              <tr>
-                  <td></td>
-                  <td>161</td>
-                  <td>2017-05-11 17:58:55</td>
-                  <td>focinabup@alienware13.com</td>
-                  <td>My Diamonds</td>
-                  <td>+0000000000</td>
-                  <td>Argentina</td>
-                  <td>$37 512.27</td>
-                  <td>37.142.168.151</td>
-                  <td>diamonds-marketing.com</td>
-                  <td>
-                      <a href="#" id="edit_user">Edit</a>
-                      <a href="#" class="edit" onclick="crm.user.info(1)">Info</a>
-                  </td>
-              </tr>
-          </tbody>
-      </table>
-    </div>
-    <div class="pagination">
-      <ul>
-          <li class="first">
-              <a href="#">First page</a>
-          </li>
-          <li class="prev">
-              <a href="#">...</a>
-          </li>
-          <li>
-              <a href="#">3</a>
-          </li>
-          <li>
-              <a href="#">4</a>
-          </li>
-          <li class="active">
-              <a href="#">5</a>
-          </li>
-          <li>
-              <a href="#">6</a>
-          </li>
-          <li>
-              <a href="#">7</a>
-          </li>
-          <li class="next">
-              <a href="#">...</a>
-          </li>
-          <li class="last">
-              <a href="#">Last page</a>
-          </li>
-      </ul>
-      <div class="total_item">
-          <span>5</span>/<span>57</span>
-      </div>
-    </div>
 </div>

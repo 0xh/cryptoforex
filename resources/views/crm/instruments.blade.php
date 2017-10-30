@@ -3,7 +3,7 @@
     <ul>
         @if(isset($instruments))
         <li>
-            <p><a href="#" id="instruments">@lang('messages.instruments')</a></p>
+            <p><a href="#" class="opener" data-action="/html/instrument">@lang('messages.instruments')</a></p>
             <p class="num">{{count($instruments)}}</p>
             <p class="last_num">{{count($instruments)}}</p>
         </li>
@@ -23,18 +23,19 @@
                     data:{},
                     list:function (container,d,x,s){
                         container.html('');
-                        for(var i in d){
-                            var s = '<tr data-class="deal" data-id="'+d[i].id+'">',row=d[i];
+                        for(var i in d.data){
+                            var row=d.data[i],s = '<tr data-class="instrument" data-id="'+row.id+'">',
+                                diff = 100*(parseFloat(row.histo.close)-parseFloat(row.histo.open))/parseFloat(row.histo.open),
+                                direction = (diff>0)?'<i class="up"></i>':((diff<0)?'<i class="down"></i>':'');
                             window.crm.instrument.data[row.id] = row;
                             s+='<td>'+row.id+'</td>';
                             s+='<td><input type="checkbox" '+((row.enabled=="1")?'checked="checked"':'')+'/></td>';
                             s+='<td>'+row.title+'</td>';
-                            s+='<td>'+row.diff+'</td>';
-                            s+='<td>'+currency.value(row.price,'')+'</td>';
-                            s+='<td>'+row.from_currency.name+'</td>';
-                            s+='<td>'+row.to_currency.name+'</td>';
-                            s+='<td>'+parseFloat(row.commission)*100+'%</td>';
 
+                            s+='<td>'+diff.toFixed(2)+'%</td>';
+                            s+='<td>'+direction+'</td>';
+
+                            s+='<td>'+parseFloat(row.commission)*100+'%</td>';
                             s+='<td><a href="#" onclick="crm.instrument.edit('+row.id+')" id="edit_deal">Edit</a></td>';
                             s+='</tr>'
                             container.append(s);
@@ -51,20 +52,20 @@
                     add:function(){},
                     edit:function(id){
                         $.ajax({
-                            url:"/json/instrument/"+id,
-                            dataType:"json",
+                            url:"/html/instrument/"+id,
                             success:function(d,x,s){
                                 console.debug(d);
-                                var inst = d[0],$bb=$('[data-rel=edit_instrument]'),
-                                    ih = new cf.loader($bb.find('.instrument-history').attr('data-action','/json/instrument/'+id+'/history'),Fresher);
-                                $bb.attr('data-action','/json/instrument/'+id+'/update');
-                                for(var i in inst){
-                                    var inpt = $bb.find('form [data-name="'+i+'"]')
-                                    if(inpt.attr('type')=='checkbox')inpt.attr('checked',(inst[i]=="1")?true:false);
-                                    else inpt.val(inst[i]);
-                                }
+                                $('body').append(d);
+                                // var inst = d[0],$bb=$('[data-rel=edit_instrument]'),
+                                //     ih = new cf.loader($bb.find('.instrument-history').attr('data-action','/json/instrument/'+id+'/history'),Fresher);
+                                // $bb.attr('data-action','/json/instrument/'+id+'/update');
+                                // for(var i in inst){
+                                //     var inpt = $bb.find('form [data-name="'+i+'"]')
+                                //     if(inpt.attr('type')=='checkbox')inpt.attr('checked',(inst[i]=="1")?true:false);
+                                //     else inpt.val(inst[i]);
+                                // }
                                 // $('.popup,.bgc').fadeOut((window.animationTime!=undefined)?window.animationTime:256);
-                                $bb.fadeIn((window.animationTime!=undefined)?window.animationTime:256);
+                                // $bb.fadeIn((window.animationTime!=undefined)?window.animationTime:256);
                                 // cf.submiter($('.edit_user'));
                             }
                         });

@@ -13,12 +13,9 @@
 .button_top .inner .box p{margin-bottom: 0;font-size: 16px;}
 .button_top .inner .box strong{margin-bottom: 11px;display: block;font-size: 14px;}
 .button_top{
-  padding: 20px;
-  padding-bottom: 0;
+  padding: 10px 10px 0;
   width: 100%;
   justify-content: flex-start;
-  position: absolute;
-  top: -10px;
   color: #fff;
 }
 .content .see .button_top{position: static;}
@@ -140,6 +137,8 @@ input[type='button']:active {
   left: 5px;
   bottom: 30px;
   position: static;
+  padding: 10px;
+  width: 100%;
  }
 .amcharts-period-input-selected {
   background-color: rgba(56,105,128,0.9) !important;
@@ -166,6 +165,7 @@ input[type='button']:active {
   cursor: pointer;
   width: 50%;
   height: 96px;
+  height: auto;
   padding: 5px;
   border: 1px solid #8c8c8c;
   position: relative;

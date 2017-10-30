@@ -52,4 +52,27 @@ class User extends Authenticatable
         //'parent_user_id','user_id'
         return $this->belongsTo('App\User','parent_user_id');
     }
+    public function users(){
+        //'parent_user_id','user_id'
+        return $this->hasMany('App\User','parent_user_id','id');
+    }
+    public function meta(){
+        //'parent_user_id','user_id'
+        return $this->hasMany('App\UserMeta');
+    }
+    public function last_login(){
+        return $this->belongsTo('App\UserMeta')->where('meta_name','last_login');
+    }
+    public function last_ip(){
+        return $this->belongsTo('App\UserMeta')->where('meta_name','last_ip');
+    }
+    public function deal(){
+        return $this->hasMany('App\Deal');
+    }
+    public function onDeals(){
+        return $this->deal->sum('amount');
+    }
+    public function scopeByRights($query,User $user){
+        return $query->where('rights_id','<',$user->rights_id);
+    }
 }

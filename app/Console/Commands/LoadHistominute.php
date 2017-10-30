@@ -45,14 +45,14 @@ class LoadHistominute extends Command
         $crapi = new CryptoCompareApi;
         $source = Source::where('name','CryptoCompare')->first();
         $ins = Instrument::get();
-        echo $this->signature." loaded as ".date("Y-m-d H:i:s")."\n";
+        // echo $this->signature." loaded as ".date("Y-m-d H:i:s")."\n";
         foreach ($ins as $i=>$instrument) {
             $fsym = Currency::find($instrument->from_currency_id);
             $tsym = Currency::find($instrument->to_currency_id);
             $rq= [
                 "fsym"=>$fsym->code,
                 "tsym"=>$tsym->code,
-                "limit"=>1000
+                "limit"=>10
             ];
             $hists = $crapi->histominute($rq);
             foreach ($hists->Data as $i => $hist) {
@@ -69,7 +69,7 @@ class LoadHistominute extends Command
                     'time'=>$hist->time
                 ];
                 if(is_null($repeat))Histo::create($udata);
-                else $repeat->update($udata);
+                // else $repeat->update($udata);
             }
         }
     }

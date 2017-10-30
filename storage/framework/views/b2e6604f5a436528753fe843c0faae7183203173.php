@@ -25,23 +25,33 @@
               <?php if(Auth::guest()): ?>
               <?php else: ?>
               <script>
+                function dateTime(d){
+                    if(d==undefined || d==null)return '';
+                    var dd =  new Date(d*1000),r = '',pad=function(v){
+                        v = v.toString().replace(/\s*(\S+)\s*/,'$1');
+                        return ((v.length==1)?'0':'')+v;
+                    };
+                    r = dd.getFullYear()+"-"+pad(dd.getMonth()+1)+"-"+pad(dd.getDate());
+                    r+= "&nbsp;<sup>"+pad(dd.getHours())+':'+pad(dd.getMinutes())+"</sup>";
+                    return r;
+                }
                 function historyCloseDeals(container,d,x,s){
                     container.html('');
                     for(var i in d.data){
-                        var row=d.data[i],jsdata = JSON.stringify(d.data[i]),s='<tr class="deal-row" data-instrument-id="'+row.instrument.id+'" data-raw=\''+jsdata+'\' data-price="'+row.open.price+'" '+
+                        var row=d.data[i],jsdata = JSON.stringify(d.data[i]),s='<tr class="deal-row" data-instrument-id="'+row.instrument.id+'" data-raw=\''+jsdata+'\' data-price="'+row.open_price+'" '+
                             ((row.status_id==10)?'onclick=\'dealInfo('+jsdata+')\'':'')
                             +' id="deal-'+row.id+'">',
                             inst = row.instrument.from.code+'/'+row.instrument.to.code,
                             prct = 100*(row.profit/row.amount),
-                            openTime = new Date(row.open.created_at*1000),
-                            closeTime = (row.close!=null)?new Date(row.close.created_at*1000):new Date();
+                            openTime = new Date(row.created_at*1000),
+                            closeTime = new Date(row.updated_at*1000);
 
                         // s+= '<td><i class="ic ic_btc"></i><i class="ic ic_lte"></i>'+inst+'</td>';
                         s+= '<td>'+inst+'</td>';
-                        s+= '<td class="'+((row.direction==1)?"down":"up")+'">'+openTime.toGMTString()+'</td>';
-                        s+= '<td>'+row.open.price+'</td>';
-                        s+= (row.close!=null)?'<td>'+closeTime.toGMTString()+'</td>':'<td>&nbsp;</td>';
-                        s+= (row.close!=null)?'<td>'+row.close.price+'</td>':'<td>&nbsp;</td>';
+                        s+= '<td class="'+((row.direction==1)?"down":"up")+'">'+dateTime(row.created_at)+'</td>';
+                        s+= '<td>'+row.open_price+'</td>';
+                        s+= '<td>'+dateTime(row.updated_at)+'</td>';
+                        s+= '<td>'+row.close_price+'</td>';
                         s+= '<td>'+currency.value(row.amount,'USD')+' <span>x'+row.multiplier+'</span></td>';
                         s+= '<td class="'+((row.close_price==undefined)?'profit':"")+'">'+currency.value(parseFloat(row.amount)+parseFloat(row.profit),'USD',4)+'</td>';
                         s+= '<td class="'+((row.profit>0)?"green":"red")+'">'+prct.toFixed(2)+'%</td>'
@@ -52,21 +62,21 @@
                 function historyDeals(container,d,x,s){
                     container.html('');
                     for(var i in d.data){
-                        var row=d.data[i],jsdata = JSON.stringify(d.data[i]),s='<tr class="deal-row" data-instrument-id="'+row.instrument.id+'" data-raw=\''+jsdata+'\' data-price="'+row.open.price+'" '+
+                        var row=d.data[i],jsdata = JSON.stringify(d.data[i]),s='<tr class="deal-row" data-instrument-id="'+row.instrument.id+'" data-raw=\''+jsdata+'\' data-price="'+row.open_price+'" '+
                             ((row.status_id==10)?'onclick=\'dealInfo('+jsdata+')\'':'')
                             +' id="deal-'+row.id+'">',
-                            inst = row.instrument.from.code+'/'+row.instrument.to.code,
+                            inst = row.instrument.title,
                             prct = 100*(row.profit/row.amount),
-                            openTime = new Date(row.open.created_at*1000),
-                            profitClass = '';
+                            openTime = new Date(row.created_at*1000),
+                            profitClass = '',profitClass2 = '';
                         // console.debug(row.id+' ('+row.volation+') => '+profitClass);
                         if(parseInt(row.volation)==1)profitClass='bg_green';
                         else if(parseInt(row.volation)==-1)profitClass='bg_red';
                         // s+= '<td><i class="ic ic_btc"></i><i class="ic ic_lte"></i>'+inst+'</td>';
                         s+= '<td>'+inst+'</td>';
-                        s+= '<td class="'+((row.direction==1)?"down":"up")+'">'+openTime.toGMTString()+'</td>';
-                        s+= '<td>'+row.open.price+'</td>';
-                        s+= '<td>&nbsp;</td>';
+                        s+= '<td class="'+((row.direction==1)?"down":"up")+'">'+dateTime(row.created_at)+'</td>';
+                        s+= '<td>'+row.open_price+'</td>';
+                        s+= '<td class="'+profitClass2+'">'+((row.close_price!=undefined)?row.close_price:'&nbsp;')+'</td>';
                         s+= '<td>'+currency.value(row.amount,'USD')+' <span>x'+row.multiplier+'</span></td>';
 
                         s+= '<td class="'+profitClass+'">'+currency.value(parseFloat(row.amount)+parseFloat(row.profit),'USD',4)+'</td>';
@@ -86,7 +96,7 @@
                   <th><?php echo app('translator')->getFromJson('messages.received'); ?></th>
                   <th><?php echo app('translator')->getFromJson('messages.Profit'); ?> %</th>
                 </thead>
-                <tbody class="loader" data-action="/deal?status=open&user_id=<?php echo e(Auth::user()->id); ?>" data-autostart="true" data-refresh="4800" data-function="historyDeals"></tbody>
+                <tbody class="loader" data-action="/deal?status=open&user_id=<?php echo e(Auth::user()->id); ?>" data-autostart="true" data-refresh="2400" data-function="historyDeals"></tbody>
                 </table>
               <?php endif; ?>
 
@@ -187,7 +197,7 @@
                     <th><?php echo app('translator')->getFromJson('messages.received'); ?></th>
                     <th><?php echo app('translator')->getFromJson('messages.Profit'); ?> %</th>
                   </thead>
-                <tbody class="loader" data-action="/deal?status=close&user_id=<?php echo e(Auth::user()->id); ?>" data-autostart="true" data-refresh="8000" data-function="historyCloseDeals"></tbody>
+                <tbody class="loader" data-action="/deal?status=close&user_id=<?php echo e(Auth::user()->id); ?>" data-autostart="true" data-refresh="4800" data-function="historyCloseDeals"></tbody>
                 </table>
               <?php endif; ?>
 

@@ -46,7 +46,7 @@
 		<div class="shell v_center">
 			<div class="logo">
 				<a href="/">
-					<img src="images/logo_xx.png" alt="">
+					<img src="../kriptex/images/logo_xx.png" alt="">
 				</a>
 			</div>
 			<nav>
@@ -55,8 +55,8 @@
 						<a href="#">About Us</a>
 						<ul class="submenu">
 							<li class="no-active">What is XcrypteX</li>
-							<li><a href="./Our-technology">Our technology</a></li>
-							<li><a href="./Crypto-Currencies">Crypto Currencies</a></li>
+							<li><a href="../page_home/Our-technology">Our technology</a></li>
+							<li><a href="../page_home/Crypto-Currencies">Crypto Currencies</a></li>
 							<!-- <li><a href="./team.html">The ReadyMadeSoft Team</a></li> -->
 							<!-- <li><a href="./Careers.html">Careers</a></li> -->
 						</ul>
@@ -65,18 +65,18 @@
 						<a href="#">Solutions</a>
 						<ul class="submenu">
 							<li class="no-active">What`s included</li>
-							<li><a href="./crm"><i class="ic ic1"></i>CRM</a></li>
-							<li><a href="./Client-Area"><i class="ic ic2"></i>Client Area</a></li>
-							<li><a href="./Affiliates-Program"><i class="ic ic3"></i>Affiliates Program</a></li>
-							<li><a href="./Marketing-Tools"><i class="ic ic4"></i>Marketing Tools</a></li>
-							<li><a href="./Risk-Managment"><i class="ic ic5"></i>Risk Managment</a></li>
-							<li><a href="./Pricing"><i class="ic ic6"></i>Pricing  Feed Data</a></li>
+							<li><a href="../page_home/crm"><i class="ic ic1"></i>CRM</a></li>
+							<li><a href="../page_home/Client-Area"><i class="ic ic2"></i>Client Area</a></li>
+							<li><a href="../page_home/Affiliates-Program"><i class="ic ic3"></i>Affiliates Program</a></li>
+							<li><a href="../page_home/Marketing-Tools"><i class="ic ic4"></i>Marketing Tools</a></li>
+							<li><a href="../page_home/Risk-Managment"><i class="ic ic5"></i>Risk Managment</a></li>
+							<li><a href="../page_home/Pricing"><i class="ic ic6"></i>Pricing  Feed Data</a></li>
 							<li><a href="#"><i class="ic ic7"></i>Brokerage Hosting Server</a></li>
 						</ul>
 					</li>
-					<li><a href="./White_Label_Program">White Label Program</a></li>
-					<li><a href="./Customers-Support">Customers Support</a></li>
-					<li><a href="./Contact">Contact</a></li>
+					<li><a href="../page_home/White_Label_Program">White Label Program</a></li>
+					<li><a href="../page_home/Customers-Support">Customers Support</a></li>
+					<li><a href="../page_home/Contact">Contact</a></li>
 				</ul>
 			</nav>
 		</div>
@@ -91,7 +91,7 @@
 			<h2>for Cryptocurrency Trading</h2>
 			<div class="button flex center">
 				<a href="/login">demo version</a>
-				<a href="#">white label program</a>
+				<a href="/White_Label_Program">white label program</a>
 			</div>
 		</div>
 	</main>
@@ -101,7 +101,7 @@
 
 	<footer class="footer">
 		<div class="shell center">
-			<p>© 2010 Sky Mechanics Ltd. All Rights Reserved.</p>
+			<p><!-- © 2010 Developed and powered by Sky Meashanics LTD. --></p>
 		</div>
 	</footer>
 	<!-- End -->

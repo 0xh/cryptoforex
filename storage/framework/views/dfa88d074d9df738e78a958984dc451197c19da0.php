@@ -1,6 +1,7 @@
 <?php $__env->startSection('content'); ?>
-<main class="main">
-    <div class="container flex flex-top">
+<?php echo $__env->make('layouts.top', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<main class="main blue">
+	<div class="container flex flex-top">
         <?php echo $__env->make('app.instruments', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
         <?php echo $__env->make('app.graph', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
         <?php echo $__env->make('app.deals', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
@@ -11,9 +12,9 @@
 
 </main>
 
-<footer class="footer">
+<!-- <footer class="footer">
     <div class="container"></div>
-</footer>
+</footer> -->
 
 
 

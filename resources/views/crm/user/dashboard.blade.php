@@ -5,24 +5,64 @@
         <div class="item">
             <div class="inner">
                 <div class="wrap">
-                    <div class="left user-basic-info submitter" data-action="/json/user/update" data-callback="">
+                    <div class="left user-basic-info submiter" data-action="/json/user/{{$user->id}}/update" data-callback="crmUserInfoCallback">
                         <!-- <a href="#" class="edit">Edit data user</a> -->
                         <ul class="">
-                            <li>First name: <span class="user-name">{{$user["name"]}}</span></li>
-                            <li>Last name: <span class="user-surname">{{$user["surname"]}}</span></li>
-                            <li>Created: <span class="user-created">{{date("Y-m-d H:i:s",time($user["created_at"]))}}</span></li>
-                            <li>E-mail: <span class="user-email">{{$user["email"]}}</span></li>
-                            <!-- <li>Password: <span class="user-password"></span></li> -->
-                            <li>Phone number: <span class="user-phone">{{$user["phone"]}}</span></li>
-                            <li>Country: <span class="user-country">{{$user["country"]}}</span></li>
+                            <li>First name: <span class="user-name"><input data-name="name" value="{{$user->name}}"/></span></li>
+                            <li>Last name: <span class="user-surname"><input data-name="surname" value="{{$user->surname}}"/></span></li>
+                            <li>Created: <span class="user-created">{{date("Y-m-d H:i:s",time($user->created_at))}}</span></li>
+                            <li>E-mail: <span class="user-email"><input data-name="email" value="{{$user->email}}"/></span></li>
+                            <li>Password: <span class="user-password"><input data-name="password" value=""/></span></li>
+                            <li>Phone number: <span class="user-phone"><input data-name="phone" value="{{$user->phone}}"/></span></li>
+                            <li>Country: <span class="user-country">
+                                <input data-name="country" value="{{$user->country}}" />
+                            </span></li>
                             <li>KYC: <span class="user-rurs">No</span></li>
-                            <li>Status: <span class="user-status">new client</span></li>
-                            <!-- <li>Rights: <span class="user-rights_id"><select name="rights_id" data-name="rights_id" placeholder="User rights" class="loader" data-action="/json/user/rights" data-autostart="true"></select></span></li> -->
+                            <li>Manager: <span class="user-status">
+                                <select data-name="parent_user_id">
+                                    <option value="false" selected="selected">Not setted</option>
+                                    <option value="{{Auth::id()}}" @if($user->manager && $user->manager->id == Auth::id())
+                                        selected="selected"
+                                    @endif
+                                    >Me</option>
+                                    @foreach($managers as $row)
+                                        <option value="{{$row->id}}"
+                                            @if($user->manager->id == $row->id)
+                                                selected="selected"
+                                            @endif
+                                            >{{$row->name}} {{$row->surname}}</option>
+                                    @endforeach
+                                </select>
+                            </span></li>
+                            <li>Status: <span class="user-status">
+                                <select data-name="status_id">
+                                    @foreach($statuses as $row)
+                                        <option value="{{$row->id}}"
+                                            @if($user->status_id == $row->id)
+                                                selected="selected"
+                                            @endif
+                                            >{{$row->title}}</option>
+                                    @endforeach
+                                </select>
+                            </span></li>
+                            <li>Rights:
+                                <span class="user-rights_id">
+                                    <select data-name="rights_id">
+                                        @foreach($rights as $row)
+                                            <option value="{{$row->id}}"
+                                                @if($user->rights_id == $row->id)
+                                                    selected="selected"
+                                                @endif
+                                                >{{$row->title}}</option>
+                                        @endforeach
+                                    </select>
+                                </span>
+                            </li>
                             <!-- <li>Source: <span class="user-name"></span></li>
                             <li>Source Description: <span class="user-name"></span></li> -->
                         </ul>
                         <div class="button flex">
-                            <a href="javascript:0;" class="submit">@lang('messages.save')</a>
+                            <!-- <a href="javascript:0;" class="submit">@lang('messages.save')</a> -->
                             <a href="javascript:0;" class="submit">@lang('edit.save')</a>
                         </div>
                     </div>
@@ -44,7 +84,7 @@
                 </div> -->
             </div>
             <div class="inner">
-                <div id="user_scheduler_{{$user['id']}}" class="dhx_cal_container">
+                <div id="user_scheduler_{{$user->id}}" class="dhx_cal_container">
                     <div class="dhx_cal_navline">
                         <div class="dhx_cal_prev_button">&nbsp;</div>
                         <div class="dhx_cal_next_button">&nbsp;</div>
@@ -69,16 +109,17 @@
                         <li>Finance</li>
                         <li>Open trad</li>
                         <li>Verification</li>
+                        <li>Message</li>
                     </ul>
                     <div class="tabs_in_dash comments">
-                        <div class="item_con">
+                        <!-- <div class="item_con">
                             <strong>Tasks Panel</strong>
                             <a href="#" class="add">Add Task</a>
                             <p class="task">Task need to do</p>
                             <div class="popup task_popup">
                                 <textarea name="task" id="task"></textarea>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="item_con">
                             <strong>Comments</strong>
                             <p class="coment">No Comments</p>
@@ -89,9 +130,45 @@
                         </div>
                     </div>
                     <div class="tabs_in_dash logs">
+                        <div class="table">
+                            <table>
+                                <thead>
+                                    <th>title</th>
+                                    <th>title</th>
+                                    <th>title</th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>tilte</td>
+                                        <td>tilte</td>
+                                        <td>tilte</td>
+                                    </tr>
+                                    <tr>
+                                        <td>tilte</td>
+                                        <td>tilte</td>
+                                        <td>tilte</td>
+                                    </tr>
+                                    <tr>
+                                        <td>tilte</td>
+                                        <td>tilte</td>
+                                        <td>tilte</td>
+                                    </tr>
+                                    <tr>
+                                        <td>tilte</td>
+                                        <td>tilte</td>
+                                        <td>tilte</td>
+                                    </tr>
+                                    <tr>
+                                        <td>tilte</td>
+                                        <td>tilte</td>
+                                        <td>tilte</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="tabs_in_dash finance">
-                        @foreach($user['accounts'] as $account)
+                        @foreach($user->accounts as $account)
                             <div class="item-bank">
                                 <h5 class="user-account-name">@lang("messages.".$account->type)</h5>
                                 <a href="#"><span></span>{{$account->amount}}</a>
@@ -139,35 +216,21 @@
                         </table>
                     </div>
                     <div class="tabs_in_dash verification">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <td>ID <div class="arrow"><span></span><span></span></div></td>
-                                    <td>Registred <div class="arrow"><span></span><span></span></div></td>
-                                    <td>Updated <div class="arrow"><span></span><span></span></div></td>
-                                    <td>Type <div class="arrow"><span></span><span></span></div></td>
-                                    <td>Status <div class="arrow"><span></span><span></span></div></td>
-                                    <td>File <div class="arrow"><span></span><span></span></div></td>
-                                    <td>&nbsp;</td>
-                                </tr>
-                            </thead>
-                            <tbody class="loader" id="user_documents" data-name="user-documents" data-action="/json/user/{{$user['id']}}/documents" data-function="crmDocumentList" data-autostart="true" data-trigger="">
-                                @foreach($documents as $document)
-                                    <tr data-class="document" data-id="{{$document->id}}">
-                                        <td>{{$document->id}}</td>
-                                        <td>{{$document->created_at}}</td>
-                                        <td>{{$document->updated_at}}</td>
-                                        <td>{{$document->type}}</td>
-                                        <td>{{$document->status}}</td>
-                                        <td>{{$document->file}}</td>
-                                        <td>
-                                            <a href="javascript:0;" onclick="crm.user.document({{$document->id}})" class="edit">@lang('messages.decline')</a>&nbsp;
-                                            <a href="javascript:0;" onclick="crm.user.document({{$document->id}})" class="edit">@lang('messages.verify')</a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                        <div class="wrap">
+                            <div class="foto">
+                                <a href="../crmd2/images/foto.png">
+                                    <img src="../crmd2/images/foto.png" alt="">
+                                </a>
+                            </div>
+                            <input type="file" name="download">
+                        </div>
+                    </div>
+                    <div class="tabs_in_dash message">
+                        <div class="wrap">
+                            <form action="#">
+                                <textarea cols="30" rows="10" placeholder="message"></textarea>
+                                <input type="submit" value="Send">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -180,10 +243,11 @@
             .addClass('active').siblings().removeClass('active')
             .closest('div.tabs_in').find('div.tabs_in_dash').removeClass('active').eq($(this).index()).addClass('active');
     });
-    // var dp = dataProcessor("/json/task?user_id={{$user['id']}}");
+
+    // var dp = dataProcessor("/json/task?user_id={{$user->id}}");
     // dp.init(scheduler);
-    scheduler.init("user_scheduler_{{$user['id']}}",new Date(),"week");
-    scheduler.load("/json/task?user_id={{$user['id']}}","json");
+    scheduler.init("user_scheduler_{{$user->id}}",new Date(),"week");
+    scheduler.load("/json/task?user_id={{$user->id}}","json");
     scheduler.attachEvent("onEventAdded", function(id,ev){
         // console.debug("onEventAdded",id,ev,ev.start_date.toISOString());
 
@@ -195,7 +259,7 @@
                 text:ev.text,
                 start_date:ev.start_date.toISOString().slice(0,-5),
                 end_data:ev.end_date.toISOString().slice(0,-5),
-                user_id:{{$user["id"]}},
+                user_id:{{$user->id}},
                 type_id:1,
                 status_id:1
             },
@@ -205,4 +269,9 @@
             }
         });
     });
+    function crmUserInfoCallback(){
+        console.debug("UserInfoCallback");
+        cf._loaders['user-list'].execute();
+    }
+    cf.reload();
 </script>

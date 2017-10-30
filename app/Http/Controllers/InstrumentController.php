@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Log;
 use App\Instrument;
 use App\InstrumentHistory;
 use App\Currency;
@@ -17,6 +18,35 @@ class InstrumentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $rq, $format='json',$id=false){
+        $res = Instrument::with([
+            'from',
+            'to',
+            'history',
+            // 'histo'
+        ])->find($id);
+        // $ret = $res->toArray();
+        // $ret["histo"] = Histo::where('instrument_id',$res->id)->orderBy('id','desc')->first();
+        return ($format=='json')
+                ?response()->json($res,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT)
+                :view('crm.instrument.dashboard',["row"=>$res]);
+    }
+    public function indexes(Request $rq, $format='json'){
+        $res = Instrument::with([
+            'from',
+            'to',
+            // 'history',
+            // 'histo'
+        ]);
+        // Log::debug('Instrument list: '.$res->toSql());
+        $ret = $res->paginate($rq->input("limit",100))->toArray();
+        foreach($ret["data"] as &$row){
+            $row["histo"] = Histo::where('instrument_id',$row["id"])->orderBy('id','desc')->first();
+        }
+        return ($format=='json')
+                ?response()->json($ret,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT)
+                :view('crm.instrument.list',["rows"=>$ret]);
+    }
+    public function indexes2(Request $rq, $format='json',$id=false){
         $res = [];
         $selector = ($id===false)?Instrument::whereNotNull('id'):Instrument::where('id','=',$id);
         // filters {

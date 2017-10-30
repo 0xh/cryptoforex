@@ -26,8 +26,6 @@
         </ul>
         <a href="#" class="more">See more tasks ></a>
     </div>
-
-
     <div class="item notenabled">
         <strong>Marketing<span>22</span></strong>
         <ul>
@@ -43,4 +41,8 @@
             </li>
         </ul>
     </div>
+@endsection
+
+@section('popup')
+    @include('crm.popup')
 @endsection

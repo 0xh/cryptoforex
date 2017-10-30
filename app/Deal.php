@@ -28,7 +28,7 @@ class Deal extends Model
      * @var array
      */
     protected $fillable = [
-        'status_id','instrument_id','user_id','open_price_id','close_price_id','direction',
+        'status_id','instrument_id','user_id','open_price','close_price','direction',
         'stop_high','stop_low','amount','currency_id','multiplier',
         'profit','price_start','price_stop','account_id','volation'
     ];
@@ -48,18 +48,12 @@ class Deal extends Model
     public function instrument(){
         return $this->belongsTo('App\Instrument');
     }
-    public function open(){
-        return $this->belongsTo('App\Price','open_price_id');
-    }
-    public function close(){
-        return $this->belongsTo('App\Price','close_price_id');
-    }
     public function scopeByUser($query,$user){
         if(is_null($user) || $user==false) return $query;
         return $query->where('user_id', '=', $user);
     }
     public function scopeByInstrument($query,$str){
-        if(false==$str || is_null($str)) return $query;
+        if(false==$str || is_null($str) || "false"==$str) return $query;
         return $query->where('instrument_id', '=', $str);
     }
     public function scopeByStatus($query,$str){

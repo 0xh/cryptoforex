@@ -42,6 +42,18 @@ var cf={
         $(".requester:not(.requester-assigned)").each(function(){
             new cf.requester($(this));
         }).addClass('requester-assigned');
+        $("a.opener:not(.opener-assigned)").on("click",function(e){
+            var $that = $(this),url = $that.attr("data-action");
+            if(url!=undefined){
+                $.ajax({
+                    url:url,
+                    success:function(d){
+                        console.debug(d,$(d).appendTo('body'));
+                        cf.reload();
+                    }
+                });
+            }
+        }).addClass("opener-assigned");
     },
     _actions:[],
     _loaders:[],
@@ -131,7 +143,7 @@ var cf={
         };
         if(container == null) return;
         var attrs = {
-            uid:container.attr("data-name"),
+            uid:(container.attr("data-id")==undefined)?container.attr("data-name"):container.attr("data-id"),
             func:container.attr("data-function"),
             autostart:(container.attr("data-autostart")=="true"),
             action:container.attr("data-action"),
@@ -166,13 +178,15 @@ var cf={
                     cf._requests[opts.action]=d;
                     try{
                         if(opts.container.prop('tagName')=='SELECT'){
+                            var title = (opts.container.attr('data-title')!=undefined)?opts.container.attr('data-title'):'Lists';
                             opts.container.html('');
-                            opts.container.append('<option value="false">All</option>');
+                            opts.container.append('<option value="false">'+title+'</option>');
                             for(var i in (d.data!=undefined)?d.data:d){
                                 var row = (d.data!=undefined)?d.data[i]:d[i];
-                                var id = row.id|'',
-                                    name=(row.title)?row.title:((row.name)?row.name:'');
-                                opts.container.append('<option value="'+id+'">'+name+'</option>');
+                                var name=(row.title)?row.title:((row.name)?row.name:''),
+                                    value = (row.id==undefined)?name:row.id;
+                                // console.debug(title,name,value);
+                                opts.container.append('<option value="'+value+'">'+name+'</option>');
                             }
                             cf._statdata[opts.container.attr("data-name")] = d;
                         }
@@ -203,17 +217,22 @@ var cf={
         var $that = arguments.length?arguments[0]:$(this),
             trigger = $that.attr("data-trigger"),
             callfunc=function(){
-                var act_uid = $(this).attr("data-target"),
+                var act_uids = $(this).attr("data-target"),
                     name = $(this).attr("data-name"),
-                    val = ($(this).attr('type')=="checkbox")?($(this).is(':checked')?1:0):(($(this).attr("data-value")!=undefined)?$(this).attr("data-value"):$(this).val()),
-                    ld = cf._loaders[act_uid].opts.data;
-                console.debug(act_uid,name,val,ld);
-                if(val.length==0) delete ld[name]; else ld[name]=val;
-                cf._loaders[act_uid].execute();
+                    val = ($(this).attr('type')=="checkbox")?($(this).is(':checked')?1:0):(($(this).attr("data-value")!=undefined)?$(this).attr("data-value"):$(this).val());
+                var act_uids = act_uids.split(/,/);
+                for(var i in act_uids){
+                    var act_uid = act_uids[i],
+                        ld = cf._loaders[act_uid].opts.data;
+                    console.debug(act_uid,name,val,ld);
+                    if(val.length==0) delete ld[name]; else ld[name]=val;
+                    cf._loaders[act_uid].execute();
+                }
+
             };
 
         $that.on(trigger,callfunc);
-        console.debug(($that instanceof jQuery)?"jquery":"object",trigger);
+        // console.debug(($that instanceof jQuery)?"jquery":"object",trigger);
     },
     submiter:function(){
         var container = arguments.length?$(arguments[0]):null,

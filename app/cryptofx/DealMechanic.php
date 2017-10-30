@@ -13,21 +13,20 @@ class DealMechanic{
         $account = User::find($deal->account_id);
         $option = Option::where("user_id",$user->id)->where('name','fork')->first();
         $fork = (is_null($option)?1:floatval($option->value));
-        $price_start = Price::find($deal->open_price_id);
         $price = Price::where('instrument_id',$deal->instrument_id)->orderBy('id','desc')->first();
         $dealUpdate = [
-            "close_price_id" => $price->id
+            "close_price" => $price->price
         ];
         $profit = $deal->amount
                     *$deal->multiplier
                     *(
                         $deal->direction
-                            *(floatval($price->price)-floatval($price_start->price))/floatval($price_start->price)
+                            *(floatval($price->price)-floatval($deal->open_price))/floatval($deal->open_price)
                     );
         echo json_encode([
             "id"=>$deal->id,
             "instrument"=>$deal->instrument_id,
-            "open"=>$price_start->price,
+            "open"=>$deal->open_price,
             "current"=>$price->price,
             "multiplier"=>$deal->multiplier,
             "profit"=>$profit,
@@ -87,7 +86,7 @@ class DealMechanic{
         //     "amount"=>$deal->amount,
         //     "multiplier"=>$deal->multiplier,
         //     "direction"=>$deal->direction,
-        //     "start_price"=>$price_start->price,
+        //     "start_price"=>$deal->open_price,
         //     "price"=>$price->price
         // ]));
     }

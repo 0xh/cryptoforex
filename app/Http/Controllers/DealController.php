@@ -35,51 +35,34 @@ class DealController extends Controller{
                 $query->with(['manager']);
             },'currency','instrument'=>function($query){
             $query->with(['from','to']);
-        },'open','close','status'])
-            ->byStatus($rq->input("status","open"))
-            ->byInstrument($rq->input("instrument_id",false))
-            ->byUser(($user->rights_id<=1)?$user->id:$rq->input("user_id",false));
-        if($id!==false) $res =$res->where('id','=',$id);
-        if($rq->input("status_id","false") !== "false") $res =$res->where('status_id','=',$rq->input("status_id"));
-        if($rq->input("sort",false)!==false) {
-            foreach ($rq->input("sort") as $key => $value) {
-                $res =$res->orderBy($key,$value);
+        },'status']);
+
+        if($id!==false) {
+            $res =$res->where('id','=',$id);
+        }
+        else {
+            $res = $res->byStatus($rq->input("status","open"))
+                ->byInstrument($rq->input("instrument_id",false))
+                ->byUser(($user->rights_id<=1)?$user->id:$rq->input("user_id",false));
+            if($rq->input("status_id","false") !== "false") $res =$res->where('status_id','=',$rq->input("status_id"));
+            if($rq->input("sort",false)!==false) {
+                foreach ($rq->input("sort") as $key => $value) {
+                    $res =$res->orderBy($key,$value);
+                }
             }
         }
-        Log::debug($res->toSql());
+        // Log::debug($res->toSql());
         return ($format=='json')
                 ?response()->json($res->orderBy('id','desc')->paginate(12),200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT)
                 :(($id==false)
                     ?view('crm.deal.list',["deals"=>$res->paginate(12)])
-                    :view('crm.deal.dashboard',["deal"=>$res->first(),'price'=>Price::where('instrument_id','=',$res->first()->instrument_id)->orderBy('id','desc')->first()])
+                    :view('crm.deal.dashboard',[
+                        "deal"=>$res->first(),
+                        'price'=>Price::where('instrument_id','=',$res->first()->instrument->id)->orderBy('id','desc')->first()
+                    ])
                 );
-        
-        // return response()->json($res->paginate(24),200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
 
-        $res = [];
-        $status = $rq->input("status","open");
-        $selector = ($user->rights_id<=1)?Deal::where('user_id',$user->id):Deal::where('id','>','0');
-        if($status!="all"){
-            $status = DealStatus::where('code',$status)->first();
-            if(!is_null($status))$selector = $selector->where("status_id",$status->id);
-        }
-        if($id!==false) $selector = Deal::where('id','=',$id);
-        if($rq->input("user_id",false)!==false) $selector = $selector->where('user_id','=',$rq->input("user_id"));
-        $deals = $selector->orderBy('id','desc')->get();
-        Log::debug($selector->toSql());
-        foreach($deals as $deal){
-            $row = $deal->toArray();
-            $row["instrument"] = Instrument::find($deal->instrument_id)->toArray();
-            $row["instrument"]["from_currency"] = Currency::find($row["instrument"]["from_currency_id"]);
-            $row["instrument"]["to_currency"] = Currency::find($row["instrument"]["to_currency_id"]);
-            $row["open_price"] = Price::find($deal->open_price_id);
-            $row["currency"] = Currency::find($deal->currency_id);
-            $row["status"] = DealStatus::find($deal->status_id);
-            $row["user"] = User::with(['manager'])->find($deal->user_id);
-            if(!is_null($deal->close_price_id))$row["close_price"] = Price::find($deal->close_price_id);
-            $res[]=$row;
-        }
-        return response()->json($res,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+
     }
 
     /**
@@ -119,7 +102,7 @@ class DealController extends Controller{
             'status_id' => $dealStatus->id,
             'instrument_id'=>$rq->input('instrument_id'),
             'user_id'=>$user->id,
-            'open_price_id'=>$price->id,
+            'open_price'=>$price->price,
             'direction'=>$rq->input("direction"),
             'stop_high'=>$rq->input("stop_high"),
             'stop_low'=>$rq->input("stop_low"),
@@ -187,7 +170,7 @@ class DealController extends Controller{
         $account = Account::find($deal->account_id);
         $price = Price::where('instrument_id',$deal->instrument_id)->orderBy('id','desc')->first();
         $deal->update([
-            "close_price_id"=>$price->id,
+            "close_price"=>$price->price,
             "status_id" => $dealStatus->id
         ]);
         DealHistory::create([

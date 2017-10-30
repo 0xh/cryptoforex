@@ -1,8 +1,8 @@
 jQuery(document).ready(function () {
 
-	jQuery('.content').shapeshift({
-        minColumns: 3
-    });
+	// jQuery('.content').shapeshift({
+ //        minColumns: 3
+ //    });
 
 	jQuery('.main .content .item strong').click(function(){
 		if ( jQuery(this).parent().hasClass('active') )

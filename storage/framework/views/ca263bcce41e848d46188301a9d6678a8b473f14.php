@@ -28,6 +28,7 @@
     <link href="<?php echo e(asset('css/cryptofx.css')); ?>" rel="stylesheet">
     <link href="<?php echo e(asset('css/polz.css')); ?>" rel="stylesheet">
     <link href="<?php echo e(asset('css/preload.css')); ?>" rel="stylesheet">
+    <link rel="stylesheet" href="/chart2/chart.css">
     <!--  Vendor styles -->
     <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
     <!-- Scripts -->
@@ -61,7 +62,7 @@
     <?php endif; ?>
     </script>
 </head>
-<body class="home">
+<body class="home" onload="init()">
   <!-- <div id="page-preloader">
       <div class="diamonds-spinner">
           <div class="spinner-image">
@@ -220,7 +221,6 @@
           <!-- </div>
         </div> -->
         <?php endif; ?>
-        <?php echo $__env->make('layouts.top', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
         <?php echo $__env->yieldContent('content'); ?>
 
         <footer class="footer blue">
@@ -550,6 +550,7 @@
             Пожалуйста, обратите внимание на имеющиеся у вас открытые позиции по криптовалютам. До указанного времени принудительного закрытия позиций у вас есть возможность самостоятельного выбора момента их закрытия.
           </p>
         </div>
+
         <div class="popup popup_deal_info" style="z-index:1000;">
             <div class="close b02"></div>
             <div class="flex flex-top">
@@ -587,7 +588,8 @@
 
                             // keydown event handler
                             document.addEventListener('keydown', function (e) {
-                                if (e.keyCode == 13 || e.keyCode == 70) {
+                                // if (e.keyCode == 13 || e.keyCode == 70) {
+                                if ( e.keyCode == 70 ) {
                                     toggleFullScreen();
                                 }
                             }, false);
@@ -618,7 +620,7 @@
                                 <div class="box">
                                   <div class="item flex">
                                     <div class="inner">
-                                      <strong class="up">Прибыль</strong>
+                                      <strong class="up"><?php echo app('translator')->getFromJson('messages.Profit'); ?></strong>
                                     </div>
                                     <div class="inner deal-profit">
                                         <span class="up">27 $</span>
@@ -626,7 +628,7 @@
                                   </div>
                                   <div class="item flex">
                                     <div class="inner">
-                                      <strong>Пара</strong>
+                                      <strong><?php echo app('translator')->getFromJson('messages.pair'); ?></strong>
                                     </div>
                                     <div class="inner flex">
                                       <strong><span>BTC</span>/<span>BCH</span></strong>
@@ -634,7 +636,7 @@
                                   </div>
                                   <div class="item flex">
                                     <div class="inner">
-                                      <strong>Время открытия</strong>
+                                      <strong><?php echo app('translator')->getFromJson('messages.Opening_time'); ?></strong>
                                     </div>
                                     <div class="inner deal-time">
                                       <p><span class="time">11:00 06.09.17</span></p>
@@ -644,7 +646,7 @@
                                 <div class="box">
                                   <div class="item flex">
                                     <div class="inner">
-                                      <p>Сумма сделки</p>
+                                      <p><?php echo app('translator')->getFromJson('messages.Sumsd'); ?></p>
                                     </div>
                                     <div class="inner deal-amount">
                                       <p>100$</p>
@@ -652,7 +654,7 @@
                                   </div>
                                   <div class="item flex">
                                     <div class="inner">
-                                      <p>Кредитное плечо</p>
+                                      <p><?php echo app('translator')->getFromJson('messages.Krpl'); ?></p>
                                     </div>
                                     <div class="inner deal-multiplier">
                                       <p>5000$</p>
@@ -660,7 +662,7 @@
                                   </div>
                                   <div class="item flex">
                                     <div class="inner">
-                                      <p>Комиссия сделки</p>
+                                      <p><?php echo app('translator')->getFromJson('messages.Komsd'); ?></p>
                                     </div>
                                     <div class="inner">
                                       <p>0.023%</p>
@@ -669,7 +671,7 @@
                                 </div>
                                 <div class="bot flex">
                                     <input type="hidden" name="deal_id" data-name="deal_id" id="deal_id"  />
-                                    <a href="#" class="order submit close b02">Закрыть сделку</a>
+                                    <a href="#" class="order submit close b02"><?php echo app('translator')->getFromJson('messages.Close_the_deal'); ?></a>
                                 </div>
                             </div>
                         </div>
@@ -679,8 +681,8 @@
                     <div class="deal loader" data-action="/deal" data-autostart="true" data-refresh="30000" data-function="userDeals"></div>
                     <div class="bot">
                         <ul class="flex">
-                            <li class="active"><a href="#">Отчет</a></li>
-                            <li><a href="#">Закрытые</a></li>
+                            <li class="active"><a href="#"><?php echo app('translator')->getFromJson('messages.Report'); ?></a></li>
+                            <li><a href="#"><?php echo app('translator')->getFromJson('messages.Closed'); ?></a></li>
                         </ul>
                     </div>
                 </div>
@@ -714,6 +716,11 @@
         <script src="<?php echo e(asset('js/cryptofx.js')); ?>"></script>
         <script src="<?php echo e(asset('js/cryptofx.fn.js')); ?>"></script>
         <script src="<?php echo e(asset('js/loader.js')); ?>"></script>
+
+        <script src="http://d3js.org/d3.v4.min.js"></script>
+        <script src="http://techanjs.org/techan.min.js"></script>
+        <script type="text/javascript" src="<?php echo e(asset('/chart2/chart.js')); ?>"></script>
+        
         <script>
             $(document).ready(function(){
                 new cf.loader($(".loader-instruments"),Fresher);

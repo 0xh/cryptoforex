@@ -11,6 +11,7 @@ class Instrument extends Model{
      * @var string
      */
     protected $table = 'instruments';
+    protected $appends = ['title'];
     /**
      * The storage format of the model's date columns.
      *
@@ -30,5 +31,14 @@ class Instrument extends Model{
     }
     public function to(){
         return $this->belongsTo('App\Currency','to_currency_id');
+    }
+    public function history(){
+        return $this->hasMany('App\InstrumentHistory');
+    }
+    public function histo(){
+        return $this->hasOne('App\Histo')->orderBy('id','desc');
+    }
+    public function getTitleAttribute(){
+        return $this->attributes['title']=$this->from->code.'/'.$this->to->code;
     }
 }

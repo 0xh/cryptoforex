@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Log;
 use App\Histo;
 use App\Price;
 use App\User;
@@ -19,11 +20,17 @@ class HistoController extends Controller
         $tq=[
             "fsym" => $rq->input("fsym","BTC"),
             "tsym" => $rq->input("tsym","BCH"),
-            "limit" => $rq->input("limit","100"),
+            "limit" => $rq->input("limit","1440"),
         ];
+        $dateFrom = $rq->input("date_from",false);
+        $dateTo = $rq->input("date_to",false);
         $instid = $rq->input("instrument_id",1);
         $res = [];
-        $histo = Histo::where('instrument_id',$instid)->limit($tq["limit"])->orderBy('id','desc')->get();
+        $histo = Histo::where('instrument_id',$instid);
+        if($dateFrom!==false)$histo=$histo->where("time",">=",intval($dateFrom/1000));
+        if($dateTo!==false)$histo=$histo->where("time","<=",intval($dateTo/1000));
+        Log::debug($histo->toSql());
+        $histo = $histo->limit($tq["limit"])->orderBy('id','desc')->get();
 
         $coef = 1;
         if($rq->input("user_id",false)!==false){
@@ -49,7 +56,8 @@ class HistoController extends Controller
         // $url ="https://min-api.cryptocompare.com/data/".$type."?fsym=".$tq["fsym"]."&tsym=".$tq['tsym']."&limit=".$tq['limit']."&aggregate=1&e=CCCAGG";
         // $res = $this->_fetchJSON($url);
         // $res = $this->_amchartFormat($res);
-        return response()->json($res)->header('Access-Control-Allow-Origin', '*')
+        // return response()->json($res,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_PRESERVE_ZERO_FRACTION)->header('Access-Control-Allow-Origin', '*')
+        return response()->json($res,200,['Content-Type' => 'application/json; charset=utf-8'])->header('Access-Control-Allow-Origin', '*')
             ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     }
 

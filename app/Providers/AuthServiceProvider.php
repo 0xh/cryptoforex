@@ -25,21 +25,24 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('uploads', function ($user) {
-            Log::debug($user->name." role:".$user->role." for uploads return:".(2 == $user->role));
-            return ("admin" == $user->role);
+        Gate::define('superadmin', function ($user) {
+            return ($user->rights_id>=10);
         });
-        Gate::define('users', function ($user) {
-            Log::debug($user->name." role:".$user->rolw." for users return:".(2 == $user->role));
-            return ("admin" == $user->role);
+        Gate::define('admin', function ($user) {
+            return ($user->rights_id>=7);
         });
-        Gate::define('suppliers', function ($user) {
-            Log::debug($user->name." role:".$user->rolw." for suppliers return:".(2 == $user->role));
-            return ("admin" == $user->role);
+        Gate::define('manager', function ($user) {
+            return ($user->rights_id>=5);
         });
-        Gate::define('schedules', function ($user) {
-            Log::debug($user->name." role:".$user->role." for suppliers return:".(2 == $user->role));
-            return ( in_array($user->role,["admin","client"]));
+        Gate::define('affilate', function ($user) {
+            return ($user->rights_id>=2);
         });
+        Gate::define('client', function ($user) {
+            return ($user->rights_id>=1);
+        });
+        Gate::define('fired', function ($user) {
+            return ("0" == $user->rights_id);
+        });
+
     }
 }

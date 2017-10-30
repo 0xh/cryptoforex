@@ -9,13 +9,14 @@ use App\UserMeta;
 use App\UserRights;
 use App\UserStatus;
 use App\UserDocument;
+use App\UserHierarchy;
 use App\Currency;
 use App\Instrument;
 use App\Deal;
 use Illuminate\Support\Facades\Auth;
 use cryptofx\DataArray;
 use Log;
-
+use DB;
 class UserController extends Controller{
     /**
      * Create a new controller instance.
@@ -32,53 +33,53 @@ class UserController extends Controller{
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $rq,$format='json',$id=null){
+    public function index(Request $rq,$format,$id){
         if(Auth::guest())return route('home');
         $user = $rq->user();
         if($user->rights_id<=1)return route('home');
-        $users = User::with(['manager'])->where('id','>','0');
-        if(!is_null($id)) $users = User::with(['manager'])->where('id','=',$id);
-        if($rq->input("status_id",false)!==false && $rq->input("status_id")!= "false") $users = User::where('status_id','=',$rq->input("status_id"));
-        if($rq->input("rights_id",false)!==false && $rq->input("rights_id")!= "false") $users = User::where('rights_id','=',$rq->input("rights_id"));
-        if($rq->input("online",false)!==false && $rq->input("online")== "1") $users = User::whereRaw("id in (select user_id from user_meta where meta_name='last_login' and meta_value>?)",strtotime("-10 minute"));
-        if($rq->input("country","false")!=="false") $users = User::whereRaw("id in (select user_id from user_meta where meta_name='country' and meta_value = ?)",$rq->input("country"));
-        if($rq->input("manager","false")!=="false" && $rq->input("manager")!= "false") $users = User::whereRaw("id in (select user_id from user_hierarchy where parent_user_id = ?)",$rq->input("manager"));
-        if($rq->input("search","false")!=="false" && $rq->input("search")!= "false") $users = User::whereRaw("(name like '%".$rq->input("search")."%' or surname like '%".$rq->input("search")."%' )");
+        $user = User::with(['manager','accounts','rights','country','status',
+            // 'last_login'=>function($query){
+            //     return $query;
+            // },
+            // 'last_ip'=>function($query){
+            //     return $query;
+            // }
+        ])->find($id);
 
-        Log::debug($users->toSql());
-        $users= $users->get();
-
-        $res = [];
-        foreach($users as $user){
-            $resor = $user->toArray();
-            $country = UserMeta::user($user)->meta('country')->first();
-            $ll = UserMeta::user($user)->where('meta_name','last_login')->first();
-            $lip = UserMeta::user($user)->where('meta_name','last_login_ip')->first();
-            $resor["country"] = is_null($country)?"-":$country->meta_value;
-            $resor["last_login"] = is_null($ll)?'':$ll->meta_value;
-            $resor["last_ip"] = is_null($lip)?'':$lip->meta_value;
-            $resor["status"] = $user->status;
-            $resor["rights"] = $user->rights;
-            // $resor["status"] = UserStatus::find($user->status_id);
-            // $resor["rights"] = UserRights::find($user->rights_id);
-            $resor["accounts"] = $user->accounts;
-            $res[]=$resor;
-        }
-        $res = DataArray::sort($res,$rq->input('sort',false));
+        $ll = UserMeta::user($user)->where('meta_name','last_login')->first();
+        $lip = UserMeta::user($user)->where('meta_name','last_login_ip')->first();
+        $res = $user;
         return ($format=='json')
-                ?response()->json($res,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT)
-                :view('crm.user.dashboard',["user"=>$res[0],"deals"=>Deal::byUser($id)->byStatus("open")->get(),"documents"=>UserDocument::byUser(User::find($res[0]["id"]))->get()]);
+                ?response()->json($user,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT)
+                :view('crm.user.dashboard',[
+                    "user"=>$user,
+                    "deals"=>Deal::byUser($id)->byStatus("open")->get(),
+                    "documents"=>UserDocument::byUser($user)->get(),
+                    "rights" => UserRights::byUser($rq->user())->get(),
+                    "statuses" => UserStatus::all(),
+                    "managers" => User::byRights($rq->user())->where('rights_id','>',$user->rights_id)->get()
+                ]);
             ;
     }
     public function ulist(Request $rq,$format='json'){
         if(Auth::guest())return route('home');
         $user = $rq->user();
         if($user->rights_id<=1)return route('home');
-        $res = User::with(['rights','status','accounts','manager'])
-            ->paginate();
+        $res = User::with(['rights','status','accounts','manager','meta','last_login','last_ip'])->withCount('users');
+        if($rq->input('search',"false")!=="false")$res=$res->whereRaw("(users.name like '%".$rq->input('search',false)."%' or users.surname like '%".$rq->input('search',false)."%'  or users.email like '%".$rq->input('search',false)."%')");
+        if($rq->input('status_id',"false")!=="false")$res=$res->where("status_id",$rq->input('status_id'));
+        if($rq->input('rights_id',"false")!=="false")$res=$res->where("rights_id",$rq->input('rights_id'));
+        if($rq->input('parent_id',"false")!=="false")$res=$res->whereIn("id",UserHierarchy::byParent($rq->input('parent_id'))->select('user_id')->get());
+        if($rq->input('country',"false")!=="false") $res=$res->whereIn("id",UserMeta::where('meta_name','country')->where('meta_value',$rq->input("country"))->select('user_id')->get());
+        if($rq->input('online',"false")=="1")       $res=$res->whereIn("id",UserMeta::where('meta_name','last_login')->whereRaw('meta_value >= unix_timestamp(DATE_SUB(NOW(),INTERVAL 10 MINUTE))')->select('user_id')->get());
+        $res=$res->byRights($user)->paginate();
         return ($format=='json')
                 ?response()->json($res,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT)
-                :view('crm.user.dashboard',["users"=>$res,"deals"=>Deal::byUser($id)->byStatus("open")->get()]);
+                :view('crm.user.dashboard',[
+                    "users"=>$res,
+                    "leads"=>[],
+                    "counts"=>$aggre->get()
+                ]);
     }
 
     /**
@@ -155,20 +156,24 @@ class UserController extends Controller{
     public function update(Request $rq,$format='json',$id){
         list($res,$code)=[["error"=>"404","message"=>"User {$id} not found."],404];
         try{
-            $user = User::findOrFail($id);
+            $user = User::with(['manager','rights'])->find($id);
             $udata = $rq->all();
-            if(isset($udata["password"]))$udata["password"]=bcrypt($udata["password"]);
             // if(isset($udata["manager_id"])){
-            //     $parent = User::findOrFail($udata["manager_id"]);
-            //     $uh = UserHierarchy::user($user)->first();
-            //     is_null($uh)?UserHierarchy::create(["user_id"=>$user->id,"parent_user_id"=>$parent->id]):$uh->update(["parent_user_id"=>$parent->id]);
+            //     $parent = User::find($udata["manager_id"]);
+            //     $uh = UserHierarchy::where('user_id',$user->id)->first();
+            //     if(is_null($uh))UserHierarchy::create(["user_id"=>$user->id,"parent_user_id"=>$parent->id]);
+            //     else $uh->update(["parent_user_id"=>$parent->id]);
             // }
             if(isset($udata["country"])){
                 $country = UserMeta::user($user)->meta('country')->first();
                 $country = is_null($country)?UserMeta::create(['user_id'=>$user->id,"meta_name"=>"country","meta_value"=>$udata['country']]):$country->update(['meta_value'=>$udata['country']]);
             }
+            if(is_null($udata["password"]))unset($udata["password"]);
+            else {$udata["password"]=bcrypt($udata["password"]);}
             $user->update($udata);
-            return $this->index($rq,$format,$user->id);
+            $res=$user;
+            $code=200;
+            // return $this->index($rq,$format,$user->id);
         }
         catch(\Exception $e){
             $code = 500;
@@ -196,8 +201,8 @@ class UserController extends Controller{
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function rights(){
-        return response()->json(UserRights::all(),200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+    public function rights(Request $rq){
+        return response()->json(UserRights::byUser($rq->user())->get(),200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
     }
     public function status(){
         return response()->json(UserStatus::all(),200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
@@ -222,9 +227,9 @@ class UserController extends Controller{
         return response()->json($um);
     }
     public function countries(Request $rq){
-        $res=[];$sel = UserMeta::where('meta_name','=','country')->distinct()->get();
+        $res=["data"=>[]];$sel = UserMeta::where('meta_name','=','country')->distinct()->get();
         foreach ($sel as $c) {
-            $res[]=[
+            $res["data"][]=[
                 "id"=>$c->meta_value,
                 "title"=>$c->meta_value
             ];
@@ -233,5 +238,17 @@ class UserController extends Controller{
     }
     public function documents(Request $rq,$format,$id){
         return response()->json(UserDocument::user(User::find($id))->get(),200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+    }
+    public function hierarchy(Request $rq,$format,$id){
+        return response()->json(UserHierarchy::with(['parent','user'])->byParent($id)->get(),200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+    }
+    public function ban(Request $rq,$format,$id){
+        $admin = $rq->user();
+        $user = User::find($id);
+        if(!is_null($user)){
+            $firedRight = UserRight::where('name','fired');
+            UserHistory::create([]);
+        }
+        return response()->json($user,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
     }
 }

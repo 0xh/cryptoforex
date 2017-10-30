@@ -13,6 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        \App\Console\Commands\CleanPrices::class,
         \App\Console\Commands\LoadPrices::class,
         \App\Console\Commands\LoadHistominute::class,
         \App\Console\Commands\ProcessDeals::class

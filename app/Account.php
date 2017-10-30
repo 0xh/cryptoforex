@@ -36,4 +36,10 @@ class Account extends Model
     {
         return $query->where('user_id', '=', $user->id);
     }
+    public function user(){
+        return $this->belongsTo('App\User');
+    }
+    public function currency(){
+        return $this->belongsTo('App\Currency');
+    }
 }

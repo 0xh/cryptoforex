@@ -9,48 +9,6 @@
         </li>
         @endif
     </ul>
-    <div class="popup instruments">
-        <!-- <div class="search"> -->
-            <!-- <form action="#"> -->
-                <!-- <input type="search" placeholder="Search"> -->
-                <!-- <button type="submit"></button> -->
-                <!-- <a href="#" class="filter">Show filter</a> -->
-                <!-- <p><input type="checkbox" name="online" data-name="online" value="online"> Active Only</p> -->
-                <!-- <a href="#" class="new">Add user</a> -->
-                <!-- <div class="popup popup_filter">
-                    <input type="radio" name="radio" data-name="radio" value="Admin"> Admin<br>
-                    <input type="radio" name="radio" data-name="radio" value="Manager"> Manager<br>
-                    <input type="radio" name="radio" data-name="radio" value="Client"> Client<br>
-                    <input type="radio" name="radio" data-name="radio" value="Affiliate"> Affiliate<br>
-                    <input type="radio" name="radio" data-name="radio" value="Super_Admin"> Super Admin<br>
-                    <input type="radio" name="radio" data-name="radio" value="Fired"> Fired
-                </div> -->
-            <!-- </form> -->
-        <!-- </div> -->
-        <strong>@lang('messages.instruments')</strong>
-        <div class="close"></div>
-        <table>
-            <thead>
-                <tr>
-
-                    <td>ID <div class="arrow"><span></span><span></span></div></td>
-                    <td>Enabled <div class="arrow"><span></span><span></span></div></td>
-
-                    <td>Title <div class="arrow"><span></span><span></span></div></td>
-
-                    <td>Volate <div class="arrow"><span></span><span></span></div></td>
-                    <td>Price<div class="arrow"><span></span><span></span></div></td>
-                    <td>From currency <div class="arrow"><span></span><span></span></div></td>
-                    <td>To Currency <div class="arrow"><span></span><span></span></div></td>
-
-                    <td>Commission <div class="arrow"><span></span><span></span></div></td>
-
-                    <td></td>
-                </tr>
-            </thead>
-            <tbody class="loader" data-action="/json/instrument" data-function="crmInstrumentList" data-autostart="true" data-trigger=""></tbody>
-        </table>
-    </div>
     <script>
         window.onloads.push(function(){
             $("#instruments").on("click",function(){
@@ -93,21 +51,12 @@
                     add:function(){},
                     edit:function(id){
                         $.ajax({
-                            url:"/json/instrument/"+id,
+                            url:"/html/instrument/"+id,
                             dataType:"json",
                             success:function(d,x,s){
+                                $('body').append(d);
                                 console.debug(d);
-                                var inst = d[0],$bb=$('[data-rel=edit_instrument]'),
-                                    ih = new cf.loader($bb.find('.instrument-history').attr('data-action','/json/instrument/'+id+'/history'),Fresher);
-                                $bb.attr('data-action','/json/instrument/'+id+'/update');
-                                for(var i in inst){
-                                    var inpt = $bb.find('form [data-name="'+i+'"]')
-                                    if(inpt.attr('type')=='checkbox')inpt.attr('checked',(inst[i]=="1")?true:false);
-                                    else inpt.val(inst[i]);
-                                }
-                                // $('.popup,.bgc').fadeOut((window.animationTime!=undefined)?window.animationTime:256);
-                                $bb.fadeIn((window.animationTime!=undefined)?window.animationTime:256);
-                                // cf.submiter($('.edit_user'));
+                                cf.reload();
                             }
                         });
 
