@@ -26,6 +26,10 @@
 .popup .text {
   padding-left: 20px;
 }
+.popup select {
+  height: 42px;
+  line-height: 42px;
+}
 .user-instrument .button {
   display: inline-block;
   height: 50px;

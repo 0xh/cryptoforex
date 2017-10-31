@@ -67,7 +67,7 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\User
      */
-    protected function create(array $data){
+    public function create(array $data){
         if(!isset($data['rights_id']))$data['rights_id']=UserRights::where('name','=','client')->first()->id;
         if(!isset($data['status_id']))$data['status_id']=UserStatus::where('code','=','newclient')->first()->id;
         $country = (isset($data['country']))?$data['country']:false;

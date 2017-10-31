@@ -67,9 +67,9 @@ body{
   100% {
     opacity: 0;
   }
-} 
+}
 
-.bg_red{  
+.bg_red{
   animation: redd 1s linear;
   border-bottom: 1px solid transparent;
   border-top: 1px solid transparent;
@@ -3406,7 +3406,7 @@ table thead td span:nth-child(2) {
 }
 
 .search form input[type=search]:hover{
-  transition: 0.7s;  
+  transition: 0.7s;
   width: 200px;
 }
 
@@ -3464,10 +3464,10 @@ table thead td span:nth-child(2) {
   margin: 0 5px;
   margin-right: 0;
 }
-
+/*
 .search form .center .inner{
   display: none;
-}
+}*/
 
 .search form .center .inner.active{
   display: block;
@@ -3989,7 +3989,7 @@ table thead td span:nth-child(2) {
     background-color: #fff;
     /*height: 50px;*/
     height: auto;
-    position: relative; 
+    position: relative;
     overflow: hidden;
     transition: 1s;
     /*position: absolute;*/

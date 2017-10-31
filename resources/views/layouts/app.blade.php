@@ -40,6 +40,32 @@
     </script>
 
     <script>
+    var _onload = [];
+    function leftZeroPad(s){
+        var ret=s.toString(),
+            length = ret.length,
+            defaults={
+                symbol:'0',
+                maxLength:2
+            },
+            opts = $.extend(defaults,(arguments.length>1)?arguments[1]:{});
+        for(var i=0;i<(opts.maxLength-length);++i)ret=opts.symbol+ret;
+        return ret;
+    }
+    function dateFormat(d){
+        if(d==null) return '';
+        var date = new Date(d*1000),
+            withTime = (arguments.length>1)?arguments[1]:true,
+            res = date.getFullYear();
+        res+= '-'+leftZeroPad(date.getMonth()+1);
+        res+= '-'+leftZeroPad(date.getDate());
+        if(withTime){
+            res+= ' '+leftZeroPad(date.getHours());
+            res+= ':'+leftZeroPad(date.getMinutes());
+            res+= ':'+leftZeroPad(date.getSeconds());
+        }
+        return res;
+    }
     var currency = {
         data:{},
         value: function(a,c){
@@ -86,7 +112,7 @@
 
         <!-- <div id="scroller_container">
           <div id="scroller"> -->
-            <div class="informer-wrap">
+           <!--  <div class="informer-wrap">
               <div id="informer">
                 <div class="flex">
                   <img src="/images/trade-down.png" alt="down">
@@ -217,7 +243,7 @@
                   <span style="color:#FF3100">110.16</span> |
                 </div>
               </div>
-            </div>
+            </div> -->
           <!-- </div>
         </div> -->
         @endif
@@ -260,15 +286,16 @@
               </div>
               <div class="con">
                 <strong>@lang('messages.Withdrawal_of_funds')</strong>
-                <form action="#">
-                  <input type="text" name="summ" placeholder="@lang('messages.Amount')">
+                <form action="#" class="submiter" data-action="/user/finance/withdrawal">
+                  <input type="text" name="summ" data-name="amount" placeholder="@lang('messages.Amount')">
                   <select name="out">
                     <option disabled value="">@lang('messages.Output_method')</option>
                     <option value="">@lang('messages.first')</option>
                     <option value="">@lang('messages.second')</option>
                     <option value="">@lang('messages.following')</option>
                   </select>
-                  <input type="submit" value="@lang('messages.Order_output')">
+                  <button class="submit">@lang('messages.Order_output')</button>
+                  <!-- <input type="submit" class="submit" value="@lang('messages.Order_output')"> -->
                 </form>
               </div>
             </div>
@@ -336,7 +363,7 @@
                           </div>
                         </div>
                       </div>
-                      <input type="submit" value="Принять">
+                      <!-- <input type="submit" value="Принять"> -->
                     </div>
                   </form>
                 </div>
@@ -347,59 +374,8 @@
                       <th>Сумма</th>
                       <th>Статус</th>
                     </thead>
-                    <tbody>
-                      <tr>
-                        <td>04-12-2017 17:29:26</td>
-                        <td>100$</td>
-                        <td>В процессе</td>
-                      </tr>
-                      <tr>
-                        <td>04-12-2017 17:29:26</td>
-                        <td>200$</td>
-                        <td>В процессе</td>
-                      </tr>
-                      <tr>
-                        <td>04-12-2017 17:29:26</td>
-                        <td>1 000$</td>
-                        <td>Выплачено</td>
-                      </tr>
-                      <tr>
-                        <td>04-12-2017 17:29:26</td>
-                        <td>5 000$</td>
-                        <td>Отказано</td>
-                      </tr>
-                      <tr>
-                        <td>04-12-2017 17:29:26</td>
-                        <td>100$</td>
-                        <td>В процессе</td>
-                      </tr>
-                      <tr>
-                        <td>04-12-2017 17:29:26</td>
-                        <td>200$</td>
-                        <td>В процессе</td>
-                      </tr>
-                      <tr>
-                        <td>04-12-2017 17:29:26</td>
-                        <td>1 000$</td>
-                        <td>Выплачено</td>
-                      </tr>
-                      <tr>
-                        <td>04-12-2017 17:29:26</td>
-                        <td>5 000$</td>
-                        <td>Отказано</td>
-                      </tr>
-                      <tr>
-                        <td>04-12-2017 17:29:26</td>
-                        <td>1 000$</td>
-                        <td>Выплачено</td>
-                      </tr>
-                      <tr>
-                        <td>04-12-2017 17:29:26</td>
-                        <td>5 000$</td>
-                        <td>Отказано</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                    <tbody class="loader" data-name="user-transactions" data-action="/json/finance/withdrawal/{{Auth::id()}}" data-function="userWithdrawals" data-autostart="true" data-refresh="0"></tbody>
+                </table>
                 </div>
               </div>
             </div>
@@ -720,10 +696,17 @@
         <script src="http://d3js.org/d3.v4.min.js"></script>
         <script src="http://techanjs.org/techan.min.js"></script>
         <script type="text/javascript" src="{{ asset('/chart2/chart.js') }}"></script>
-        
+
         <script>
             $(document).ready(function(){
                 new cf.loader($(".loader-instruments"),Fresher);
+                for(var i in _onload){
+                    var fnc=_onload[i];
+                    if(typeof(fnc)=="function"){
+                        console.debug("Execute _onload func: "+fnc);
+                        fnc();
+                    }
+                }
             });
 
         </script>

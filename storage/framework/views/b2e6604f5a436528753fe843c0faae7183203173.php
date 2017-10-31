@@ -47,8 +47,14 @@
                             closeTime = new Date(row.updated_at*1000);
 
                         // s+= '<td><i class="ic ic_btc"></i><i class="ic ic_lte"></i>'+inst+'</td>';
-                        s+= '<td>'+inst+'</td>';
-                        s+= '<td class="'+((row.direction==1)?"down":"up")+'">'+dateTime(row.created_at)+'</td>';
+                        s+= '<td>'
+                            +'<span><img src="'+((row.instrument.from!=undefined)?row.instrument.from.image:'')+'" alt=""><img src="'+((row.instrument.to!=undefined)?row.instrument.to.image:'')+'" alt=""></span>'
+                            +inst
+                            +'</td>';
+                        s+= '<td>'+dateTime(row.created_at)+'</td>';
+                        s+= '<td>'+123+'</td>';
+                        s+= '<td class="'+((row.direction==1)?"down":"up")+'">';
+                        s+= '<td>'+123+'</td>';
                         s+= '<td>'+row.open_price+'</td>';
                         s+= '<td>'+dateTime(row.updated_at)+'</td>';
                         s+= '<td>'+row.close_price+'</td>';
@@ -73,8 +79,14 @@
                         if(parseInt(row.volation)==1)profitClass='bg_green';
                         else if(parseInt(row.volation)==-1)profitClass='bg_red';
                         // s+= '<td><i class="ic ic_btc"></i><i class="ic ic_lte"></i>'+inst+'</td>';
-                        s+= '<td>'+inst+'</td>';
-                        s+= '<td class="'+((row.direction==1)?"down":"up")+'">'+dateTime(row.created_at)+'</td>';
+                        s+= '<td>'
+                            +'<span><img src="'+((row.instrument.from!=undefined)?row.instrument.from.image:'')+'" alt=""><img src="'+((row.instrument.to!=undefined)?row.instrument.to.image:'')+'" alt=""></span>'
+                            +inst
+                            +'</td>';
+                        s+= '<td>'+dateTime(row.created_at)+'</td>';
+                        s+= '<td>'+123+'</td>';
+                        s+= '<td class="'+((row.direction==1)?"down":"up")+'">';
+                        s+= '<td>'+123+'</td>';
                         s+= '<td>'+row.open_price+'</td>';
                         s+= '<td class="'+profitClass2+'">'+((row.close_price!=undefined)?row.close_price:'&nbsp;')+'</td>';
                         s+= '<td>'+currency.value(row.amount,'USD')+' <span>x'+row.multiplier+'</span></td>';
@@ -90,10 +102,13 @@
                 <thead>
                   <th><?php echo app('translator')->getFromJson('messages.Assets'); ?></th>
                   <th><?php echo app('translator')->getFromJson('messages.D/T/O'); ?></th>
+                  <th>Take Profit</th>
+                  <th>Buy / Sell</th>
+                  <th>Stop Loss</th>
                   <th><?php echo app('translator')->getFromJson('messages.open_price'); ?></th>
                   <th><?php echo app('translator')->getFromJson('messages.current_price'); ?></th>
                   <th><?php echo app('translator')->getFromJson('messages.invested'); ?></th>
-                  <th><?php echo app('translator')->getFromJson('messages.received'); ?></th>
+                  <th><?php echo app('translator')->getFromJson('messages.Profit'); ?> $</th>
                   <th><?php echo app('translator')->getFromJson('messages.Profit'); ?> %</th>
                 </thead>
                 <tbody class="loader" data-action="/deal?status=open&user_id=<?php echo e(Auth::user()->id); ?>" data-autostart="true" data-refresh="2400" data-function="historyDeals"></tbody>
@@ -190,11 +205,12 @@
                   <thead>
                     <th><?php echo app('translator')->getFromJson('messages.Assets'); ?></th>
                     <th><?php echo app('translator')->getFromJson('messages.D/T/O'); ?></th>
+                    <th>Buy / Sell</th>
                     <th><?php echo app('translator')->getFromJson('messages.open_price'); ?></th>
                     <th><?php echo app('translator')->getFromJson('messages.D/T/C'); ?></th>
                     <th><?php echo app('translator')->getFromJson('messages.close'); ?></th>
                     <th><?php echo app('translator')->getFromJson('messages.invested'); ?></th>
-                    <th><?php echo app('translator')->getFromJson('messages.received'); ?></th>
+                    <th><?php echo app('translator')->getFromJson('messages.Profit'); ?> $</th>
                     <th><?php echo app('translator')->getFromJson('messages.Profit'); ?> %</th>
                   </thead>
                 <tbody class="loader" data-action="/deal?status=close&user_id=<?php echo e(Auth::user()->id); ?>" data-autostart="true" data-refresh="4800" data-function="historyCloseDeals"></tbody>

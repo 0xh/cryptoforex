@@ -47,16 +47,16 @@ class ProcessDeals extends Command
      */
     public function handle(){
         echo "Proccess deals stated ....\n";
-        $openDealStatus = DealStatus::where('code','open')->first();
+        $openDealStatus = DealStatus::where('code','close')->first();
         // $deals = Deal::orderBy('id')->get();
 
         $ticks = time();
         while(time()-$ticks<60){
-            $deals = Deal::where('status_id','=',$openDealStatus->id)->orderBy('id')->orderBy('updated_at')->get();
+            $deals = Deal::where('status_id','<>',$openDealStatus->id)->orderBy('id')->orderBy('updated_at')->get();
             foreach($deals as $deal){
                 DealMechanic::fork($deal);
             }
-            usleep(100);
+            usleep(400);
         }
     }
 }

@@ -165,7 +165,7 @@
                 res+= ':'+leftZeroPad(date.getSeconds());
             }
             return res;
-      }
+        }
   </script>
   <script src="/crmd2/js/jquery.shapeshift.min.js"></script>
   <script src="/crmd2/js/js.js"></script>

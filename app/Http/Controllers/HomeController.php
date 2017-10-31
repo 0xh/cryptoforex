@@ -28,8 +28,9 @@ class HomeController extends Controller
     public function index(Request $rq){
         if(Auth::guest()) return view('welcome');
         $user = $rq->user();
+        $user_count = User::all()->count();
         $accounts = Account::where('user_id',$user->id)->get();
-        return view('home',["user"=>$user,"accounts"=>$accounts,'currencies'=>Currency::all()]);
+        return view('home',["user"=>$user,"accounts"=>$accounts,'currencies'=>Currency::all(),'online'=>rand($user_count,$user_count*3)]);
     }
     /**
      * Show the application page.

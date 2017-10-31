@@ -61,7 +61,7 @@ Route::get('/{format}/user/{id}','UserController@index')->name('user.info')->whe
 Route::get('/{format}/user/{id}/update','UserController@update')->name('user.update')->where('format','json')->where('id','[0-9]+');
 Route::get('/{format}/user/{id}/delete','UserController@destroy')->name('user.update')->where('format','json')->where('id','[0-9]+');
 Route::get('/{format}/user/{id}/documents','UserController@documents')->name('user.documents')->where('format','json')->where('id','[0-9]+');
-Route::get('/{format}/user/add','Auth\RegisterController@create')->name('user.register')->where('format','json');
+
 Route::get('/{format}/user/status','UserController@status')->name('user.status')->where('format','json');
 Route::get('/{format}/user/rights','UserController@rights')->name('user.rights')->where('format','json');
 Route::get('/{format}/user/countries','UserController@countries')->name('user.countries')->where('format','json');
@@ -89,3 +89,7 @@ Route::get('/price/{format}/{id?}','PriceController@index')->name('price.list')-
 
 Route::get('/user/hierarchy/{format}/{id?}','UserController@hierarchy')->name('user.hierarchy')->where('format','json')->where('id','[0-9]+');
 Route::get('/user/ban/{format}/{id}','UserController@ban')->name('user.ban')->where('format','json')->where('id','[0-9]+');
+Route::get('/user/add/{format}','UserController@store')->name('user.add')->where('format','json');
+Route::get('/user/finance/withdrawal','TransactionController@makeWithdrawal')->name('user.makeWithdrawal');
+Route::get('/user/{id}/controll/off','UserController@controll')->name('user.controll')->where('id','[0-9]+');
+// Route::get('/user/{format}','UserController@ulist')->name('user.list')->where('format','json');

@@ -54,10 +54,31 @@
                     <p>'+d.message+'</p></div>').appendTo('body');
             }
         }
-        $(document).ready(function(){
-            $('#deal_amount').on("change keyup",function(){$('[data-name=amount],[data-name=stop_high]').val($(this).val());});
-            $('#flying').on("change keyup",function(){$('[data-name=multiplier]').val($(this).val());});
-        });
+        _onload.push(
+            function(){
+                $('#deal_amount').on("change keyup",function(){
+                    var val = parseFloat($(this).val());
+                    $('[data-name=amount]').val(val);
+                    if(!$('#profit_active').is(':checked'))$('[data-name=stop_high]').val(100*val);
+                });
+                $('#flying').on("change keyup",function(){$('[data-name=multiplier]').val($(this).val());});
+                $('#take_profit').on("change keyup",function(){
+                    if($('#profit_active').is(':checked'))$('[data-name=stop_high]').val($(this).val());
+                });
+                $('#stop_loss').on("change keyup",function(){
+                    if($('#loss_active').is(':checked'))$('[data-name=stop_low]').val($(this).val());
+                });
+                $('#atprice').on("change keyup",function(){
+                    if($('#atprice_active').is(':checked'))
+                        $('[data-name=atprice]').val($(this).val());
+                });
+                $('#atprice_active').on("change",function(){
+                    ($('#atprice_active').is(':checked'))
+                        ?$('[data-name=delayed]').val("true")
+                        :$('[data-name=delayed]').val("false");
+                });
+            }
+        );
     </script>
     <div class="deal">
         <div class="tabs_popup white">
@@ -91,16 +112,16 @@
                     <ul class="flex jcsb">
                         <li class="active">TP</li>
                         <li>SL</li>
-                        <li>AtP</li>
+                        <li>ATP</li>
                     </ul>
                     <div class="wrap">
                         <div class="left">
                             <div class="item">
                                 <div>
-                                    <input type="checkbox" class="checkbox account-type" id="profit_active" value="">
-                                    <label for="profit_active" class="account-type-switcher">Take Profit (TP)</label>
+                                    <input type="checkbox" class="checkbox" id="profit_active" value="">
+                                    <label for="profit_active">Take Profit (TP)</label>
                                 </div>
-                                <div class="flex">
+                                <div class="flex active">
                                     <input type="number" value="0" size="0.00001" id="take_profit"/>
                                     <div class="wrap flex">
                                       <span class="minus">-</span>
@@ -110,8 +131,8 @@
                             </div>
                             <div class="item">
                                 <div>
-                                    <input type="checkbox" class="checkbox account-type" id="loss_active" value="">
-                                    <label for="loss_active" class="account-type-switcher">Stop Loss (SL)</label>
+                                    <input type="checkbox" class="checkbox" id="loss_active" value="">
+                                    <label for="loss_active">Stop Loss (SL)</label>
                                 </div>
                                 <div class="flex active">
                                     <input type="number" value="0" size="0.00001" id="stop_loss"/>
@@ -125,13 +146,16 @@
                         <div class="right">
                             <strong>At the price</strong>
                             <div>
-                                <input type="checkbox" class="checkbox account-type" id="price" value="">
-                                <label for="price" class=" account-type-switcher">Stop Loss (SL)</label>
+                                <input type="checkbox" class="checkbox" id="atprice_active" value="">
+                                <label for="atprice_active">At the price</label>
                             </div>
-                            <input type="number" value="xxx" size="0.00001">
+                            <div class="flex active">
+                                <input type="number" value="0" size="0.00001" id='atprice'>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <input name="atprice" value="" type="hidden" data-name="atprice"/>
                 <input name="amount" value="100" type="hidden" data-name="amount"/>
                 <input name="stop_high" value="100" type="hidden" data-name="stop_high"/>
                 <input name="stop_low" value="0" type="hidden" data-name="stop_low"/>
@@ -139,6 +163,8 @@
                 <input name="instrument_id" value="1" type="hidden" data-name="instrument_id"/>
                 <input name="direction" value="1" type="hidden" data-name="direction"/>
                 <input name="currency" value="USD" type="hidden" data-name="currency" />
+                <input name="delayed" value="false" type="hidden" data-name="delayed" />
+
 
                 <a  onclick="$('[name=direction]').val(1);" href="#" class="up flex submit">
                     <div class="flex instrument-price-buy">
@@ -154,7 +180,7 @@
                     </div>
                     <b><?php echo app('translator')->getFromJson('messages.SELL'); ?></b>
                 </a>
-                
+
             </div>
             <!-- <div class="work_order flex">
               <p>BTC/BCH</p>

@@ -18,7 +18,7 @@
                                 <input data-name="country" value="{{$user->country}}" />
                             </span></li>
                             <li>KYC: <span class="user-rurs">No</span></li>
-                            <li>Manager: <span class="user-status">
+                            <li>Manager: <span class="user-manager">
                                 <select data-name="parent_user_id">
                                     <option value="false" selected="selected">Not setted</option>
                                     <option value="{{Auth::id()}}" @if($user->manager && $user->manager->id == Auth::id())
@@ -27,7 +27,7 @@
                                     >Me</option>
                                     @foreach($managers as $row)
                                         <option value="{{$row->id}}"
-                                            @if($user->manager->id == $row->id)
+                                            @if(isset($user->manager->id) && $user->manager->id == $row->id)
                                                 selected="selected"
                                             @endif
                                             >{{$row->name}} {{$row->surname}}</option>
@@ -58,8 +58,12 @@
                                     </select>
                                 </span>
                             </li>
-                            <!-- <li>Source: <span class="user-name"></span></li>
-                            <li>Source Description: <span class="user-name"></span></li> -->
+                            @if($user->rights_id>2 && $user->users_count>0)
+                                <li>Controll: <span class="user-control">
+                                    <button class="" onclick="crmControllOff()">@lang('messages.controll_off')</button>
+                                </span></li>
+                            @endif
+                            <!-- <li>Source Description: <span class="user-name"></span></li> -->
                         </ul>
                         <div class="button flex">
                             <!-- <a href="javascript:0;" class="submit">@lang('messages.save')</a> -->
@@ -97,11 +101,6 @@
                     <div class="dhx_cal_header"></div>
                     <div class="dhx_cal_data"></div>
                 </div>
-            </div>
-        </div>
-        <div class="item">
-            <div class="inner"></div>
-            <div class="inner">
                 <div class="tabs_in">
                     <ul class="tabs_in_dashbord">
                         <li>Comments</li>
@@ -112,14 +111,14 @@
                         <li>Message</li>
                     </ul>
                     <div class="tabs_in_dash comments">
-                        <!-- <div class="item_con">
+                        <div class="item_con">
                             <strong>Tasks Panel</strong>
                             <a href="#" class="add">Add Task</a>
                             <p class="task">Task need to do</p>
                             <div class="popup task_popup">
                                 <textarea name="task" id="task"></textarea>
                             </div>
-                        </div> -->
+                        </div>
                         <div class="item_con">
                             <strong>Comments</strong>
                             <p class="coment">No Comments</p>
@@ -235,6 +234,12 @@
                 </div>
             </div>
         </div>
+        <!-- <div class="item">
+            <div class="inner"></div>
+            <div class="inner">
+                
+            </div>
+        </div> -->
     </div>
 </div>
 <script>
@@ -272,6 +277,15 @@
     function crmUserInfoCallback(){
         console.debug("UserInfoCallback");
         cf._loaders['user-list'].execute();
+    }
+    function crmControllOff(){
+        $.ajax({
+            url:"/user/{{$user->id}}/controll/off",
+            dataType:"html",
+            success:function(d,x,s){
+                $('.user_dashboard').replaceWith(d);
+            }
+        });
     }
     cf.reload();
 </script>

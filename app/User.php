@@ -75,4 +75,7 @@ class User extends Authenticatable
     public function scopeByRights($query,User $user){
         return $query->where('rights_id','<',$user->rights_id);
     }
+    public function getTitleAttribute(){
+        return $this->name." ".$this->surname;
+    }
 }

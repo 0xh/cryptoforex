@@ -37,7 +37,7 @@ var cf={
         }).addClass('sorter-assigned');
         $(".check-all:not(.checkall-assigned)").on("change",function(){
             var v = $(this).is(':checked')?true:false, list = $(this).attr("data-list");
-            $('[data-name='+list+']').prop("checked",v);
+            $('[data-name='+list+']').prop("checked",v).change();
         }).addClass('checkall-assigned');
         $(".requester:not(.requester-assigned)").each(function(){
             new cf.requester($(this));
@@ -59,6 +59,7 @@ var cf={
     _loaders:[],
     _requests:[],
     _type:"get",
+    _switchOff:false,
     refresher:function(){
         cf._actions=[];
         this.tick=0;
@@ -71,6 +72,7 @@ var cf={
             cf._actions.push(bnd);
         };
         this.execute=function(){
+            if(cf._switchOff)return;
             if(cf._actions.length==0)return;
             var dt = new Date().getTime();
             for(var i in cf._actions){
@@ -81,7 +83,7 @@ var cf={
                     cf._actions[i].run(args);
                     cf._actions[i].last = dt;
                 }
-
+                // cf._switchOff=true;
             }
         };
         setInterval(this.execute,1000);
@@ -161,6 +163,11 @@ var cf={
             var opts = (arguments.length)?arguments[0]:this.opts,rdata = {};
             if(opts==undefined || opts.container == undefined )return;
             opts.action = opts.container.attr('data-action');
+            container.find("input,select,textarea").each(function(){
+                var name = $(this).attr('data-name'), val = $(this).val();
+                console.debug(opts.uid,name,val);
+                if(name!=undefined && val.length) rdata[name]= val;
+            });
             if(opts.sort!==false){
                 rdata["sort"]={};
                 var srt =opts.sort.split(/\,/g);
@@ -185,6 +192,7 @@ var cf={
                                 var row = (d.data!=undefined)?d.data[i]:d[i];
                                 var name=(row.title)?row.title:((row.name)?row.name:''),
                                     value = (row.id==undefined)?name:row.id;
+                                name = (row.surname)?name+' '+row.surname:'';
                                 // console.debug(title,name,value);
                                 opts.container.append('<option value="'+value+'">'+name+'</option>');
                             }
@@ -251,9 +259,8 @@ var cf={
                 return args;
             },clickfn=function(){
                 if(!checkvals(container))return;
-                // console.debug(container);
-                var action = container.attr("data-action"), args = getargs(container),callback = container.attr("data-callback");
-                // console.debug(args,callback);
+                var action = container.attr("data-action"), args = getargs(container),callback = container.attr("data-callback"),error = container.attr("data-callback-error");
+                console.debug(action,args,callback);
                 $.ajax({
                     url:action,
                     data:args,
@@ -263,7 +270,7 @@ var cf={
                         else console.debug(d);
                     },
                     error:function(x,s){
-                        if(window[callback]!=undefined)window[callback](x.responseJSON);
+                        if(window[error]!=undefined)window[error](x.responseJSON);
                         else console.error(x);
                     }
                 });

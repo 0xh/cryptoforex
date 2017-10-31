@@ -1,4 +1,4 @@
-<aside class="left">
+g<aside class="left">
     <ul>
         <li>
             <a href="#">@lang('messages.Poppar')</a>
@@ -182,10 +182,14 @@
                     window.instrument = row;
                 }
                 window.instruments[row.id]= row;
-                if(--count==0)break;
+                // if(--count==0)break;
+
                 //<img src="/images/trade-down.png" alt="down"> EUR/USD <span style="color:#FF3100">1.1965</span>
-                informer+= (row.histo.volation>0)?'<img src="/images/trade-up.png" alt="up">':'<img src="/images/trade-down.png" alt="fown"> '
-                informer+= row.title+' <span style="color:#FF3100">'+currency.value(row.price,'')+'</span> | ';
+                informer+= '<div class="flex" style="float:left;">';
+                informer+= (row.histo.volation>0)?'<img src="/images/trade-down.png" alt="up">':'<img src="/images/trade-up.png" alt="fown"> ';
+                informer+='<span class="img"><img src="'+((row.from!=undefined)?row.from.image:'')+'" alt=""><img src="'+((row.to!=undefined)?row.to.image:'')+'" alt=""></span>';
+                informer+= row.title+' <span style="color:#FF3100">'+currency.value(row.histo.close,'')+'</span> | ';
+                informer+= '</div>';
 
                 s='<div class="inner instrument-bar width flex flex-top '+((row.histo.volation>0)?"green":"red")+'" id="instrument_id_'+row.id+'" onclick="chooseInstrument('+row.id+')">';
                 s+='<div class="box">'
@@ -209,15 +213,16 @@
                 //     iid:row.id
                 // });
             }
-            $('#informer').html(informer);
+            // $('#informer > div > div').html(informer);
+            // $('#informer').html('');
             chooseInstrument(window.instrument.id)
         }
         function chooseInstrument(id){
             var rand=function(min, max) {
                     return Math.random() * (max - min) + min; //The maximum is exclusive and the minimum is inclusive
                 },setPrice=function(id,price){
-                var price_sell = price*(1-parseFloat(window.instrument.commission)),
-                    price_buy = price*(1+parseFloat(window.instrument.commission));
+                var price_sell = window.instrument.histo.open*(1-parseFloat(window.instrument.commission)),
+                    price_buy = window.instrument.histo.close*(1+parseFloat(window.instrument.commission));
                 // $('.instrument-price-sell').html('<p>'+price_sell.toFixed(0)+'.</p><b>'+price_sell.toString().replace(/(\d+)\.(\d{0,4}.*)/,'$2')+'</b>');
                 $('.instrument-price-sell').html(price_sell.toFixed(4).replace(/(\d+)\.(\d+)/,'<p>$1.</p><b>$2</b>'));
                 $('.instrument-price-buy').html(price_buy.toFixed(4).replace(/(\d+)\.(\d+)/,'<p>$1.</p><b>$2</b>'));
@@ -258,7 +263,7 @@
             if(window.MainChart != undefined){
                 window.MainChart.setParams({xhrInstrumentId: id});
                 window.MainChart.reloadData(true);
-            }else{
+            }else if(typeof(Chart) != "undefined"){
                 window.MainChart = new Chart(document.getElementById('main'), {
                     xhrInstrumentId: id,     // query type currency number
                     xhrPeriodFull: 1440,    // data max period
@@ -276,7 +281,7 @@
 
             }
             // set pult
-            setPrice(id,window.instrument.price);
+            setPrice(id);
         }
     </script>
 

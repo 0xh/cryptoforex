@@ -42,6 +42,12 @@ class Withdrawal extends Model
     public function account(){
         return $this->belongsTo('App\Account');
     }
+    public function scopeByUser($query,$user){
+        return ($user == false )?$query:$query->where('user_id',$user->id);
+    }
+    public function scopeByUserId($query,$id){
+        return ($id == false )?$query:$query->where('user_id',$id);
+    }
     public function scopeById($query,$id){
         return ($id == false )?$query:$query->where('id',$id);
     }

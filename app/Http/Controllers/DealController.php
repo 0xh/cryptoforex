@@ -84,7 +84,7 @@ class DealController extends Controller{
      */
     public function store(Request $rq){
         $amount = floatval ($rq->input("amount",0));
-        $dealStatus = DealStatus::where('code',$rq->input('status','open'))->first();
+
         $user = $rq->user();
 
         $account = Account::where('user_id',$user->id)->where('type',$rq->input('account_type','demo'))->first();
@@ -98,6 +98,7 @@ class DealController extends Controller{
         if($trx->code!="200")return response()->json($trx,$trx->code,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
         $currency = Currency::where('code',$rq->input('currency'))->first();
         $price = Price::where('instrument_id',$rq->input('instrument_id'))->orderBy('id','desc')->first();
+        $dealStatus = DealStatus::where('code',$rq->input('status','open'))->first();
         $dealData = [
             'status_id' => $dealStatus->id,
             'instrument_id'=>$rq->input('instrument_id'),
@@ -111,6 +112,11 @@ class DealController extends Controller{
             'multiplier'=>$rq->input('multiplier',1),
             'account_id'=>$account->id
         ];
+        if($rq->input("delayed","false") == "true"){
+            $dealStatus = DealStatus::where('code',$rq->input('status','delayed'))->first();
+            $dealData['open_price']=$rq->input("atprice");
+            $dealData['status_id'] = $dealStatus->id;
+        }
         $deal = Deal::create($dealData);
         DealHistory::create([
             'deal_id'=>$deal->id,

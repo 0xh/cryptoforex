@@ -64,26 +64,53 @@
                 user:{
                     current:null,
                     showList:function(opts){
+                        $.ajax({
+                            url:'/html/user',
+                            dataType:"html",
+                            data:opts,
+                            success:function(d,x,s){
+                                $(d).appendTo('body');
+                                // cf._loaders['user-list'].opts.data={};
+                                // cf._loaders['user-list'].execute();
+                                cf.reload();
+                            }
+                        });
+                        return;
                         var container = $('.popup.users');
                         container.fadeIn((animationTime)?animationTime:256);$('body').addClass('active');
-                        // console.debug(container,animationTime);
+                        // console.debug(container.find('select'));
+                        container.find('input').val('');
+                        container.find('select').removeAttr('selected').val('false');
                         for(var i in opts){
-                            container.find('[data-name="'+i+'"]').val(opts[i]).change();
+                            container.find('[data-name="'+i+'"]')
+                                .val(opts[i])
+                                // .change();
                         }
-                        // cf._loaders['user-list'].execute();
+                        // console.debug(container.find('select[data-name=status_id]').val());
+                        cf._loaders['user-list'].opts.data={};
+                        cf._loaders['user-list'].execute();
+                        // container.find('select:last').change();
                     },
                     list:function (container,d,x,s){
+                        if(d.data.length==0){
+                            var mm = $('<div class="popup users empty-list" style="display:block;padding:2rem;text-align:center; width: 12rem;">@lang("messages.list_empty")</div>').appendTo('body');
+                            $('<div class="close"></div>').appendTo(mm).on('click',function(e){
+                                $('.empty-list').fadeOut( 256, function(){ $(this).remove(); });
+                            });
+                            return;
+                        }
                         container.html('');
                         for(var i in d.data){
                             var row=d.data[i],s = '<tr data-class="user" data-id="'+row.id+'">';
                             s+='<td><input type="checkbox" data-name="user_selected" value="user_'+row.id+'" data-id="'+row.id+'" /></td>';
                             s+='<td>'+row.id+'</td>';
-                            // s+='<td>'+row.status.title+'</td>';
+
                             s+='<td>'+dateFormat(row.created_at)+'</td>';
                             s+='<td>'+row.email+'</td>';
                             s+='<td>'+row.name+' '+row.surname+'</td>';
                             s+='<td>'+row.phone+'</td>';
                             s+='<td>'+row.country+'</td>';
+                            s+='<td>'+row.status.title+'</td>';
                             for(var i =0;i <2;++i){
                                 s+=(row.accounts[i]==undefined)?'<td>0</td>':'<td>'+currency.value(row.accounts[i].amount,"USD")+'&nbsp;<sup>'+row.accounts[i].type+'</sup></td>';
                             }
@@ -98,32 +125,50 @@
                             container.append(s);
                         }
                         cf.pagination(d,'user-list',container);
+                        container.find('[data-name=user_selected]').on('click change keyup',function(e){
+                            if($('[data-name=user_selected]:checked').length)$('[data-name=manager_id]').show();else $('[data-name=manager_id]').hide();
+                        })
+                        $('[data-name=manager_id]').on("change",function(){
+                            var manager_id = $(this).val();
+                            $('[data-name=user_selected]:checked').each(function(){
+                                var id = $(this).attr('data-id');
+                                $.ajax({
+                                    url:'/json/user/'+id+'/update?parent_user_id='+manager_id,
+                                    success:function(){
+                                    }
+                                });
+                            }).promise().done(function(){
+                                $('.check-all').prop('checked',false);
+                                cf._loaders['user-list'].execute();
+                            });
+                        });
                     },
                     add:function(){
-                        var s = '<div class="popup edit_user submiter" data-callback="crmUserCallback" style="display:block;">';
-                        s+= '<span></span><div class="close" onclick="{ $(this).parent().fadeOut( 256, function(){ $(this).remove(); } ); }"></div>';
-                        // s+= '<form action="#">';
+                        var s = '<div class="popup edit_user submiter user-add" data-callback="crmUserCallback" data-callback-error="crmUserCallbackError" data-action="/user/add/json">';
+                        s+= '<span>@lang("messages.user_add")</span><div class="close" onclick="{ $(\'.user-add\').fadeOut( 256, function(){ $(this).remove(); } ); }"></div>';
+                        s+= '<form action="#">';
                         s+= '<div class="item">'
                                 +'<input type="text" name="name" data-name="name" placeholder="Name">'
                                 +'<input type="email" name="email" data-name="email" placeholder="Nameaddress@servername.com">'
                                 +'<input type="password" name="password" data-name="password" placeholder="password">'
-                                +'<select name="rights_id" data-name="rights_id" placeholder="User rights" class="loader" data-action="/json/user/rights" data-autostart="true"></select>'
-                                +'<select name="status_id" data-name="status_id" placeholder="User status" class="loader" data-action="/json/user/status" data-autostart="true"></select>'
+                                +'<select name="rights_id" data-title="Rights" data-name="rights_id" placeholder="User rights" class="loader" data-action="/json/user/rights" data-autostart="true"></select>'
+                                +'<select name="status_id" data-title="Status" data-name="status_id" placeholder="User status" class="loader" data-action="/json/user/status" data-autostart="true"></select>'
                             +'</div>';
-                        s+= '<div class="item">';
-                                +'<input type="text" name="surname" data-name="surname" placeholder="Surname">';
-                                +'<input type="tel" name="phone" data-name="phone" placeholder="Phone number">';
-                                +'<input type="text" name="country" data-name="country" placeholder="Country">';
+                        s+= '<div class="item">'
+                                +'<input type="text" name="surname" data-name="surname" placeholder="Surname"/>'
+                                +'<input type="tel" name="phone" data-name="phone" placeholder="Phone number"/>'
+                                +'<input type="text" name="country" data-name="country" placeholder="Country"/>'
                             +'</div>';
-                        // s+= '</form>';
-                        s+= '<div class="button"><a href="#" class="close cancel">Close</a><a href="#" class="edit submit">@lang("messages.add")</a></div>'
-                        s+= '</div>';
 
-
-                        $('.edit_user span:first').html('@lang("messages.user_add")');
-                        $('.edit_user').attr('data-action','/json/user/add');
-                        $('.edit_user form input').val('');
-                        $('.edit_user').fadeIn((window.animationTime!=undefined)?window.animationTime:256);
+                        s+= '</form>';
+                        s+= '<hr style="display:block;width:100%;"/>';
+                        s+= '<div class="button"><a href="#" class="close cancel">Close</a><a href="#" class="edit submit">@lang("messages.add")</a></div>';
+                        $(s).appendTo('body').fadeIn((window.animationTime!=undefined)?window.animationTime:256);
+                        cf.reload();
+                        // $('.edit_user span:first').html('@lang("messages.user_add")');
+                        // $('.edit_user').attr('data-action','/user/add/json');
+                        // // $('.edit_user form input').val('');
+                        // $('.edit_user').fadeIn((window.animationTime!=undefined)?window.animationTime:256);
                     },
                     edit:function(id){
                         $.ajax({
@@ -270,7 +315,15 @@
             window.crmUserList = crm.user.list;
             window.crmUserDealList = crm.user.deals;
             window.crmUserInfo = crm.user.info;
-
+            window.crmUserCallback = function(){
+                var args = arguments.length?arguments[0]:undefined;
+                console.debug("UserInfoCallback",args);
+                $('.edit_user').fadeOut(animationTime?animationTime:256);
+                cf._loaders['user-list'].execute();
+            };
+            window.crmUserCallbackError = function(d){
+                alert(d.message);
+            }
         });
     </script>
 </div>

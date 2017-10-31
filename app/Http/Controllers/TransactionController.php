@@ -97,9 +97,32 @@ class TransactionController extends Controller
         ]);
         return response()->json($res,$res['code'],['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
     }
+    public function makeWithdrawal(Request $rq){
+        list($res,$code) = [[],200];
+        try{
+            $user = $rq->user();
+            $account = Account::where('user_id',$user->id)->where('type','real')->first();
+            $amount = $rq->input("amount");
+            $res = Withdrawal::create([
+                'status' => 'request',
+                'user_id'=>$user->id,
+                'account_id'=>$account->id,
+                'amount'=>$amount,
+            ]);
+        }
+        catch(\Exception $e){
+            $code = 500;
+            $res = [
+                "error"=>$e->getCode(),
+                "message"=>$e->getMessage()
+            ];
+        }
+        return response()->json($res,$code,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+    }
     public function withdrawal(Request $rq,$format='json',$id=false){
         $res = Withdrawal::with(['account'=>function($query){return $query->with(['user','currency']);},'merchant','manager'])
             ->byId($id)
+            ->byUserId($rq->input("user_id",false))
             ->byStatus($rq->input('status',false));
         return response()->json($res->paginate(12),200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
     }

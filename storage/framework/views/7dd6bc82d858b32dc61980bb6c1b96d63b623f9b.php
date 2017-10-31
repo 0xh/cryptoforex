@@ -1,12 +1,17 @@
 <header class="header">
     <div class="container flex">
         <div class="logo">
-            <a href="/"><img src="../images/logo_x.png" alt=""></a>
+            <a href="/"><img src="../kriptex/images/logo_xx.png" alt=""></a>
         </div>
         <div class="search">
-            <form action="#"><input type="search" name="search" placeholder="Поиск инструментов. Например: LTE или Litecoin"></form>
+            <i class="face"></i>
+            <p>online <span><?php echo e(isset($online) ? $online : 128); ?></span></p>
+            <!-- <form action="#"><input type="search" name="search" placeholder="Поиск инструментов. Например: LTE или Litecoin"></form> -->
         </div>
         <div class="akk flex">
+            <div class="deposit">
+                <a href="#">Make a deposit</a>
+            </div>
             <?php if(Auth::guest()): ?>
                 <?php if(Request::is('login') or Request::is('register')): ?>
                 <?php else: ?>
@@ -14,13 +19,62 @@
                 <?php endif; ?>
             <?php else: ?>
             <div class="item">
+                <a href="#" class="mail"></a>
+            </div>
+            <div class="notifications hidden">
+                <div class="top flex">
+                    <p><?php echo app('translator')->getFromJson('messages.Notifications'); ?></p>
+                    <div class="arrow">
+                        <a href="#" class="left"></a>
+                        <a href="#" class="right"></a>
+                    </div>
+                </div>
+                <ul>
+                    <li class="active">
+                        <a href="#">
+                            Изменение торгового времени 15 августа в связи с Днем Вознесения Девы Марии 2017
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Закрытие позиций по биткойну и лайткойну
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Изменение торгового времени 28 августа по Z (FTSE) в связи с летними банковскими выходными в Великобритании
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Изменение торгового времени 15 августа в связи с Днем Вознесения Девы Марии 2017
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            13 августа переход на летнее время в Чили
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Изменение торгового времени 15 августа в связи с Днем Вознесения Девы Марии 2017
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            13 августа переход на летнее время в Чили
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="item flex">
                 <nav class="nav">
-                    <p class="menu"><?php echo e(Auth::user()->name); ?> </p>
+                    <p class="menu flex center"><?php echo e(Auth::user()->name); ?> </p>
                     <ul class="flex column hidden">
                         <div class="top br flex">
-                            <p class="active"><?php echo app('translator')->getFromJson('messages.real'); ?></p>
+                            <p class="active"><?php echo app('translator')->getFromJson('messages.demo'); ?></p>
                             <div>
-                                <input type="checkbox" class="checkbox account-type" id="checkbox" value="<?php echo app('translator')->getFromJson('messages.demo'); ?>">
+                                <input type="checkbox" class="checkbox account-type" id="checkbox" value="demo">
                                 <label for="checkbox" class=" account-type-switcher"></label>
                             </div>
                             <p><?php echo app('translator')->getFromJson('messages.real'); ?></p>
@@ -63,82 +117,74 @@
                 <script>
                     var user_accounts = [];
                     function displayuseraccount(d){
+                         $('.account-display-'+d.type+' .money').html(currency.value(d.amount,'USD'));
+                        return;
                         var c = $('.account-display');
                         c.html('');
                         c.append('<span class="'+d.type+'">'+d.type+'</span>');
-                        $('<span class="money">'+currency.value(d.amount,'USD')+'</span>').appendTo(c).on("click",function(){
-                            new cf.loader($('.account-display'),Fresher);
-                        });
+                        $('<span class="money">'+currency.value(d.amount,'USD')+'</span>').appendTo(c).on("click",function(){new cf.loader($('.account-display'),Fresher);});
+                    }
+                    function userWithdrawals(c,data,x,s){
+                        console.debug(data);
+                        for(var i in data.data){
+                            var tr = $('<tr></tr>').appendTo(c),row = data.data[i];
+                            tr.append('<td>'+dateFormat(row.created_at)+'</td>');
+                            tr.append('<td>'+currency.value(row.amount,'USD')+'</td>');
+                            tr.append('<td>'+row.status+'</td>');
+                        }
+
                     }
                     function userAccount(c,data,x,s){
                         for(var i in data){
                             var d = data[i];
                             user_accounts[d.type] = d;
+                            displayuseraccount(d);
+                            if(d.type=='real'){
+                                $('.popup_bal .sum').html(currency.value(d.amount,'USD'));
+                                $('.popup_bal2 .sum').html(currency.value(d.amount,'USD'));
+                            }
                         }
-                        displayuseraccount(user_accounts.demo);
-                        $(".account-type-switcher").unbind("click").on("click",function(){
+                        // displayuseraccount(user_accounts.demo);
+                    }
+                    _onload.push(function(){
+                        $(".account-type-switcher").on("click",function(){
                             var vt = $('.account-type').val();
                             vt = (vt=='demo')?'real':'demo';
-                            $('.account-type,[name=account_type]').val(vt);
+                            $('.account-type').val(vt);
 
-                            displayuseraccount(user_accounts[vt]);
+                            $('.account-display > div').hide();
+                            $('.account-display-'+vt).show();
                         });
-                    }
+                    });
                 </script>
                 <div class="inner flex loader account-display" data-action="/account?type=demo&user_id=<?php echo e(Auth::user()->id); ?>" data-autostart="true" data-refresh="1000" data-function="userAccount">
-                  <span class="demo"><?php echo app('translator')->getFromJson('messages.demo'); ?></span>
-                  <span class="money">10 000 $</span>
+                    <div class="account-display-demo">
+                        <span class="demo"><?php echo app('translator')->getFromJson('messages.demo'); ?></span>
+                        <span class="money">10 000 $</span>
+                    </div>
+                    <div class="account-display-real" style="display:none;">
+                        <span class="demo"><?php echo app('translator')->getFromJson('messages.real'); ?></span>
+                        <span class="money">10 000 $</span>
+                    </div>
+
                 </div>
             </div>
-            <div class="item">
-                <a href="#" class="mail"></a>
-            </div>
-            <div class="notifications hidden">
-                    <div class="top flex">
-                        <p><?php echo app('translator')->getFromJson('messages.Notifications'); ?></p>
-                        <div class="arrow">
-                            <a href="#" class="left"></a>
-                            <a href="#" class="right"></a>
-                        </div>
-                    </div>
+            <div class="support">
+                <a href="#">Client support departament</a>
+                <div class="hidden">
                     <ul>
-                        <li class="active">
-                            <a href="#">
-                                Изменение торгового времени 15 августа в связи с Днем Вознесения Девы Марии 2017
-                            </a>
+                        <li>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti impedit asperiores obcaecati nobis blanditiis et itaque deleniti, libero numquam! Quis unde nostrum saepe perferendis aspernatur totam itaque ipsum libero, debitis!
                         </li>
                         <li>
-                            <a href="#">
-                                Закрытие позиций по биткойну и лайткойну
-                            </a>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti impedit asperiores obcaecati nobis blanditiis et itaque deleniti, libero numquam! Quis unde nostrum saepe perferendis aspernatur totam itaque ipsum libero, debitis!
                         </li>
                         <li>
-                            <a href="#">
-                                Изменение торгового времени 28 августа по Z (FTSE) в связи с летними банковскими выходными в Великобритании
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                Изменение торгового времени 15 августа в связи с Днем Вознесения Девы Марии 2017
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                13 августа переход на летнее время в Чили
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                Изменение торгового времени 15 августа в связи с Днем Вознесения Девы Марии 2017
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                13 августа переход на летнее время в Чили
-                            </a>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti impedit asperiores obcaecati nobis blanditiis et itaque deleniti, libero numquam! Quis unde nostrum saepe perferendis aspernatur totam itaque ipsum libero, debitis!
                         </li>
                     </ul>
                 </div>
+            </div>
             <?php endif; ?>
             <div class="lang">
                 <ul>

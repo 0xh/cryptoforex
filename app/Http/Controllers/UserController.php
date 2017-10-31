@@ -15,6 +15,7 @@ use App\Instrument;
 use App\Deal;
 use Illuminate\Support\Facades\Auth;
 use cryptofx\DataArray;
+// use App\Http\Controllers\Auth\RegisterController;
 use Log;
 use DB;
 class UserController extends Controller{
@@ -44,7 +45,7 @@ class UserController extends Controller{
             // 'last_ip'=>function($query){
             //     return $query;
             // }
-        ])->find($id);
+        ])->withCount('users')->find($id);
 
         $ll = UserMeta::user($user)->where('meta_name','last_login')->first();
         $lip = UserMeta::user($user)->where('meta_name','last_login_ip')->first();
@@ -69,14 +70,37 @@ class UserController extends Controller{
         if($rq->input('search',"false")!=="false")$res=$res->whereRaw("(users.name like '%".$rq->input('search',false)."%' or users.surname like '%".$rq->input('search',false)."%'  or users.email like '%".$rq->input('search',false)."%')");
         if($rq->input('status_id',"false")!=="false")$res=$res->where("status_id",$rq->input('status_id'));
         if($rq->input('rights_id',"false")!=="false")$res=$res->where("rights_id",$rq->input('rights_id'));
-        if($rq->input('parent_id',"false")!=="false")$res=$res->whereIn("id",UserHierarchy::byParent($rq->input('parent_id'))->select('user_id')->get());
+        if($rq->input('parent_id',"false")!=="false")$res=$res->where("parent_user_id",$rq->input('parent_id'));
         if($rq->input('country',"false")!=="false") $res=$res->whereIn("id",UserMeta::where('meta_name','country')->where('meta_value',$rq->input("country"))->select('user_id')->get());
         if($rq->input('online',"false")=="1")       $res=$res->whereIn("id",UserMeta::where('meta_name','last_login')->whereRaw('meta_value >= unix_timestamp(DATE_SUB(NOW(),INTERVAL 10 MINUTE))')->select('user_id')->get());
+        if($rq->input('assigner',"false")=="1")       $res=$res->where('rights_id','>','2');
         $res=$res->byRights($user)->paginate();
+
+        $aggre = DB::table('users')->join('user_rights','user_rights.id','users.rights_id')
+            ->selectRaw("sum(case when user_rights.name = 'admin' then 1 else 0 end) as admin")
+            ->selectRaw("sum(case when user_rights.name = 'admin' and users.updated_at>=unix_timestamp(DATE_SUB(NOW(),INTERVAL 1 DAY)) then 1 else 0 end) as admin_last")
+            ->selectRaw("sum(case when user_rights.name = 'manager' then 1 else 0 end) as manager")
+            ->selectRaw("sum(case when user_rights.name = 'manager' and users.updated_at>=unix_timestamp(DATE_SUB(NOW(),INTERVAL 1 DAY)) then 1 else 0 end) as manager_last")
+            ->selectRaw("sum(case when user_rights.name = 'affilate' then 1 else 0 end) as affilate")
+            ->selectRaw("sum(case when user_rights.name = 'affilate' and users.updated_at>=unix_timestamp(DATE_SUB(NOW(),INTERVAL 1 DAY)) then 1 else 0 end) as affilate_last")
+            ->selectRaw("sum(case when user_rights.name = 'client' then 1 else 0 end) as client")
+            ->selectRaw("sum(case when user_rights.name = 'client' and users.updated_at>=unix_timestamp(DATE_SUB(NOW(),INTERVAL 1 DAY)) then 1 else 0 end) as client_last")
+            ->selectRaw("sum(case when user_rights.name = 'fired' then 1 else 0 end) as fired")
+            ->selectRaw("sum(case when user_rights.name = 'fired' and users.updated_at>=unix_timestamp(DATE_SUB(NOW(),INTERVAL 1 DAY)) then 1 else 0 end) as fired_last")
+            ;
         return ($format=='json')
                 ?response()->json($res,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT)
-                :view('crm.user.dashboard',[
-                    "users"=>$res,
+                :view('crm.user.list',[
+                    "rights"=>[
+                        "list"=>UserRights::byUser($rq->user())->get(),
+                        "admins"=>User::where("rights_id",7)->get(),
+                        "managers"=>User::where("rights_id",5)->get(),
+                        "selected"=>$rq->input('rights_id',false)
+                    ],
+                    "statuses"=>[
+                        "list"=>UserStatus::all(),
+                        "selected"=>$rq->input('status_id',false)
+                    ],
                     "leads"=>[],
                     "counts"=>$aggre->get()
                 ]);
@@ -98,23 +122,18 @@ class UserController extends Controller{
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $rq){
-        list($data,$res,$code)=[[],false,200];
+    public function store(Request $rq,$format='json'){
+        list($data,$res,$code)=[$rq->all(),false,200];
         try{
-            $data['name'] = $rq->input('name',false);
-            $data['surname'] = $rq->input('surname',false);
-            $data['rights_id'] = $rq->input('rights_id',false);
-            $data['email'] = $rq->input('email',false);
-            $data['phone'] = $rq->input('phone',false);
-            $data['password'] = $rq->input('password',false);
-            $data['status_id'] = $rq->input('status_id',false);
-            if($data['rights_id']==false)$data['rights_id']=UserRights::where('name','=','client')->first()->id;
-            if($data['status_id']==false)$data['status_id']=UserStatus::where('code','=','newclient')->first()->id;
-            $user = User::create($data);
-            $res = $user->toArray();
-            $res['new_password'] = $password;
+            $rg = app('App\Http\Controllers\Auth\RegisterController');
+            $res = $rg->create($data);
+            // if(!is_null($data['password']))$data['password'] = bcrypt($rq->input('password'));
+            // if($data['rights_id']==false)$data['rights_id']=UserRights::where('name','=','client')->first()->id;
+            // if(!isset($data['status_id']))$data['status_id']=UserStatus::where('code','=','registered')->first()->id;
+            // $user = User::create($data);
+            // $res = $user->toArray();
         }
-        catch(Exception $e){
+        catch(\Exception $e){
             $code = 500;
             $res = [
                 "error"=>$e->getCode(),
@@ -168,8 +187,11 @@ class UserController extends Controller{
                 $country = UserMeta::user($user)->meta('country')->first();
                 $country = is_null($country)?UserMeta::create(['user_id'=>$user->id,"meta_name"=>"country","meta_value"=>$udata['country']]):$country->update(['meta_value'=>$udata['country']]);
             }
-            if(is_null($udata["password"]))unset($udata["password"]);
-            else {$udata["password"]=bcrypt($udata["password"]);}
+            if(isset($udata["password"])){
+                if(is_null($udata["password"]))unset($udata["password"]);
+                else {$udata["password"]=bcrypt($udata["password"]);}
+            }
+
             $user->update($udata);
             $res=$user;
             $code=200;
@@ -247,8 +269,13 @@ class UserController extends Controller{
         $user = User::find($id);
         if(!is_null($user)){
             $firedRight = UserRight::where('name','fired');
-            UserHistory::create([]);
+            // UserHistory::create([]);
         }
         return response()->json($user,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+    }
+    public function controll(Request $rq,$id){
+        $admin = $rq->user();
+        $user = User::where('parent_user_id',$id)->update(['parent_user_id'=>null]);
+        return $this->index($rq,"html",$id);
     }
 }

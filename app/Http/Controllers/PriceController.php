@@ -27,7 +27,7 @@ class PriceController extends Controller{
         $default = true;
         $random = [];
         $res = [];
-        $precision = 1000;
+        $precision = 100000;
         $histo = Histo::where("instrument_id",$id)->orderBy("id","desc")->first();
         //{ "date":"2017-10-29 09:19:00","open":12.44,"low":12.44,"high":12.44,"close":12.41,"value":12.41,"volumefrom":0,"volumeto":0,"volume":0 }
         //first
@@ -42,8 +42,13 @@ class PriceController extends Controller{
         ];
         $high = ($histo->high == $histo->low)?$histo->close:$histo->high;
         $low =  $histo->low;
+        $old_price = floatval($histo->open);
         for($i=1;$i<58;++$i){
             $price = rand(intval($low*$precision),intval($high*$precision))/$precision;
+            $volation = 0;
+            if($price>$old_price)$volation = 1;
+            else if($price<$old_price)$volation = -1;
+            $old_price = $price;
             $random[$histo->time+$i]=[
                 "id"=>"1132",
                 "created_at"=>$histo->time+$i,
@@ -51,7 +56,7 @@ class PriceController extends Controller{
                 "price"=>$price,
                 "instrument_id"=>$histo->instrument_id,
                 "source_id"=>$histo->source_id,
-                "volation"=>$histo->volation
+                "volation"=>$volation
             ];
         }
         // last
@@ -64,7 +69,8 @@ class PriceController extends Controller{
             "source_id"=>$histo->source_id,
             "volation"=>$histo->volation
         ];
-        if($this->useRandom == 1) return response()->json($random)->header('Access-Control-Allow-Origin', '*')
+        if($this->useRandom == 1) return response()->json($random)
+            ->header('Access-Control-Allow-Origin', '*')
             ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 
         $res = Price::where('instrument_id',$id);
@@ -74,12 +80,14 @@ class PriceController extends Controller{
         $res = $res->limit($rq->input("limit","60"))->orderBy('id','desc')->get();
 
         foreach($res as $row){
-            if(isset($random[$row->created_at])){
-                $random[$row->created_at] = $row->toArray();
+            $rr = $row->toArray();
+            if(isset($random[$rr["created_at"]])) {
+                $random[$rr["created_at"]] = $row->toArray();
             }
         }
 
-        return response()->json(array_values($random))->header('Access-Control-Allow-Origin', '*')
+        return response()->json(array_values($random))
+            ->header('Access-Control-Allow-Origin', '*')
             ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     }
 
