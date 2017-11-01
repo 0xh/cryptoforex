@@ -25,12 +25,26 @@
                         console.debug(d);
                         for(var i in d.data){
                             var row=d.data[i],s = '<tr data-class="deal" data-id="'+row.id+'">';
+                            /*
+                            <td>ID <div class="arrow"><span></span><span></span></div></td>
+                            <td>Registred <div class="arrow"><span></span><span></span></div></td>
+                            <td>Updated <div class="arrow"><span></span><span></span></div></td>
+                            <td>Instrument <div class="arrow"><span></span><span></span></div></td>
+                            <td>Status <div class="arrow"><span></span><span></span></div></td>
+                            <td>Amount <div class="arrow"><span></span><span></span></div></td>
+                            <td>Multiplier <div class="arrow"><span></span><span></span></div></td>
+                            <td>Direction <div class="arrow"><span></span><span></span></div></td>
+                            <td>Profit <div class="arrow"><span></span><span></span></div></td>
+                            <td>Stops <div class="arrow"><span></span><span></span></div></td>
+                            <td>&nbsp;</td>
+                            */
                             s+='<td>'+row.id+'</td>';
                             s+='<td>'+new Date(row.created_at*1000)+'</td>';
                             s+='<td>'+new Date(row.updated_at*1000)+'</td>';
+
                             s+='<td><a href="#" data-class="user" data-id="'+row.user.id+'">'+row.user.name+' '+row.user.surname+'</a></td>';
                             s+=(row.manager)?'<td><a href="#" data-class="manager" data-id="'+row.manager.id+'">'+row.manager.name+' '+row.manager.surname+'</a></td>':'<td></td>';
-                            s+='<td><a href="#" data-class="instrument" data-id="'+row.instrument_id+'">'+row.instrument.from.code+'/'+row.instrument.to.code+'</a></td>';
+                            s+='<td><a href="#" data-class="instrument" data-id="'+row.instrument_id+'">'+row.instrument.title+'</a></td>';
                             s+='<td>'+row.status.name+'</td>';
                             s+='<td>'+currency.value(row.amount,row.currency.code)+'</td>';
                             s+='<td>x'+row.multiplier+'</td>';

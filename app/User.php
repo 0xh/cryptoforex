@@ -66,6 +66,9 @@ class User extends Authenticatable
     public function last_ip(){
         return $this->belongsTo('App\UserMeta')->where('meta_name','last_ip');
     }
+    public function comment(){
+        return $this->hasMany('App\UserMeta','user_id')->where('meta_name','comment');
+    }
     public function deal(){
         return $this->hasMany('App\Deal');
     }

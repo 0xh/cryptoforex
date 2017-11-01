@@ -248,7 +248,7 @@ var cf={
                 return true;
             },getargs = function($c){
                 var args = {};
-                $c.find("input,select").each(function(){
+                $c.find("input,select,textarea").each(function(){
                     var n,v;
                     n = $(this).attr("data-name");
                     v = $(this).val();

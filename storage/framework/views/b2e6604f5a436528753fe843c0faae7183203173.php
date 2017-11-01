@@ -3,7 +3,7 @@
     <div class="flex flex-top">
       <div class="tabs">
         <ul class="tabs__caption flex width">
-          <li class="flex active">
+          <li class="flex active open-deals">
             <!-- <span><?php echo app('translator')->getFromJson('messages.history'); ?> </span>
             <span class="all"><?php echo app('translator')->getFromJson('messages.all_history'); ?></span> -->
             <span>active</span>
@@ -75,6 +75,8 @@
                 }
                 function historyDeals(container,d,x,s){
                     container.html('');
+                    var deals_count= d.data.length, deals_profit=0;
+                    $('.open-deals').html('<span>Active<sup>'+deals_count+'</sup></span>');
                     for(var i in d.data){
                         var row=d.data[i],jsdata = JSON.stringify(d.data[i]),s='<tr class="deal-row" data-instrument-id="'+row.instrument.id+'" data-raw=\''+jsdata+'\' data-price="'+row.open_price+'" '+
                             ((row.status_id==10)?'onclick=\'dealInfo('+jsdata+')\'':'')
@@ -102,6 +104,7 @@
                         s+= '<td class="'+profitClass+'">'+currency.value(parseFloat(row.amount)+parseFloat(row.profit),'USD',4)+'</td>';
                         s+= '<td class="'+((row.profit>=0)?"green":"red")+'">'+prct.toFixed(2)+'%</td>'
                         s+='</tr>';
+                        deals_profit += parseFloat(row.profit);
                         container.append(s);
                     }
                 }

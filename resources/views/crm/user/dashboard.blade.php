@@ -119,12 +119,18 @@
                                 <textarea name="task" id="task"></textarea>
                             </div>
                         </div>
-                        <div class="item_con">
+                        <div class="item_con submiter" data-action="/json/user/meta" data-name="user-comment">
                             <strong>Comments</strong>
                             <p class="coment">No Comments</p>
-                            <textarea name="coment" id="coment" placeholder="Enter comment text"></textarea>
+                            <input type="hidden" data-name="user_id" value="{{$user->id}}" />
+                            <input type="hidden" data-name="meta_name" value="comment" />
+                            <textarea name="comment" data-name="meta_value" id="comment" placeholder="Enter comment text">
+                                @if(count($user->comment))
+                                {{$user->comment[0]->meta_value or ''}}
+                                @endif
+                            </textarea>
                             <div class="item_abs">
-                                <a href="#">Add Comment</a>
+                                <a class="submit" href="#">Add Comment</a>
                             </div>
                         </div>
                     </div>
@@ -195,8 +201,8 @@
                                     <td>&nbsp;</td>
                                 </tr>
                             </thead>
-                            <tbody class="loader" id="user_deals" data-name="user-deals" data-action="/json/deal?status=open" data-function="crmDealList" data-autostart="true" data-trigger="">
-                                @foreach($deals as $deal)
+                            <tbody class="loader" id="user_deals" data-name="user-deals" data-action="/json/deal?status=open&user_id={{$user->id}}" data-function="crmUserDealList" data-autostart="true" data-trigger="">
+                                @foreach($user->deal as $deal)
                                     <tr  data-class="deal" data-id="{{$deal->id}}">
                                         <td>{{$deal->id}}</td>
                                         <td>{{$deal->created_at}}</td>
@@ -237,7 +243,7 @@
         <!-- <div class="item">
             <div class="inner"></div>
             <div class="inner">
-                
+
             </div>
         </div> -->
     </div>
@@ -286,6 +292,45 @@
                 $('.user_dashboard').replaceWith(d);
             }
         });
+    }
+    function crmUserDealList(container,d,x,s){
+        container.html('');
+        console.debug(d);
+        for(var i in d.data){
+            var row=d.data[i],s = '<tr data-class="deal" data-id="'+row.id+'">';
+            /*
+            <td>ID <div class="arrow"><span></span><span></span></div></td>
+            <td>Registred <div class="arrow"><span></span><span></span></div></td>
+            <td>Updated <div class="arrow"><span></span><span></span></div></td>
+            <td>Instrument <div class="arrow"><span></span><span></span></div></td>
+            <td>Status <div class="arrow"><span></span><span></span></div></td>
+            <td>Amount <div class="arrow"><span></span><span></span></div></td>
+            <td>Multiplier <div class="arrow"><span></span><span></span></div></td>
+            <td>Direction <div class="arrow"><span></span><span></span></div></td>
+            <td>Profit <div class="arrow"><span></span><span></span></div></td>
+            <td>Stops <div class="arrow"><span></span><span></span></div></td>
+            <td>&nbsp;</td>
+            */
+            s+='<td>'+row.id+'</td>';
+            s+='<td>'+new Date(row.created_at*1000)+'</td>';
+            s+='<td>'+new Date(row.updated_at*1000)+'</td>';
+            s+='<td><a href="#" data-class="instrument" data-id="'+row.instrument_id+'">'+row.instrument.title+'</a></td>';
+            // s+='<td><a href="#" data-class="user" data-id="'+row.user.id+'">'+row.user.name+' '+row.user.surname+'</a></td>';
+            // s+=(row.manager)?'<td><a href="#" data-class="manager" data-id="'+row.manager.id+'">'+row.manager.name+' '+row.manager.surname+'</a></td>':'<td></td>';
+
+            s+='<td>'+row.status.name+'</td>';
+            s+='<td>'+currency.value(row.amount,row.currency.code)+'</td>';
+            s+='<td>x'+row.multiplier+'</td>';
+            s+='<td>'+((row.direction==-1)?'<i class="fa fa-arrow-down"></i>':'<i class="fa fa-arrow-up"></i>')+'</td>';
+            s+='<td>'+currency.value(row.profit,row.currency.code)+'</td>';
+            s+='<td>'+row.stop_low+' - '+row.stop_high+'</td>';
+
+            // s+='<td><a href="#" onclick="crm.deal.edit('+row.id+')" id="edit_deal">@lang('messages.edit')</a><a href="#" onclick="crm.deal.info('+row.id+')" class="edit">@lang('messages.info')</a></td>';
+            s+='<td><a href="#" onclick="crm.deal.info('+row.id+')" class="edit">@lang('messages.info')</a></td>';
+            s+='</tr>'
+            container.append(s);
+        }
+        cf.pagination(d,'deal-list',container);
     }
     cf.reload();
 </script>

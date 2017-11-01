@@ -10,7 +10,7 @@
             $('.popup_deal_info,.bgc').fadeIn((window.animationTime!=undefined)?window.animationTime:256);
             var rchart = null, time = new Date(deal.created_at*1000);
             console.debug(deal);
-            
+
 
             $('.popup_deal_info .deal-profit').html('<span class="'+((deal.profit>0)?"up":"down")+'">'+deal.profit+'</span>');
             $('.popup_deal_info .deal-time').html('<p><span class="time">'+time.toGMTString()+'</span></p>');
@@ -46,7 +46,7 @@
             }else {
                 console.debug("success deal",d);
                 $('.popup_open p:first').html('@lang("messages.trand_on_instrument") '+d.instrument.title+' @lang("messages.is_opened")');
-                $('.popup_open p:eq(1)').html('@lang("messages.commission_is") '+currency.value(d.fee,'USD') + ' ('+d.instrument.commission+'%)');
+                $('.popup_open p:eq(1)').html('@lang("messages.commission_is") '+currency.value(d.fee,'USD') + ' ('+parseFloat(d.instrument.commission)*100+'%)');
             }
         }
         _onload.push(

@@ -38,7 +38,7 @@ class UserController extends Controller{
         if(Auth::guest())return route('home');
         $user = $rq->user();
         if($user->rights_id<=1)return route('home');
-        $user = User::with(['manager','accounts','rights','country','status',
+        $user = User::with(['manager','accounts','rights','country','status','comment'
             // 'last_login'=>function($query){
             //     return $query;
             // },
@@ -66,7 +66,7 @@ class UserController extends Controller{
         if(Auth::guest())return route('home');
         $user = $rq->user();
         if($user->rights_id<=1)return route('home');
-        $res = User::with(['rights','status','accounts','manager','meta','last_login','last_ip'])->withCount('users');
+        $res = User::with(['rights','status','accounts','manager','meta','last_login','last_ip','comment'])->withCount('users');
         if($rq->input('search',"false")!=="false")$res=$res->whereRaw("(users.name like '%".$rq->input('search',false)."%' or users.surname like '%".$rq->input('search',false)."%'  or users.email like '%".$rq->input('search',false)."%')");
         if($rq->input('status_id',"false")!=="false")$res=$res->where("status_id",$rq->input('status_id'));
         if($rq->input('rights_id',"false")!=="false")$res=$res->where("rights_id",$rq->input('rights_id'));
