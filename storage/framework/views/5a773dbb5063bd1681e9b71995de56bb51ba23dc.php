@@ -1,4 +1,4 @@
-g<aside class="left">
+<aside class="left">
     <ul>
         <li>
             <a href="#"><?php echo app('translator')->getFromJson('messages.Poppar'); ?></a>
@@ -226,6 +226,7 @@ g<aside class="left">
                 // $('.instrument-price-sell').html('<p>'+price_sell.toFixed(0)+'.</p><b>'+price_sell.toString().replace(/(\d+)\.(\d{0,4}.*)/,'$2')+'</b>');
                 $('.instrument-price-sell').html(price_sell.toFixed(4).replace(/(\d+)\.(\d+)/,'<p>$1.</p><b>$2</b>'));
                 $('.instrument-price-buy').html(price_buy.toFixed(4).replace(/(\d+)\.(\d+)/,'<p>$1.</p><b>$2</b>'));
+                $('.current-instrument').html('<p>'+instrument.title+'</p>'+'<p>'+price_buy.toFixed(4)+'</p>');
 
                 // $('.deal-row').each(function(){
                 //     var $that = $(this);

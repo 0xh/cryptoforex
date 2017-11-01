@@ -192,7 +192,7 @@ var cf={
                                 var row = (d.data!=undefined)?d.data[i]:d[i];
                                 var name=(row.title)?row.title:((row.name)?row.name:''),
                                     value = (row.id==undefined)?name:row.id;
-                                name = (row.surname)?name+' '+row.surname:'';
+                                name = (row.surname)?name+' '+row.surname:name;
                                 // console.debug(title,name,value);
                                 opts.container.append('<option value="'+value+'">'+name+'</option>');
                             }

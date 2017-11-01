@@ -6,6 +6,41 @@ function multiplier(t){
 }
 </script>
 
+<div class="popup popup_deposit">
+  <div class="close"></div>
+  <strong>Deposit</strong>
+  <div class="item top">
+      <div class="inner flex">
+          <p>Demo account</p>
+          <b class="live-demo-account"><i class="demo"></i>10 000.00</b>
+      </div>
+      <div class="inner">
+          <p>You can add funds to your demo account, if your balance is less than <i class="demo"></i>5 000</p>
+      </div>
+      <div class="inner">
+          <a href="#">
+              <span>Deposit</span>
+              <span>up to <i class="demo"></i>10 000</span>
+          </a>
+      </div>
+  </div>
+  <div class="item bot">
+      <div class="inner flex">
+          <p>Live account</p>
+          <b class="live-real-account"><i class="real"></i>10 000.00</b>
+      </div>
+      <div class="inner">
+          <p>Trade on a real account and make a profit</p>
+      </div>
+      <div class="inner">
+          <a href="#">
+              <span>Deposit</span>
+              <!-- <span>From <i class="real"></i>350</span> -->
+          </a>
+      </div>
+  </div>
+</div>
+
 <div class="popup popup_open">
   <div class="close"></div>
   <strong>Done!</strong>
@@ -16,7 +51,7 @@ function multiplier(t){
 
 <div class="popup popup_close">
   <div class="close"></div>
-  <div class="submiter tab_cap active" data-action="/deal/add" data-callback="pageReload">
+  <!-- <div class="submiter tab_cap active" data-action="/deal/add" data-callback="pageReload">
     <div class="box">
       <div class="info flex">
         <p>BTC/USD</p>
@@ -33,7 +68,7 @@ function multiplier(t){
       <strong>@lang('messages.Krpl')</strong>
       <form onsubmit="return false" oninput="level.value = flevel.valueAsNumber">
         <output for="flying" name="level">0</output>
-        <input name="flevel" id="flying" type="range" min="1" max="20" value="10" step="1">
+        <input name="flevel" id="flying" class="flying" type="range" min="1" max="20" value="10" step="1">
       </form>
     </div>
     <div class="bot flex">
@@ -55,7 +90,64 @@ function multiplier(t){
             <b>@lang('messages.BUY')</b>
         </a>
     </div>
+  </div> -->
+
+  <div class="submiter tab_cap active" data-action="/json/deal/add" data-callback="dealAdd">
+    <div class="box">
+      <div class="info flex current-instrument">
+        <p>BTC/USD</p>
+        <p>3,967.28</p>
+      </div>
+      <strong>@lang('messages.Sumsd')</strong>
+      <div class="number">
+        <input type="text" value="100" size="5" id="deal_amount" class="deal_amount"/>
+        <div class="wrap flex">
+          <span class="minus">-</span>
+          <span class="plus">+</span>
+        </div>
+      </div>
+      <strong>@lang('messages.Krpl')</strong>
+      <form onsubmit="return false" oninput="level.value = flevel.valueAsNumber">
+        <output for="flying" name="level">10</output>
+        <input name="flevel" id="flying" class="flying" class="flying" type="range" min="1" max="20" value="10" step="1">
+      </form>
+    </div>
+    <div class="bot flex">
+        <input name="atprice" value="" type="hidden" data-name="atprice"/>
+        <input name="amount" value="100" type="hidden" data-name="amount"/>
+        <input name="stop_high" value="100" type="hidden" data-name="stop_high"/>
+        <input name="stop_low" value="0" type="hidden" data-name="stop_low"/>
+        <input name="multiplier" value="10" type="hidden" data-name="multiplier"/>
+        <input name="instrument_id" value="1" type="hidden" data-name="instrument_id"/>
+        <input name="direction" value="1" type="hidden" data-name="direction"/>
+        <input name="currency" value="USD" type="hidden" data-name="currency" />
+        <input name="delayed" value="false" type="hidden" data-name="delayed" />
+
+
+        <a  onclick="$('[name=direction]').val(1);" href="#" class="up flex submit">
+            <div class="flex instrument-price-buy">
+                <p>3782.</p>
+                <b>50</b>
+            </div>
+            <b>@lang('messages.BUY')</b>
+        </a>
+        <a onclick="$('[name=direction]').val(-1);" href="#" class="down flex submit">
+            <div class="flex instrument-price-sell">
+                <p class="">3758.</p>
+                <b class="instrument-bid">60</b>
+            </div>
+            <b>@lang('messages.SELL')</b>
+        </a>
+
+    </div>
+    <!-- <div class="work_order flex">
+      <p>BTC/BCH</p>
+      <p class="down"></p>
+      <p>$ <span>180.24</span></p>
+    </div> -->
   </div>
+
+
   <div class="opan_order hidden flex column">
     <h2>@lang('messages.open')</h2>
     <div class="work_order flex">

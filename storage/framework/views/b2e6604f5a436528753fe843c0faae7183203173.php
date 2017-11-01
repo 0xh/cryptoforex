@@ -9,9 +9,15 @@
             <span>active</span>
           </li>
           <li class="flex">
+            <span>pending order</span>
+          </li>
+          <li class="flex">
             <!-- <span><?php echo app('translator')->getFromJson('messages.news'); ?></span>
             <span class="all"><?php echo app('translator')->getFromJson('messages.all_news'); ?></span> -->
             <span>signals</span>
+          </li>
+          <li class="flex">
+            <span>news</span>
           </li>
           <li class="flex">
             <!-- <span><?php echo app('translator')->getFromJson('messages.trade'); ?></span>
@@ -52,11 +58,13 @@
                             +inst
                             +'</td>';
                         s+= '<td>'+dateTime(row.created_at)+'</td>';
-                        s+= '<td>'+123+'</td>';
+
                         s+= '<td class="'+((row.direction==1)?"down":"up")+'">';
-                        s+= '<td>'+123+'</td>';
                         s+= '<td>'+row.open_price+'</td>';
+                        // s+= '<td>'+currency.value(row.stop_high,'USD')+'</td>';
                         s+= '<td>'+dateTime(row.updated_at)+'</td>';
+                        // s+= '<td>'+currency.value(row.stop_low,'USD')+'</td>';
+
                         s+= '<td>'+row.close_price+'</td>';
                         s+= '<td>'+currency.value(row.amount,'USD')+' <span>x'+row.multiplier+'</span></td>';
                         s+= '<td class="'+((row.close_price==undefined)?'profit':"")+'">'+currency.value(parseFloat(row.amount)+parseFloat(row.profit),'USD',4)+'</td>';
@@ -84,15 +92,44 @@
                             +inst
                             +'</td>';
                         s+= '<td>'+dateTime(row.created_at)+'</td>';
-                        s+= '<td>'+123+'</td>';
+                        s+= '<td>'+currency.value(row.stop_high,'USD')+'</td>';
                         s+= '<td class="'+((row.direction==1)?"down":"up")+'">';
-                        s+= '<td>'+123+'</td>';
+                        s+= '<td>'+currency.value(row.stop_low,'USD')+'</td>';
                         s+= '<td>'+row.open_price+'</td>';
                         s+= '<td class="'+profitClass2+'">'+((row.close_price!=undefined)?row.close_price:'&nbsp;')+'</td>';
                         s+= '<td>'+currency.value(row.amount,'USD')+' <span>x'+row.multiplier+'</span></td>';
 
                         s+= '<td class="'+profitClass+'">'+currency.value(parseFloat(row.amount)+parseFloat(row.profit),'USD',4)+'</td>';
                         s+= '<td class="'+((row.profit>=0)?"green":"red")+'">'+prct.toFixed(2)+'%</td>'
+                        s+='</tr>';
+                        container.append(s);
+                    }
+                }
+                function historyDelayedDeals(container,d,x,s){
+                    container.html('');
+                    for(var i in d.data){
+                        var row=d.data[i],jsdata = JSON.stringify(d.data[i]),s='<tr class="deal-row" data-instrument-id="'+row.instrument.id+'" data-raw=\''+jsdata+'\' data-price="'+row.open_price+'" '+
+                            ((row.status_id!=20)?'onclick=\'dealInfo('+jsdata+')\'':'')
+                            +' id="deal-'+row.id+'">',
+                            inst = row.instrument.title,
+                            prct = 100*(row.profit/row.amount),
+                            openTime = new Date(row.created_at*1000),
+                            profitClass = '',profitClass2 = '';
+                        // console.debug(row.id+' ('+row.volation+') => '+profitClass);
+                        if(parseInt(row.volation)==1)profitClass='bg_green';
+                        else if(parseInt(row.volation)==-1)profitClass='bg_red';
+                        // s+= '<td><i class="ic ic_btc"></i><i class="ic ic_lte"></i>'+inst+'</td>';
+                        s+= '<td>'
+                            +'<span><img src="'+((row.instrument.from!=undefined)?row.instrument.from.image:'')+'" alt=""><img src="'+((row.instrument.to!=undefined)?row.instrument.to.image:'')+'" alt=""></span>'
+                            +inst
+                            +'</td>';
+                        s+= '<td>'+dateTime(row.created_at)+'</td>';
+                        s+= '<td>'+currency.value(row.stop_high,'USD')+'</td>';
+                        s+= '<td class="'+((row.direction==1)?"down":"up")+'">';
+                        s+= '<td>'+currency.value(row.stop_low,'USD')+'</td>';
+                        s+= '<td>'+row.open_price+'</td>';
+                        s+= '<td class="'+profitClass2+'">'+((row.close_price!=undefined)?row.close_price:'&nbsp;')+'</td>';
+                        s+= '<td>'+currency.value(row.amount,'USD')+' <span>x'+row.multiplier+'</span></td>';
                         s+='</tr>';
                         container.append(s);
                     }
@@ -112,6 +149,30 @@
                   <th><?php echo app('translator')->getFromJson('messages.Profit'); ?> %</th>
                 </thead>
                 <tbody class="loader" data-action="/deal?status=open&user_id=<?php echo e(Auth::user()->id); ?>" data-autostart="true" data-refresh="2400" data-function="historyDeals"></tbody>
+                </table>
+              <?php endif; ?>
+
+          </div>
+        </div>
+
+        <div class="tabs__content">
+          <div class="table">
+              <?php if(Auth::guest()): ?>
+              <?php else: ?>
+              <table class="width">
+                <thead>
+                  <th><?php echo app('translator')->getFromJson('messages.Assets'); ?></th>
+                  <th><?php echo app('translator')->getFromJson('messages.D/T/O'); ?></th>
+                  <th>Take Profit</th>
+                  <th>Buy / Sell</th>
+                  <th>Stop Loss</th>
+                  <th>At the price</th>
+                  <th><?php echo app('translator')->getFromJson('messages.current_price'); ?></th>
+                  <th><?php echo app('translator')->getFromJson('messages.invested'); ?></th>
+                  <!-- <th><?php echo app('translator')->getFromJson('messages.Profit'); ?> $</th> -->
+                  <!-- <th><?php echo app('translator')->getFromJson('messages.Profit'); ?> %</th> -->
+                </thead>
+                <tbody class="loader" data-action="/deal?status=delayed&user_id=<?php echo e(Auth::user()->id); ?>" data-autostart="true" data-refresh="2400" data-function="historyDelayedDeals"></tbody>
                 </table>
               <?php endif; ?>
 
@@ -197,6 +258,31 @@
         </div>
 
         <div class="tabs__content">
+          <ul class="news flex column width">
+            <li>
+              <a href="#" class="more">Нефть восстанавливается в район $48 в ожидании данных</a>
+              <span class="date">07:51 GMT, 22 авг</span>
+            </li>
+            <li>
+              <a href="#" class="more">Дорогу Nzd/jpy вверх перекрыла 200-dma, лучше вставать в лонг при пробое выше</a>
+              <span class="date">08:01 GMT, 22 авг</span>
+            </li>
+            <li>
+              <a href="#" class="more">Использование производственных мощностей (Швеция ): 0.5% (2q) против 0.4%</a>
+              <span class="date">07:36 GMT, 22 авг</span>
+            </li>
+            <li>
+              <a href="#" class="more">Диспозиция трейдеров по Gbp/usd</a>
+              <span class="date">07:38 GMT, 22 авг</span>
+            </li>
+            <li>
+              <a href="#" class="more">Диспозиция трейдеров по Eur/usd</a>
+              <span class="date">07:36 GMT, 22 авг</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="tabs__content">
           <div class="table">
               <?php if(Auth::guest()): ?>
               <?php else: ?>
@@ -219,6 +305,7 @@
 
           </div>
         </div>
+
       </div>
     </div>
   </div>

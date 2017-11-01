@@ -30,7 +30,8 @@ class Deal extends Model
     protected $fillable = [
         'status_id','instrument_id','user_id','open_price','close_price','direction',
         'stop_high','stop_low','amount','currency_id','multiplier',
-        'profit','price_start','price_stop','account_id','volation'
+        'profit','price_start','price_stop','account_id','volation',
+        'fee'
     ];
 
     public function history(){

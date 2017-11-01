@@ -5,7 +5,7 @@
         </div>
         <div class="search">
             <i class="face"></i>
-            <p>online <span>{{$online or 128}}</span></p>
+            <p>Online <span>{{$online or 128}}</span></p>
             <!-- <form action="#"><input type="search" name="search" placeholder="Поиск инструментов. Например: LTE или Litecoin"></form> -->
         </div>
         <div class="akk flex">
@@ -15,7 +15,10 @@
             @if (Auth::guest())
                 @if(Request::is('login') or Request::is('register'))
                 @else
-                    <p class="menu"><a href="{{ route('login') }}">@lang('messages.login')</a> or <a href="{{ route('register') }}">@lang('messages.register')</a></p>
+                    <p class="menu">
+                        <a href="{{ route('login') }}">@lang('messages.login')</a>
+                            or
+                        <a href="{{ route('register') }}">@lang('messages.register')</a></p>
                 @endif
             @else
             <div class="item">
@@ -69,7 +72,9 @@
             </div>
             <div class="item flex">
                 <nav class="nav">
-                    <p class="menu flex center">{{ Auth::user()->name }} </p>
+                    <p class="menu flex center">{{ Auth::user()->name }}
+                        <span></span>
+                    </p>
                     <ul class="flex column hidden">
                         <div class="top br flex">
                             <p class="active">@lang('messages.demo')</p>
@@ -79,38 +84,32 @@
                             </div>
                             <p>@lang('messages.real')</p>
                         </div>
-                        <div class="br">
-                            <li><a href="#" class="bal"><i class="ic in"></i>@lang('messages.fund')</a></li>
-                            <li><a href="#" class="bal2"><i class="ic out"></i>@lang('messages.out_m')</a></li>
-                            <li><a href="#" class="his"><i class="ic ic_his"></i>@lang('messages.history')</a></li>
-                        </div>
-                        <div class="br">
-                            <li><a href="#" class="cab"><i class="ic prof"></i>@lang('messages.profil')</a></li>
-                        </div>
-                        <div class="br">
-                            <li><a href="#"><i class="ic prof"></i>@lang('messages.Education')</a>
-                                <ul class="sub-menu">
-                                    <li><a href="./page/RSI">RSI</a></li>
-                                    <li><a href="./page/Stochastic">Stochastic</a></li>
-                                    <li><a href="./page/Parabolic-SAR">Parabolic SAR</a></li>
-                                    <li><a href="./page/MACD">MACD</a></li>
-                                    <li><a href="./page/SMA">SMA</a></li>
-                                    <li><a href="./page/Bollinger-Bands">@lang('messages.Bollinger-Bands')</a></li>
-                                    <li><a href="./page/Скользим-по-средним">@lang('messages.on-average')</a></li>
-                                    <li><a href="./page/MACD-professional">@lang('messages.MACD-p')</a></li>
-                                    <li><a href="./page/Японский-стандарт">@lang('messages.Japanese')</a></li>
-                                    <li><a href="./page/Закон-относительной-силы">@lang('messages.strength')</a></li>
-                                </ul>
-                            </li>
-                        </div>
-                        <!-- <li><a href="#">выход</a></li> -->
-                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <i class="ic prof_out"></i>@lang('messages.logout')
-                        </a>
+                        <li><a href="#" class="bal"><i class="ic in"></i>@lang('messages.fund')</a></li>
+                        <li><a href="#" class="bal2"><i class="ic out"></i>@lang('messages.out_m')</a></li>
+                        <li><a href="#" class="his"><i class="ic ic_his"></i>@lang('messages.history')</a></li>
+                        <li><a href="#" class="cab"><i class="ic prof"></i>@lang('messages.profil')</a></li>
+                        <li><a href="#"><i class="ic prof"></i>@lang('messages.Education')</a>
+                            <ul class="sub-menu">
+                                <li><a href="./page/RSI">RSI</a></li>
+                                <li><a href="./page/Stochastic">Stochastic</a></li>
+                                <li><a href="./page/Parabolic-SAR">Parabolic SAR</a></li>
+                                <li><a href="./page/MACD">MACD</a></li>
+                                <li><a href="./page/SMA">SMA</a></li>
+                                <li><a href="./page/Bollinger-Bands">@lang('messages.Bollinger-Bands')</a></li>
+                                <li><a href="./page/Скользим-по-средним">@lang('messages.on-average')</a></li>
+                                <li><a href="./page/MACD-professional">@lang('messages.MACD-p')</a></li>
+                                <li><a href="./page/Японский-стандарт">@lang('messages.Japanese')</a></li>
+                                <li><a href="./page/Закон-относительной-силы">@lang('messages.strength')</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="ic prof_out"></i>@lang('messages.logout')
+                            </a>
+                        </li>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             {{ csrf_field() }}
                         </form>
-
                     </ul>
                 </nav>
                 <script>
@@ -141,6 +140,10 @@
                             if(d.type=='real'){
                                 $('.popup_bal .sum').html(currency.value(d.amount,'USD'));
                                 $('.popup_bal2 .sum').html(currency.value(d.amount,'USD'));
+                                $(".live-real-account").html('<i class="real"></i>'+currency.value(d.amount,'USD')+'</b>');
+                            }
+                            else {
+                                $(".live-demo-account").html('<i class="demo"></i>'+currency.value(d.amount,'USD')+'</b>');
                             }
                         }
                         // displayuseraccount(user_accounts.demo);
@@ -173,13 +176,10 @@
                 <div class="hidden">
                     <ul>
                         <li>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti impedit asperiores obcaecati nobis blanditiis et itaque deleniti, libero numquam! Quis unde nostrum saepe perferendis aspernatur totam itaque ipsum libero, debitis!
-                        </li>
-                        <li>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti impedit asperiores obcaecati nobis blanditiis et itaque deleniti, libero numquam! Quis unde nostrum saepe perferendis aspernatur totam itaque ipsum libero, debitis!
-                        </li>
-                        <li>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti impedit asperiores obcaecati nobis blanditiis et itaque deleniti, libero numquam! Quis unde nostrum saepe perferendis aspernatur totam itaque ipsum libero, debitis!
+                            Telephone:<a href="tel:+447441913630">+447441913630</a>
+                            Watsapp:<a href="tel:+447441913630">+447441913630</a>
+                            Sales department:<a href="mailto:support@xcryptex.com">support@xcryptex.com</a>
+                            Technical support department:<a href="mailto:ab@sky-mechanics.com">ab@sky-mechanics.com</a>
                         </li>
                     </ul>
                 </div>

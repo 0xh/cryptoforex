@@ -315,6 +315,35 @@ if ((chartOptions.macdVisible == false) && (chartOptions.rsiVisible == false))
             .attr("width", dim.width)
             .attr("height", dim.height);
 
+    // Рисуем вертикальный индикатор
+    svg.append("rect")
+            .attr("class", "vertical_bar")
+            .attr("x", 10)
+            .attr("y", dim.indicator.padding)
+            .attr("width", 30)
+            .attr("height", dim.ohlc.height);
+/*
+    svg.append('text')
+            .attr("class", "symbol")
+            .attr("x", 10)
+            .text("35%");
+*/
+    var vred_ind1_value = 100;
+    vred_ind1 = svg.append("line")
+            .attr("class", "vertical_bar_red")
+            .attr("x1", 25)
+            .attr("y1", 20)
+            .attr("x2", 25)
+            .attr("y2", vred_ind1_value);
+            
+
+    vred_ind2 = svg.append("line")
+            .attr("class", "vertical_bar_green")
+            .attr("x1", 25)
+            .attr("y1", vred_ind1_value+8)
+            .attr("x2", 25)
+            .attr("y2", dim.ohlc.height);
+    
 /*    svg = d3.select("body").append("svg")
             .attr("width", dim.width)
             .attr("height", dim.height);
@@ -391,7 +420,7 @@ if ((chartOptions.macdVisible == false) && (chartOptions.rsiVisible == false))
     // Пишем Название графика
     svg.append('text')
             .attr("class", "symbol")
-            .attr("x", 60)
+            .attr("x", 10)
             .text(chartOptions.title);
     
     // Выводим первую иконку
@@ -399,7 +428,7 @@ if ((chartOptions.macdVisible == false) && (chartOptions.rsiVisible == false))
         .attr("xlink:href", "https://www.cryptocompare.com/media/20275/etc2.png")
         .attr("width", 20)
         .attr("height", 20)
-        .attr("x", 0)
+        .attr("x", 40)
         .attr("y",-15);
 
     // Выводим вторую иконку
@@ -407,7 +436,7 @@ if ((chartOptions.macdVisible == false) && (chartOptions.rsiVisible == false))
         .attr("xlink:href", "https://www.cryptocompare.com/media/19633/btc.png")
         .attr("width", 20)
         .attr("height", 20)
-        .attr("x", 20)
+        .attr("x", 60)
         .attr("y",-15);
     
     // Рисуем горизонтальную сетку
@@ -530,9 +559,7 @@ function init()
     sendRequest();
     
     // Далее будем запрашивать по одному элементу раз в минуту
-    RequestParams.limit = 1;
-    
-    
+    RequestParams.limit = 1;    
 }
 
 function clearChart()
@@ -561,6 +588,22 @@ function clearChart()
 * Параметры:  Нет.
 * Возвращает: Нет.
 */    
+var zoom_value = 0;
+function zoomChart(type)
+{
+    console.log(newData.length);
+    //x.zoomable().domain([zoom_value, newData.length]).copy();
+    if (type == 0) {
+        zoom_value++;
+    } else {
+        if (zoom_value > 0) {
+            zoom_value--;
+        }
+    }
+
+    dataChart(newData);
+
+}
     function zoomed() {
         // x.zoomable().domain(d3.event.transform.rescaleX(zoomableInit).domain());
         // y.domain(d3.event.transform.rescaleY(yInit).domain());
@@ -686,7 +729,7 @@ function dataChart(data)
 //        svg.select("g.supstances").datum(supstanceData).call(supstance).call(supstance.drag);
 
         // Stash for zooming
-        x.zoomable().domain([0, data.length]).copy(); // Zoom in a little to hide indicator preroll
+        x.zoomable().domain([zoom_value, data.length]).copy(); // Zoom in a little to hide indicator preroll
                 
         updateChart();
 }
@@ -858,7 +901,8 @@ function sendRequest()
     } else {
         // Конвертируем 
         var resp_data = JSON.parse(xhr.responseText);    
-        for (var i=(resp_data.length-1); i>(-1); i--)    
+//        for (var i=(resp_data.length-1); i>(-1); i--)    
+        for (var i=(resp_data.length-1); i>(resp_data.length-128); i--)    
         {
             if (checkData == true) {
                 // Проверяем на наличе дубликатов
@@ -951,7 +995,8 @@ function paintCandle()
             current_date[i] = "0" + current_date[i];
         }
     }
-    chartOptions.title = "Online - "
+    chartOptions.title = "Online" + "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0";
+    chartOptions.title += "ETH/BTC" + "\u00A0\u00A0\u00A0";
     chartOptions.title += current_date[0] + "." + current_date[1] + "." + current_date[2] + " ";
     chartOptions.title += current_date[3] + ":" + current_date[4] + ":" + current_date[5];
     
@@ -1027,11 +1072,11 @@ function animateRound()
     // Рисуем мигающий индикатор в названии
     svg.append('circle')
             .attr("class", "flashing_point")
-            .attr("cx", 50)
+            .attr("cx", 0)
             .attr("cy", -3)
             .attr("r", animate_round);
     if (animate_round == 0) {
-        animate_round = 3;
+        animate_round = 5;
     } else {
         animate_round = 0;
     }
@@ -1159,3 +1204,10 @@ function setBackground()
 }
 //------------------------------------------------------------------------------
 
+$(document).ready(function(){
+    $(window).resize(function(){
+        // обновляем размер графика
+        clearChart();
+        dataChart(newData);
+    });
+});

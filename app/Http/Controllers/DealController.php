@@ -99,9 +99,19 @@ class DealController extends Controller{
         $currency = Currency::where('code',$rq->input('currency'))->first();
         $price = Price::where('instrument_id',$rq->input('instrument_id'))->orderBy('id','desc')->first();
         $dealStatus = DealStatus::where('code',$rq->input('status','open'))->first();
+        $instrument = Instrument::find($rq->input('instrument_id'));
+        $fee = floatval($amount)*floatval($instrument->commission);
+        $trx = $this->trx->makeTransaction([
+            'account'=>$account->id,
+            'type'=>'fee',
+            'user' => $rq->user(),
+            'merchant'=>'1',
+            'amount'=>$fee,
+        ]);
+        if($trx->code!="200")return response()->json($trx,$trx->code,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
         $dealData = [
             'status_id' => $dealStatus->id,
-            'instrument_id'=>$rq->input('instrument_id'),
+            'instrument_id'=>$instrument->id,
             'user_id'=>$user->id,
             'open_price'=>$price->price,
             'direction'=>$rq->input("direction"),
@@ -110,7 +120,8 @@ class DealController extends Controller{
             'amount'=>$amount,
             'currency_id'=>$currency->id,
             'multiplier'=>$rq->input('multiplier',1),
-            'account_id'=>$account->id
+            'account_id'=>$account->id,
+            'fee'=>$fee
         ];
         if($rq->input("delayed","false") == "true"){
             $dealStatus = DealStatus::where('code',$rq->input('status','delayed'))->first();
@@ -125,7 +136,9 @@ class DealController extends Controller{
             'changed_user_id'=>$user->id,
             'description'=>'Interface opened'
         ]);
-        return response()->json($deal,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+        $res = $deal->toArray();
+        $res['instrument'] = $instrument->toArray();
+        return response()->json($res,200,['Content-Type' => 'application/json; charset=utf-8'],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
     }
 
     /**

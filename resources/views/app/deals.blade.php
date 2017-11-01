@@ -9,17 +9,8 @@
             $('.popup,.bgc').fadeOut((window.animationTime!=undefined)?window.animationTime:256);
             $('.popup_deal_info,.bgc').fadeIn((window.animationTime!=undefined)?window.animationTime:256);
             var rchart = null, time = new Date(deal.created_at*1000);
-            // console.debug(deal);
-            // graphControl.makeChart(120,"chartdiv_p1",null,rchart);
-
-            window.SubChart = new Chart(document.getElementById('chartdiv_p1'), {
-                xhrInstrumentId: deal.intrument_id,     // query type currency number
-                xhrPeriodFull: 1440,    // data max period
-                dataNum: 60,          // default zoom number of dataset in 1 screen
-                xhrMaxInterval: 45000,  // renewal full data interval
-                xhrMinInterval: 1000,    // ticks - min interval to update and redraw last close data
-                btnVolume: true,       // bottom volume graph default state
-            });
+            console.debug(deal);
+            
 
             $('.popup_deal_info .deal-profit').html('<span class="'+((deal.profit>0)?"up":"down")+'">'+deal.profit+'</span>');
             $('.popup_deal_info .deal-time').html('<p><span class="time">'+time.toGMTString()+'</span></p>');
@@ -52,16 +43,23 @@
                 $('.popup').hide();
                 $('<div class="popup popup_open" style="display: block;"><div class="close" onclick="{ $(this).parent().fadeOut( 256, function(){ $(this).remove(); } ); }"></div><strong>Error!</strong>\
                     <p>'+d.message+'</p></div>').appendTo('body');
+            }else {
+                console.debug("success deal",d);
+                $('.popup_open p:first').html('@lang("messages.trand_on_instrument") '+d.instrument.title+' @lang("messages.is_opened")');
+                $('.popup_open p:eq(1)').html('@lang("messages.commission_is") '+currency.value(d.fee,'USD') + ' ('+d.instrument.commission+'%)');
             }
         }
         _onload.push(
             function(){
-                $('#deal_amount').on("change keyup",function(){
+                $('.deal_amount').on("change keyup",function(){
                     var val = parseFloat($(this).val());
-                    $('[data-name=amount]').val(val);
-                    if(!$('#profit_active').is(':checked'))$('[data-name=stop_high]').val(100*val);
+                    $(this).parents('.submiter').find('[data-name=amount]').val(val);
+                    if(!$(this).parents('.submiter').find('#profit_active').is(':checked'))$(this).parents('.submiter').find('[data-name=stop_high]').val(val);
                 });
-                $('#flying').on("change keyup",function(){$('[data-name=multiplier]').val($(this).val());});
+                $('.flying').on("change keyup",function(){
+
+                    $(this).parents('.submiter').find('[data-name=multiplier]').val($(this).val());
+                });
                 $('#take_profit').on("change keyup",function(){
                     if($('#profit_active').is(':checked'))$('[data-name=stop_high]').val($(this).val());
                 });
@@ -94,7 +92,7 @@
               </div>
               <strong>@lang('messages.Sumsd')</strong>
               <div class="number">
-                <input type="text" value="100" size="5" id="deal_amount"/>
+                <input type="text" value="100" size="5" id="deal_amount" class="deal_amount"/>
                 <div class="wrap flex">
                   <span class="minus">-</span>
                   <span class="plus">+</span>
@@ -103,7 +101,7 @@
               <strong>@lang('messages.Krpl')</strong>
               <form onsubmit="return false" oninput="level.value = flevel.valueAsNumber">
                 <output for="flying" name="level">10</output>
-                <input name="flevel" id="flying" type="range" min="1" max="20" value="10" step="1">
+                <input name="flevel" id="flying" class="flying" type="range" min="1" max="20" value="10" step="1">
               </form>
             </div>
             <div class="bot flex">
@@ -144,7 +142,7 @@
                             </div>
                         </div>
                         <div class="right">
-                            <strong>At the price</strong>
+                            <!-- <strong>At the price</strong> -->
                             <div>
                                 <input type="checkbox" class="checkbox" id="atprice_active" value="">
                                 <label for="atprice_active">At the price</label>

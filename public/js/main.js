@@ -33,6 +33,33 @@ jQuery(document).ready(function () {
         return false;
     });
 
+    jQuery('header .akk .deposit a').click(function(){
+    	if ( jQuery('.popup_deposit').is(':visible') ) {
+    		jQuery('.popup,.bgc').fadeOut();
+    	} else {
+    		jQuery('.popup_deposit,.bgc').fadeIn();
+    	}
+    	return false;
+    });
+
+    jQuery('.tabs__content ul li a.more').click(function(){
+    	jQuery('.popup_message').fadeIn();
+    	return false;
+    });
+
+    jQuery('header .akk .support a').click(function(){
+    	if ( jQuery('header .akk .support div').hasClass('hidden') ) {
+    		jQuery('header .akk .support div').removeClass('hidden').slideDown();
+    	} else {
+    		jQuery('header .akk .support div').addClass('hidden').slideUp();
+    	}
+    	return false;
+    });
+
+    jQuery('.advance input[type="checkbox"]').change(function(){
+    	jQuery('.advance .item > .flex,.advance .right > .flex').toggleClass('active');
+    });
+
     jQuery('.advance h2').click(function(){
     	if ( jQuery('.advance > ul').is(':visible') ) {
     		jQuery('.advance > ul').fadeOut();
