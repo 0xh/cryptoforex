@@ -30,7 +30,7 @@ class HomeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $rq){
-        if(Auth::guest()) return view('welcome');
+        if(Auth::guest()) return redirect('login');
         $user = $rq->user();
         $user_count = User::all()->count();
         $accounts = Account::where('user_id',$user->id)->get();
