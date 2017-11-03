@@ -1,5 +1,5 @@
 <div class="content flex column">
-	
+
 	<div class="settings flex wrap">
 		<!-- <div class="item flex">
 			<p><b> 2. JSON data: </b></p>
@@ -38,5 +38,4 @@
 		</div>
 	</div>
     <div id="chart_field"></div>
-
 </div>

@@ -92,7 +92,7 @@ function multiplier(t){
     </div>
   </div> -->
 
-  <div class="submiter tab_cap active" data-action="/json/deal/add" data-callback="dealAdd">
+  <div class="submiter tab_cap active" data-action="/json/deal/add" data-callback="dealAddPopup">
     <div class="box">
       <div class="info flex current-instrument">
         <p>BTC/USD</p>

@@ -32,11 +32,25 @@
 				<option value="2">Close</option>
 			</select>
 			<button onclick="addTrendline()">Add trendline</button>
-			<button class="black_button" onclick="setBackground()">Change background</button>
+			<!-- <button class="black_button" onclick="setBackground()">Change background</button> -->
 			<!-- <button onclick="destroyChart()">clear</button> -->
 			<!-- <button onclick="sendRequest()">Request</button> -->
 		</div>
 	</div>
+	<a href="#" class="button" id="myButton" onclick="launchFullScreen();"></a>
+	<script>
+		var i = document.getElementById("myButton");
+
+		function launchFullScreen(element) {
+			if(i.requestFullScreen) {
+				i.requestFullscreen();
+			} else {
+				(i.cancelFullScreen) {
+					i.cancelFullScreen();
+				}
+			}
+		}
+	</script>
     <div id="chart_field"></div>
 
 </div>

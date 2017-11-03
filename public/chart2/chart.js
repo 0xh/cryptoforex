@@ -49,6 +49,10 @@ var chartOptions = {
     grid_x_step: 100,          // Шаг горизонтальной сетки
     grid_y_step: 100,          // Шаг вертикальной сетки
     
+    // Размеры иконок валютных пар
+    icons_width: 20,            
+    icons_height: 20,
+    
     sma0:       false,
     sma0Value:  10,
     sma1:       false,
@@ -64,8 +68,57 @@ var chartOptions = {
     trendlineData: [],
 };
 
-function createChart()
+var test_params = {
+    id: 1,
+    from_currency_id: "2",
+    to_currency_id: "3",
+    commission: "0.02",
+    enabled: "1",
+    title: "BTC\/BCH",
+    from: {
+        id: 2,
+        name: "Bitcoin",
+        code: "BTC",
+        image: "https:\/\/www.cryptocompare.com\/media\/19633\/btc.png",
+        symbol: "\\f15a",
+        unicode: "\\u20bf"
+    },
+    to: {
+        id: 3,
+        name: "Bitcoin cash",
+        code: "BCH",
+        image: "https:\/\/www.cryptocompare.com\/media\/1383919\/bch.jpg",
+        symbol: "\\f15a",
+        unicode: "\\u20bf"
+    },
+    histo: {
+        id: 16595,
+        created_at: "1509331973",
+        source_id: "1",
+        instrument_id: "1",
+        time: "1509331920",
+        open: "14.25000",
+        low: "14.22000",
+        high: "14.25000",
+        close: "14.21000",
+        volumefrom: "0.9082000000",
+        volumeto: "12.9000000000",
+        exchange: "CCAGG",
+        volation: "1"
+    }
+}
+
+var title_position = 0;
+var title_date_time = "0000";
+
+function createChart(params)
 {   
+    // Анализируем входные параметры
+    //--------------------------------------------------------------------------
+    // 1. Формируем параметры запросов
+    requestParams.instrument_id = params.histo.instrument_id;
+    requestParams.price_id = params.id;
+    //--------------------------------------------------------------------------
     dim = {
         width: 640, height: 480,
         margin: { top: 20, right: 50, bottom: 30, left: 50 },
@@ -420,24 +473,36 @@ if ((chartOptions.macdVisible == false) && (chartOptions.rsiVisible == false))
     // Пишем Название графика
     svg.append('text')
             .attr("class", "symbol")
-            .attr("x", 10)
+            .attr("x", (title_position+10))
             .text(chartOptions.title);
     
     // Выводим первую иконку
     svg.append("svg:image")
-        .attr("xlink:href", "https://www.cryptocompare.com/media/20275/etc2.png")
-        .attr("width", 20)
-        .attr("height", 20)
-        .attr("x", 40)
+        .attr("xlink:href", test_params.from.image)
+        .attr("width", chartOptions.icons_width)
+        .attr("height", chartOptions.icons_height)
+        .attr("x", title_position+50)
         .attr("y",-15);
 
     // Выводим вторую иконку
     svg.append("svg:image")
-        .attr("xlink:href", "https://www.cryptocompare.com/media/19633/btc.png")
-        .attr("width", 20)
-        .attr("height", 20)
-        .attr("x", 60)
+        .attr("xlink:href", test_params.to.image)
+        .attr("width", chartOptions.icons_width)
+        .attr("height", chartOptions.icons_height)
+        .attr("x", (title_position+55+chartOptions.icons_width))
         .attr("y",-15);
+    
+    // Пишем название валютной пары
+    svg.append('text')
+            .attr("class", "symbol")
+            .attr("x", (title_position+60+chartOptions.icons_width*2))
+            .text(test_params.title);
+
+    // Пишем текущие дату и время
+    svg.append('text')
+            .attr("class", "symbol")
+            .attr("x", (title_position+120+chartOptions.icons_width*2))
+            .text(title_date_time);
     
     // Рисуем горизонтальную сетку
     for (var i=1; i<(dim.ohlc.height/chartOptions.grid_x_step); i++)
@@ -551,7 +616,7 @@ if ((chartOptions.macdVisible == false) && (chartOptions.rsiVisible == false))
 
 function init()
 {
-    createChart();
+    createChart(test_params);
 //    checkForm();
     
     // Обнуляем массив
@@ -559,14 +624,14 @@ function init()
     sendRequest();
     
     // Далее будем запрашивать по одному элементу раз в минуту
-    RequestParams.limit = 1;    
+//    RequestParams.limit = 1;    
 }
 
 function clearChart()
 {
     // Пересоздаем график
     d3.select("body").select("svg").remove();
-    createChart();
+    createChart(test_params);
 }
 
 
@@ -869,10 +934,12 @@ function addTrendline()
     svg.select("g.trendlines").datum(chartOptions.trendlineData).call(trendline).call(trendline.drag);
 }
 
-var RequestParams = {
+var requestParams = {
 //    url: 
     limit: 144,
     user_id: 1,
+    instrument_id: 0,
+    price_id: 0
 }
 
 var requestTimer = null;
@@ -883,13 +950,11 @@ function sendRequest()
     // 1. Создаём новый объект XMLHttpRequest
     var xhr = new XMLHttpRequest();
 
-    // 2. Конфигурируем его: GET-запрос на URL 'phones.json'
-//    xhr.open('GET', 'http://xcryptex.com/data/amcharts/hystominute?limit=10&user_id=1&instrument_id=1&date_from=1505411477000&date_to=1505411477000', false);
-
+    // 2. Конфигурируем его: GET-запрос на URL 'hystominute'
     xhr.open('GET', 'http://xcryptex.com/data/amcharts/hystominute?limit=' 
-            + RequestParams.limit 
+            + requestParams.limit 
     //        + '&user_id=' + RequestParams.user_id 
-            + '&instrument_id=2', false);
+            + '&instrument_id=' + requestParams.instrument_id, false);
 
     // 3. Отсылаем запрос
     xhr.send();
@@ -951,7 +1016,7 @@ function sendRequestPrice()
     // 2. Конфигурируем его: GET-запрос на URL 'phones.json'
 //    xhr.open('GET', 'http://xcryptex.com/data/amcharts/hystominute?limit=10&user_id=1&instrument_id=1&date_from=1505411477000&date_to=1505411477000', false);
 
-    xhr.open('GET', 'http://xcryptex.com/price/json/2', false);
+    xhr.open('GET', 'http://xcryptex.com/price/json/' + requestParams.price_id, false);
 
     // 3. Отсылаем запрос
     xhr.send();
@@ -995,10 +1060,11 @@ function paintCandle()
             current_date[i] = "0" + current_date[i];
         }
     }
-    chartOptions.title = "Online" + "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0";
-    chartOptions.title += "ETH/BTC" + "\u00A0\u00A0\u00A0";
-    chartOptions.title += current_date[0] + "." + current_date[1] + "." + current_date[2] + " ";
-    chartOptions.title += current_date[3] + ":" + current_date[4] + ":" + current_date[5];
+    chartOptions.title = "Online";// + "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0";
+    title_date_time = current_date[0] + "." + current_date[1] + "." + current_date[2] + " " + current_date[3] + ":" + current_date[4] + ":" + current_date[5];
+//    chartOptions.title += "ETH/BTC" + "\u00A0\u00A0\u00A0";
+//    chartOptions.title += current_date[0] + "." + current_date[1] + "." + current_date[2] + " ";
+//    chartOptions.title += current_date[3] + ":" + current_date[4] + ":" + current_date[5];
     
 //    console.log(date);
     // 1-я секунда
@@ -1073,7 +1139,7 @@ function animateRound()
     // Рисуем мигающий индикатор в названии
     svg.append('circle')
             .attr("class", "flashing_point")
-            .attr("cx", 0)
+            .attr("cx", title_position)
             .attr("cy", -3)
             .attr("r", animate_round);
     if (animate_round == 0) {

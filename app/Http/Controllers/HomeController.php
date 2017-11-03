@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Response;
 use Illuminate\Http\Request;
 use App\Account;
+
 use App\User;
 use App\Currency;
+use App\Mail\SupportRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller
 {
@@ -42,5 +46,16 @@ class HomeController extends Controller
     }
     public function page2(Request $rq,$page){
         return view('page_home.'.$page);
+    }
+    public function support(Request $rq){
+        $mail = [
+            "from"=>$rq->input('from'),
+            "email"=>$rq->input('email'),
+            "phone"=>$rq->input('phone'),
+            "text"=>$rq->input('text'),
+        ];
+        $sp = new SupportRequest(json_decode(json_encode($mail)));
+        Mail::send($sp);
+        return back();
     }
 }

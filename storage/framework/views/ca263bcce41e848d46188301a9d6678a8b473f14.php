@@ -28,7 +28,7 @@
     <link href="<?php echo e(asset('css/cryptofx.css')); ?>" rel="stylesheet">
     <link href="<?php echo e(asset('css/polz.css')); ?>" rel="stylesheet">
     <link href="<?php echo e(asset('css/preload.css')); ?>" rel="stylesheet">
-    <link rel="stylesheet" href="/chart2/chart.css">
+    <link rel="stylesheet" href="/chart2/chart.v2.css">
     <!--  Vendor styles -->
     <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
     <!-- Scripts -->
@@ -88,7 +88,7 @@
     <?php endif; ?>
     </script>
 </head>
-<body class="home" onload="init()">
+<body class="home">
   <!-- <div id="page-preloader">
       <div class="diamonds-spinner">
           <div class="spinner-image">
@@ -695,7 +695,7 @@
 
         <script src="http://d3js.org/d3.v4.min.js"></script>
         <script src="http://techanjs.org/techan.min.js"></script>
-        <script type="text/javascript" src="<?php echo e(asset('/chart2/chart_v5.js')); ?>"></script>
+        <script type="text/javascript" src="<?php echo e(asset('/chart2/chart_2.0.js')); ?>"></script>
 
         <script>
             $(document).ready(function(){

@@ -261,26 +261,31 @@
             //     <p class="hidden slice">btc/dgb</p>
             // </div>
 
-            if(window.MainChart != undefined){
-                window.MainChart.setParams({xhrInstrumentId: id});
-                window.MainChart.reloadData(true);
-            }else if(typeof(Chart) != "undefined"){
-                window.MainChart = new Chart(document.getElementById('main'), {
-                    xhrInstrumentId: id,     // query type currency number
-                    xhrPeriodFull: 1440,    // data max period
-                    dataNum: 60,          // default zoom number of dataset in 1 screen
-                    xhrMaxInterval: 45000,  // renewal full data interval
-                    xhrMinInterval: 1000,    // ticks - min interval to update and redraw last close data
-                    btnVolume: true,       // bottom volume graph default state
-                    // colorCandleBodyUp: "#f59" // example to change positive candle body
-                });
-                window.MainChart.reloadData(true);
-                window.MainChart.on("tickEvent", function(evt, tickVol, direction, element){
-                    // console.debug(tickVol);
-                    setPrice(id,tickVol.close);
-                });
-
-            }
+            // if(window.MainChart != undefined){
+            //     window.MainChart.setParams({xhrInstrumentId: id});
+            //     window.MainChart.reloadData(true);
+            // }else if(typeof(Chart) != "undefined"){
+            //     window.MainChart = new Chart(document.getElementById('main'), {
+            //         xhrInstrumentId: id,     // query type currency number
+            //         xhrPeriodFull: 1440,    // data max period
+            //         dataNum: 60,          // default zoom number of dataset in 1 screen
+            //         xhrMaxInterval: 45000,  // renewal full data interval
+            //         xhrMinInterval: 1000,    // ticks - min interval to update and redraw last close data
+            //         btnVolume: true,       // bottom volume graph default state
+            //         // colorCandleBodyUp: "#f59" // example to change positive candle body
+            //     });
+            //     window.MainChart.reloadData(true);
+            //     window.MainChart.on("tickEvent", function(evt, tickVol, direction, element){
+            //         // console.debug(tickVol);
+            //         setPrice(id,tickVol.close);
+            //     });
+            //
+            // }
+            // Finiikin
+            createChart("#chart_field", window.instrument );
+            // Обнуляем массив
+            newData.length = 0;
+            sendRequest();
             // set pult
             setPrice(id);
         }

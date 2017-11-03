@@ -695,7 +695,7 @@
 
         <script src="http://d3js.org/d3.v4.min.js"></script>
         <script src="http://techanjs.org/techan.min.js"></script>
-        <script type="text/javascript" src="{{ asset('/chart2/chart_v5.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('/chart2/chart_2.0.js') }}"></script>
 
         <script>
             $(document).ready(function(){

@@ -15,10 +15,10 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="../kriptex/js/main.js"></script>
 </head>
-<body>
+<body class="home wlp">
 
 	<!-- header -->
-	
+
 	<header class="header">
 		<div class="shell v_center">
 			<div class="logo">
@@ -38,7 +38,7 @@
 							<!-- <li><a href="./Careers.html">Careers</a></li> -->
 						</ul>
 					</li>
-					<li class="but">
+					<!-- <li class="but">
 						<a href="#">Solutions</a>
 						<ul class="submenu">
 							<li class="no-active">What`s included</li>
@@ -50,12 +50,24 @@
 							<li><a href="../page_home/Pricing"><i class="ic ic6"></i>Pricing  Feed Data</a></li>
 							<li><a href="#"><i class="ic ic7"></i>Brokerage Hosting Server</a></li>
 						</ul>
-					</li>
+					</li> -->
 					<li><a href="../page_home/White_Label_Program">White Label Program</a></li>
-					<li><a href="../page_home/Customers-Support">Customers Support</a></li>
+					<!-- <li><a href="../page_home/Customers-Support">Customers Support</a></li> -->
 					<li><a href="../page_home/Contact">Contact</a></li>
 				</ul>
 			</nav>
+			<div class="phone">
+				<ul class="flex">
+					<li class="flex column width">
+						<a href="tel:+447441913630" class="tel">+44 744 191 3630</a>
+						<a href="tel:+447441913630" class="tg">+44 744 191 3630</a>
+					</li>
+					<li class="flex column width">
+						<a href="tel:+447441913630" class="vi">+44 744 191 3630</a>
+						<a href="tel:+447441913630" class="wh">+44 744 191 3630</a>
+					</li>
+				</ul>
+			</div>
 		</div>
 	</header>
 	<!-- End -->
@@ -70,19 +82,21 @@
 					<p>Speak today with our team of CryptoCurrency experts!     </p>
 					<div class="item flex">
 						<div class="left">
-							<p><span>Telephone:</span> <a href="tel:+447441913630">+44 744 191 3630</a></p>
-							<p><span>Watsapp:</span> <a href="tel:+447441913630">+44 744 191 3630</a></p>
-							<p><span>Viber:</span> <a href="tel:+447441913630">+44 744 191 3630</a></p>
-							<p><span>Telegram:</span> <a href="tel:+447441913630">+44 744 191 3630</a></p>
+							<div class="wrap">
+								<p><span>Telephone:</span> <a href="tel:+447441913630">+44 744 191 3630</a></p>
+								<p><span>Watsapp:</span> <a href="tel:+447441913630">+44 744 191 3630</a></p>
+								<p><span>Viber:</span> <a href="tel:+447441913630">+44 744 191 3630</a></p>
+								<p><span>Telegram:</span> <a href="tel:+447441913630">+44 744 191 3630</a></p>
+							</div>
 						</div>
 						<div class="right">
-							<form action="#">
+							<form action="http://xcryptex.com/email/support">
 								<div class="inner flex">
-									<input type="text" name="name" placeholder="Full Name">
+									<input type="text" name="from" placeholder="Full Name">
 									<input type="email" name="email" placeholder="Email">
 								</div>
 								<div class="inner flex">
-									<input type="tel" name="tel" placeholder="Phone Number">
+									<input type="tel" name="phone" placeholder="Phone Number">
 								</div>
 								<div class="inner flex">
 									<textarea name="text" id="text" placeholder="Message"></textarea>

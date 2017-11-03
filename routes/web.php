@@ -93,3 +93,6 @@ Route::get('/user/add/{format}','UserController@store')->name('user.add')->where
 Route::get('/user/finance/withdrawal','TransactionController@makeWithdrawal')->name('user.makeWithdrawal');
 Route::get('/user/{id}/controll/off','UserController@controll')->name('user.controll')->where('id','[0-9]+');
 // Route::get('/user/{format}','UserController@ulist')->name('user.list')->where('format','json');
+
+
+Route::get('/email/support','HomeController@support');

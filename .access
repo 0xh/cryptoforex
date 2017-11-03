@@ -2,6 +2,7 @@ https://159.253.20.224:8888/
 fastuser
 Lo4Lvw3n
 root пароль Ye4rwRS5sC9gU4o8 для ssh и прочего
+
 sql
 Имя базы  xcryptex_com_db
 Пользователь  xcryptex_com_usr
@@ -16,5 +17,28 @@ FTP  ftp://xcryptexcom375:4498d0943cbf@159.253.20.224
 
 
 https://5.45.124.70:8888/#/
+fastuser:Dxx7Xnf2
+root:cB7od847aFYp6xCQ
+
+ftp://srvxcryptexcom439:oIxig3EJCoRyIghc@5.45.124.70
+
+
+
+service
+> https://5.101.179.54:8888/
 fastuser
-Dxx7Xnf2
+o9xNwcB9
+root: YL5b8vTe6kXrvC36
+
+
+
+BD
+https://5.101.179.55:8888/ этот для sql базы
+fastuser
+h6GCfp6u
+DB xcryptex_db
+    Пользователь: xcryptex_db_usr
+    Пароль для базы данных: NOtQ8XzSrYyYoN0Q
+    platform_db:Do7P4Is2rBs5gWOx
+
+root: 7n93Wk4J7mrVNYcp

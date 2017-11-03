@@ -30,8 +30,8 @@ class DealController extends Controller{
      */
     public function index(Request $rq,$format='json',$id=false){
         $user = $rq->user();
-        $res = Deal::where('id','>','9')
-            ->with(['user'=>function($query){
+        // $res = Deal::where('id','>','9')
+        $res = Deal::with(['user'=>function($query){
                 $query->with(['manager']);
             },'currency','instrument'=>function($query){
             $query->with(['from','to']);

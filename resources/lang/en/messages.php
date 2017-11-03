@@ -870,4 +870,7 @@ Learn to receive multi-level signals from three instruments at once and make the
           <li><a href="#q7">Open the transaction ABOVE</a></li>
           <li><a href="#q8">Trade recommendations</a></li>
         </ul>',
+    'trand_on_instrument'=>'Trade on pair',
+    'is_opened'=>'is opened',
+    'commission_is'=>'Commission is',
 ];

@@ -21,6 +21,7 @@
                 <div id="deal_{{$deal->id}}_chart"></div>
             </div>
         </div>
+        @if($deal->status_id!=20)
         <div class="item dashblock-4 flex column">
             <!-- <span class="title">@lang('messages.User'): <a href="javascript:window.crm.user.info({{$deal->user->id}})">{{ $deal->user->name }} {{ $deal->user->surname }}</a></span>
             <span class="text">@lang('messages.manager'): <b>@if(!is_null($deal->user->manager)) {{ $deal->user->manager->name or 'no'}} {{ $deal->user->surname or 'manager'}} @endif</b></span> -->
@@ -65,6 +66,7 @@
                 </form>
             </div>
         </div>
+        @endif
     </div>
 </div>
 <link rel="stylesheet" type="text/css" href="/chart/assets/plugins/chart/chart.css">

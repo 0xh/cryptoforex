@@ -92,7 +92,7 @@ function multiplier(t){
     </div>
   </div> -->
 
-  <div class="submiter tab_cap active" data-action="/json/deal/add" data-callback="dealAdd">
+  <div class="submiter tab_cap active" data-action="/json/deal/add" data-callback="dealAddPopup">
     <div class="box">
       <div class="info flex current-instrument">
         <p>BTC/USD</p>
@@ -112,32 +112,81 @@ function multiplier(t){
         <input name="flevel" id="flying" class="flying" class="flying" type="range" min="1" max="20" value="10" step="1">
       </form>
     </div>
-    <div class="bot flex">
-        <input name="atprice" value="" type="hidden" data-name="atprice"/>
-        <input name="amount" value="100" type="hidden" data-name="amount"/>
-        <input name="stop_high" value="100" type="hidden" data-name="stop_high"/>
-        <input name="stop_low" value="0" type="hidden" data-name="stop_low"/>
-        <input name="multiplier" value="10" type="hidden" data-name="multiplier"/>
-        <input name="instrument_id" value="1" type="hidden" data-name="instrument_id"/>
-        <input name="direction" value="1" type="hidden" data-name="direction"/>
-        <input name="currency" value="USD" type="hidden" data-name="currency" />
-        <input name="delayed" value="false" type="hidden" data-name="delayed" />
-
-
-        <a  onclick="$('[name=direction]').val(1);" href="#" class="up flex submit">
-            <div class="flex instrument-price-buy">
-                <p>3782.</p>
-                <b>50</b>
+    <div class="bot flex column">
+      <div class="advance flex column">
+        <h2>Advance</h2>
+        <ul class="flex jcsb">
+            <li class="active">Take Profit</li>
+            <li>Stop Loss</li>
+            <li>At to Price</li>
+        </ul>
+        <div class="wrap width">
+            <div class="left">
+                <div class="item flex">
+                    <div>
+                        <input type="checkbox" class="checkbox" id="profit_active_p" value="">
+                        <label for="profit_active_p">Take Profit (TP)</label>
+                    </div>
+                    <div class="flex active">
+                        <input type="number" value="0" size="0.00001" id="take_profit_p">
+                        <div class="wrap flex">
+                          <span class="minus">-</span>
+                          <span class="plus">+</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="item flex">
+                    <div>
+                        <input type="checkbox" class="checkbox" id="loss_active_p" value="">
+                        <label for="loss_active_p">Stop Loss (SL)</label>
+                    </div>
+                    <div class="flex active">
+                        <input type="number" value="0" size="0.00001" id="stop_loss_p">
+                        <div class="wrap flex">
+                          <span class="minus">-</span>
+                          <span class="plus">+</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <b>@lang('messages.BUY')</b>
-        </a>
-        <a onclick="$('[name=direction]').val(-1);" href="#" class="down flex submit">
-            <div class="flex instrument-price-sell">
-                <p class="">3758.</p>
-                <b class="instrument-bid">60</b>
+            <div class="right">
+                <!-- <strong>At the price</strong> -->
+                <div>
+                    <input type="checkbox" class="checkbox" id="atprice_active_p" value="">
+                    <label for="atprice_active_p">At the price</label>
+                </div>
+                <div class="flex">
+                    <input type="number" value="0" size="0.00001" id="atprice_p">
+                </div>
             </div>
-            <b>@lang('messages.SELL')</b>
-        </a>
+        </div>
+    </div>
+    <div class="flex width">
+      <input name="atprice" value="" type="hidden" data-name="atprice"/>
+      <input name="amount" value="100" type="hidden" data-name="amount"/>
+      <input name="stop_high" value="100" type="hidden" data-name="stop_high"/>
+      <input name="stop_low" value="0" type="hidden" data-name="stop_low"/>
+      <input name="multiplier" value="10" type="hidden" data-name="multiplier"/>
+      <input name="instrument_id" value="1" type="hidden" data-name="instrument_id"/>
+      <input name="direction" value="1" type="hidden" data-name="direction"/>
+      <input name="currency" value="USD" type="hidden" data-name="currency" />
+      <input name="delayed" value="false" type="hidden" data-name="delayed" />
+      
+      <a  onclick="$('[name=direction]').val(1);" href="#" class="up flex submit">
+          <div class="flex instrument-price-buy">
+              <p>3782.</p>
+              <b>50</b>
+          </div>
+          <b>@lang('messages.BUY')</b>
+      </a>
+      <a onclick="$('[name=direction]').val(-1);" href="#" class="down flex submit">
+          <div class="flex instrument-price-sell">
+              <p class="">3758.</p>
+              <b class="instrument-bid">60</b>
+          </div>
+          <b>@lang('messages.SELL')</b>
+      </a>
+    </div>
 
     </div>
     <!-- <div class="work_order flex">

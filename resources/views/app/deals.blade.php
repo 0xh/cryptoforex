@@ -47,6 +47,24 @@
                 console.debug("success deal",d);
                 $('.popup_open p:first').html('@lang("messages.trand_on_instrument") '+d.instrument.title+' @lang("messages.is_opened")');
                 $('.popup_open p:eq(1)').html('@lang("messages.commission_is") '+currency.value(d.fee,'USD') + ' ('+parseFloat(d.instrument.commission)*100+'%)');
+
+                $('#take_profit').val(0);
+                $('#stop_loss').val(0);
+                $('#atprice').val(0);
+
+            }
+        }
+        function dealAddPopup(d){
+            $('.popup').hide();
+            if(d.error){
+                $('.popup').hide();
+                $('<div class="popup popup_open" style="display: block;"><div class="close" onclick="{ $(this).parent().fadeOut( 256, function(){ $(this).remove(); } ); }"></div><strong>Error!</strong>\
+                    <p>'+d.message+'</p></div>').appendTo('body');
+            }else {
+                console.debug("success deal",d);
+                $('.popup_open').fadeIn();
+                $('.popup_open p:first').html('@lang("messages.trand_on_instrument") '+d.instrument.title+' @lang("messages.is_opened")');
+                $('.popup_open p:eq(1)').html('@lang("messages.commission_is") '+currency.value(d.fee,'USD') + ' ('+parseFloat(d.instrument.commission)*100+'%)');
             }
         }
         _onload.push(
@@ -71,9 +89,9 @@
                         $('[data-name=atprice]').val($(this).val());
                 });
                 $('#atprice_active').on("change",function(){
-                    ($('#atprice_active').is(':checked'))
-                        ?$('[data-name=delayed]').val("true")
-                        :$('[data-name=delayed]').val("false");
+                    if($('#atprice_active').is(':checked'))
+                        $('[data-name=delayed]').val("true")
+                    else $('[data-name=delayed]').val("false");
                 });
             }
         );
