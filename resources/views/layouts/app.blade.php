@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="apple-touch-icon" sizes="57x57" href="/images/apple-icon-57x57.png">
+    <!-- <link rel="apple-touch-icon" sizes="57x57" href="/images/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/images/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="/images/apple-icon-72x72.png">
     <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-icon-76x76.png">
@@ -16,7 +16,8 @@
     <link rel="icon" type="image/png" sizes="192x192"  href="/images/android-icon-192x192.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png"> -->
+    <link rel="icon" type="image/ico" href="/images/favicon_1.png">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -695,7 +696,7 @@
 
         <script src="http://d3js.org/d3.v4.min.js"></script>
         <script src="http://techanjs.org/techan.min.js"></script>
-        <script type="text/javascript" src="{{ asset('/chart2/chart_2.0.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('/chart2/chart.js') }}"></script>
 
         <script>
             $(document).ready(function(){

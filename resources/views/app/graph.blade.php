@@ -1,5 +1,5 @@
 <div class="content flex column">
-	
+
 	<div class="settings flex wrap">
 		<!-- <div class="item flex">
 			<p><b> 2. JSON data: </b></p>
@@ -45,7 +45,7 @@
 			if(i.requestFullScreen) {
 				i.requestFullscreen();
 			} else {
-				(i.cancelFullScreen) {
+				if(i.cancelFullScreen) {
 					i.cancelFullScreen();
 				}
 			}

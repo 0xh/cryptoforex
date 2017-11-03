@@ -1,7 +1,8 @@
 <header class="header">
     <div class="container flex">
         <div class="logo">
-            <a href="/"><img src="../kriptex/images/logo_xx.png" alt=""></a>
+            <!-- <a href="/"><img src="../kriptex/images/logo_xx.png" alt=""></a> -->
+            <a href="/"><img src="/images/Logo_Cryptogriff_136.png" alt=""></a>
         </div>
         <div class="search">
             <i class="face"></i>
